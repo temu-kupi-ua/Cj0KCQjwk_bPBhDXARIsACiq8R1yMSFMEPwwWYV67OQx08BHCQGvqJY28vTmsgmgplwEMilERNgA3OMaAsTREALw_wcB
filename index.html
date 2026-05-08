@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Scan Interface</title>
+<title>System Scan</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
@@ -15,37 +15,26 @@ body{
     font-family:Consolas;
 }
 
-.header{
-    text-align:center;
-    padding:15px;
-    font-size:20px;
-    letter-spacing:2px;
-}
-
 .container{
     width:90%;
     max-width:800px;
-    margin:auto;
+    margin:80px auto;
 }
 
 .box{
     background:#0b1220;
-    border:1px solid #334155;
     padding:10px;
     border-radius:10px;
     margin-bottom:10px;
     opacity:0;
     transform:translateY(10px);
-    transition:0.5s;
+    transition:0.4s;
 }
 
 .show{
     opacity:1;
     transform:translateY(0);
 }
-
-.label{ color:#94a3b8; }
-.value{ color:white; margin-top:5px; }
 
 .progress{
     height:18px;
@@ -60,24 +49,59 @@ body{
     background:#3b82f6;
 }
 
+.label{ color:#94a3b8; }
+.value{ color:white; margin-top:5px; }
+
 #map{
     height:300px;
-    margin-top:10px;
+    display:none;
     border-radius:10px;
-    opacity:0;
-    transition:1s;
+    margin-top:10px;
+}
+
+/* ADMIN */
+.adminBtn{
+    position:fixed;
+    top:10px;
+    left:10px;
+    background:#111827;
+    color:white;
+    padding:6px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.admin{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#05060a;
+    z-index:9999;
+    padding:20px;
+}
+
+.close{
+    position:absolute;
+    top:10px;
+    right:15px;
+    cursor:pointer;
+    color:white;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">SYSTEM SCANNER</div>
+<!-- ADMIN BUTTON -->
+<div class="adminBtn" onclick="openAdmin()">ADMIN</div>
 
 <div class="container">
 
+<!-- SCAN -->
 <div class="box show">
-<div class="label">SCAN</div>
 <div class="progress"><div class="bar" id="bar"></div></div>
 <div class="value" id="percent">0%</div>
 </div>
@@ -85,23 +109,22 @@ body{
 <div class="box" id="ipBox"><div class="label">IP</div><div class="value" id="ip">---</div></div>
 <div class="box" id="countryBox"><div class="label">COUNTRY</div><div class="value" id="country">---</div></div>
 <div class="box" id="cityBox"><div class="label">CITY</div><div class="value">Bortiatyn</div></div>
-
-<div class="box" id="nameBox">
-<div class="label">NAME</div>
-<div class="value">Protsyk Maksym</div>
-</div>
-
-<div class="box" id="deviceBox">
-<div class="label">DEVICE</div>
-<div class="value" id="device"></div>
-</div>
-
-<div class="box" id="timeBox">
-<div class="label">TIME</div>
-<div class="value" id="time"></div>
-</div>
+<div class="box" id="nameBox"><div class="label">NAME</div><div class="value">Protsyk Maksym</div></div>
+<div class="box" id="deviceBox"><div class="label">DEVICE</div><div class="value" id="device"></div></div>
+<div class="box" id="timeBox"><div class="label">TIME</div><div class="value" id="time"></div></div>
 
 <div id="map"></div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin" id="admin">
+
+<span class="close" onclick="closeAdmin()">✖</span>
+
+<h2>ADMIN PANEL</h2>
+
+<div id="adminData">Waiting...</div>
 
 </div>
 
@@ -109,92 +132,97 @@ body{
 
 <script>
 
-// TIME
-function updateTime(){
-    document.getElementById("time").innerText =
-    new Date().toLocaleString();
-}
-setInterval(updateTime,1000);
-updateTime();
+// DEVICE + TIME
+document.getElementById("device").innerText = navigator.userAgent;
 
-// DEVICE
-document.getElementById("device").innerText =
-navigator.userAgent;
+setInterval(()=>{
+document.getElementById("time").innerText =
+new Date().toLocaleString();
+},1000);
 
 // SCAN
-let p = 0;
-let bar = document.getElementById("bar");
-let percent = document.getElementById("percent");
+let p=0;
+let bar=document.getElementById("bar");
+let percent=document.getElementById("percent");
 
-let scan = setInterval(() => {
-    p++;
-    bar.style.width = p + "%";
-    percent.innerText = p + "%";
+let visitor={};
 
-    if(p >= 100){
-        clearInterval(scan);
-        revealAll();
-    }
-}, 30);
+let scan=setInterval(()=>{
+p++;
+bar.style.width=p+"%";
+percent.innerText=p+"%";
 
-// REVEAL ONE BY ONE
+if(p>=100){
+clearInterval(scan);
+revealAll();
+}
+},25);
+
+// REVEAL DATA
 function revealAll(){
 
-    fetch("https://ipapi.co/json/")
-    .then(r => r.json())
-    .then(d => {
+fetch("https://ipapi.co/json/")
+.then(r=>r.json())
+.then(d=>{
 
-        setTimeout(()=> {
-            document.getElementById("ip").innerText = d.ip;
-            document.getElementById("ipBox").classList.add("show");
-        }, 300);
+visitor=d;
 
-        setTimeout(()=> {
-            document.getElementById("country").innerText = d.country_name;
-            document.getElementById("countryBox").classList.add("show");
-        }, 900);
+setTimeout(()=>{
+document.getElementById("ip").innerText=d.ip;
+document.getElementById("ipBox").classList.add("show");
+},200);
 
-        setTimeout(()=> {
-            document.getElementById("cityBox").classList.add("show");
-        }, 1400);
+setTimeout(()=>{
+document.getElementById("country").innerText=d.country_name;
+document.getElementById("countryBox").classList.add("show");
+},600);
 
-        setTimeout(()=> {
-            document.getElementById("nameBox").classList.add("show");
-        }, 1900);
+setTimeout(()=>document.getElementById("cityBox").classList.add("show"),1000);
+setTimeout(()=>document.getElementById("nameBox").classList.add("show"),1400);
+setTimeout(()=>document.getElementById("deviceBox").classList.add("show"),1800);
+setTimeout(()=>document.getElementById("timeBox").classList.add("show"),2200);
 
-        setTimeout(()=> {
-            document.getElementById("deviceBox").classList.add("show");
-        }, 2400);
+setTimeout(showMap,2600);
 
-        setTimeout(()=> {
-            document.getElementById("timeBox").classList.add("show");
-        }, 2900);
+});
 
-        setTimeout(()=> {
-            showMap();
-        }, 3400);
-
-    });
 }
 
-// MAP ANIMATION
+// MAP
 function showMap(){
 
-    let mapDiv = document.getElementById("map");
-    mapDiv.style.opacity = 1;
+document.getElementById("map").style.display="block";
 
-    let map = L.map('map').setView([49.80933, 23.39702], 13);
+let map=L.map('map').setView([49.80933,23.39702],13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        attribution:''
-    }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+attribution:''
+}).addTo(map);
 
-    setTimeout(()=>{
-        L.marker([49.80933, 23.39702])
-        .addTo(map)
-        .bindPopup("Bortiatyn 📍")
-        .openPopup();
-    }, 800);
+L.marker([49.80933,23.39702])
+.addTo(map)
+.bindPopup("Bortiatyn 📍")
+.openPopup();
+
+}
+
+// ADMIN OPEN
+function openAdmin(){
+
+document.getElementById("admin").style.display="block";
+
+document.getElementById("adminData").innerHTML=`
+IP: ${visitor.ip || "-"}<br>
+Country: ${visitor.country_name || "-"}<br>
+City: Bortiatyn<br>
+Time: ${new Date().toLocaleString()}<br>
+Device: ${navigator.userAgent}
+`;
+
+}
+
+function closeAdmin(){
+document.getElementById("admin").style.display="none";
 }
 
 </script>
