@@ -3,91 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ДКВС | Подільський край (06 Сервер)</title>
+    <title>НПУ | Подільський Край 06</title>
     <style>
+        :root {
+            --dark-bg: #121824;
+            --panel-bg: #1c2333;
+            --accent-blue: #2563eb;
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121214;
-            color: #e1e1e6;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
         }
+
         header {
-            background-color: #1a1a1e;
-            border-bottom: 3px solid #0056b3;
+            background-color: var(--panel-bg);
             padding: 20px;
             text-align: center;
+            border-bottom: 3px solid var(--accent-blue);
         }
+
         header h1 {
             margin: 0;
-            color: #fff;
             font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
         header p {
             margin: 5px 0 0 0;
-            color: #a8a8b3;
+            color: var(--text-muted);
         }
+
         .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #1c1c22;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
         }
-        h2 {
-            color: #0056b3;
-            border-bottom: 1px solid #29292e;
-            padding-bottom: 10px;
-        }
-        .info-block {
-            line-height: 1.6;
+
+        /* Меню вкладок */
+        .tabs-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 20px;
+            background-color: var(--panel-bg);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
-        .btn-link {
-            display: inline-block;
-            background-color: #0056b3;
-            color: #fff;
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
             padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
             border-radius: 5px;
-            font-weight: bold;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
         }
-        .btn-link:hover {
-            background-color: #004085;
+
+        .tab-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-blue);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Контент вкладок */
+        .tab-content {
+            display: none;
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.6;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .alert-box {
+            background-color: rgba(37, 99, 235, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Державна Кримінально-Виконавча Служба</h1>
-        <p>Ukraine GTA | 06 Сервер | Подільський край</p>
-    </header>
+<header>
+    <h1>Національна Поліція України</h1>
+    <p>Офіційний інформаційний портал | Сервер 06 Подільський Край</p>
+</header>
 
-    <div class="container">
-        <h2>Про фракцію</h2>
-        <div class="info-block">
-            <p>Вітаємо на інформаційному порталі ДКВС Подільського краю! Наше основне завдання — забезпечення правопорядку, охорона правопорушників та підтримання дисципліни на території виправної колонії.</p>
-        </div>
-
-        <h2>Основні обов'язки співробітників</h2>
-        <div class="info-block">
-            <ul>
-                <li>Вартування на постах та патрулювання території колонії.</li>
-                <li>Конвоювання затриманих та підтримання безпеки.</li>
-                <li>Дотримання статуту та внутрішніх нормативно-правових актів.</li>
-            </ul>
-        </div>
-
-        <h2>Електронні заявки</h2>
-        <div class="info-block">
-            <p>Бажаєте приєднатися до наших лав? Ви можете ознайомитися з критеріями відбору та подати офіційну заяву через наш Discord або ігровий форум.</p>
-            <a href="#" class="btn-link">Подати рапорт на вступ</a>
-        </div>
+<div class="container">
+    <div class="tabs-menu">
+        <button class="tab-btn active" onclick="openTab(event, 'main')">База знань (F.A.Q.)</button>
+        <button class="tab-btn" onclick="openTab(event, 'statut')">Стройовий статут</button>
+        <button class="tab-btn" onclick="openTab(event, 'codes')">Коди та Тен-коди</button>
+        <button class="tab-btn" onclick="openTab(event, 'law')">Законодавство</button>
     </div>
+
+    <div id="main" class="tab-content active">
+        <h2>Інформація для нового співробітника</h2>
+        <div class="alert-box">
+            <strong>Важливо!</strong> Кожен співробітник зобов'язаний знати основні законодавчі акти, субординацію та внутрішні регламенти фракції.
+        </div>
+        <p>Вітаємо на офіційному порталі НПУ ГУНП м. Дніпро / м. Київ. Тут зібрано всі необхідні матеріали для успішного проходження служби та підвищення у званні.</p>
+        <p><em>(Сюди можна вставити основний текст привітання або форму подачі заявок)</em></p>
+    </div>
+
+    <div id="statut" class="tab-content">
+        <h2>Стройовий статут</h2>
+        <p><strong>Стрій</strong> — визначене Стройовим статутом розміщення військовослужбовців (співробітників), підрозділів і частин для спільних дій у пішому порядку або на машинах.</p>
+        <p><strong>Шеренга</strong> — стрій, у якому військовослужбовці розміщені один біля одного на одній лінії.</p>
+        <p><em>(Місце для повного тексту стройового статуту з вашого відео)</em></p>
+    </div>
+
+    <div id="codes" class="tab-content">
+        <h2>Загальні коди та Тен-коди</h2>
+        <ul>
+            <li><strong>Код-1</strong> — Стан стабільний.</li>
+            <li><strong>Код-2</strong> — Порушення у відділку.</li>
+            <li><strong>Код-3</strong> — Тривога у відділку / місті.</li>
+            <li><strong>Код-4</strong> — Надзвичайний стан.</li>
+        </ul>
+        <p><em>(Місце для додаткових тен-кодів патрулювання)</em></p>
+    </div>
+
+    <div id="law" class="tab-content">
+        <h2>Кримінальний Кодекс Подільського Краю</h2>
+        <p>Кримінальний кодекс має своїм завданням правове забезпечення охорони прав і свобод людини і громадянина, власності, громадського порядку та безпеки.</p>
+        <p><em>(Місце для переліку статей та мір покарання)</em></p>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        // Ховаємо весь контент вкладок
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+
+        // Прибираємо клас active з усіх кнопок
+        const tabButtons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active");
+        }
+
+        // Показуємо поточну вкладку та додаємо клас активності кнопці
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
 
 </body>
 </html>
