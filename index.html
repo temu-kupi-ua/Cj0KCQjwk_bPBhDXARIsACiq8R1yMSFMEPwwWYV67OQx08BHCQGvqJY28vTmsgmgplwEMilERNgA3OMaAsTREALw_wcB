@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>НПУ | Подільський Край 06</title>
+    <title>База знань НПУ | Подільський Край 06</title>
     <style>
         :root {
-            --dark-bg: #121824;
-            --panel-bg: #1c2333;
-            --accent-blue: #2563eb;
-            --text-color: #f1f5f9;
+            --dark-bg: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-gold: #eab308;
+            --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
+            --danger-red: #ef4444;
+            --danger-hover: #dc2626;
         }
 
         body {
@@ -23,160 +26,385 @@
         }
 
         header {
-            background-color: var(--panel-bg);
-            padding: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 30px 20px;
             text-align: center;
             border-bottom: 3px solid var(--accent-blue);
         }
 
         header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 28px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         header p {
-            margin: 5px 0 0 0;
-            color: var(--text-muted);
+            margin: 8px 0 0 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 16px;
         }
 
         .container {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
         }
 
-        /* Меню вкладок */
-        .tabs-menu {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Навігація */
+        .sidebar {
             background-color: var(--panel-bg);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 18px;
+            color: var(--text-muted);
+            text-align: center;
         }
 
         .tab-btn {
+            display: block;
+            width: 100%;
             background: none;
             border: none;
             color: var(--text-muted);
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 15px;
+            font-size: 15px;
+            text-align: left;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s ease;
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
         .tab-btn:hover {
-            background-color: rgba(37, 99, 235, 0.1);
+            background-color: rgba(59, 130, 246, 0.1);
             color: var(--text-color);
+            padding-left: 20px;
         }
 
         .tab-btn.active {
             background-color: var(--accent-blue);
             color: white;
             font-weight: bold;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        /* Контент вкладок */
+        /* Контент */
+        .main-content {
+            background-color: var(--panel-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            min-height: 550px;
+        }
+
         .tab-content {
             display: none;
-            background-color: var(--panel-bg);
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            line-height: 1.6;
+            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        h2 {
-            color: var(--text-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 0;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .alert-box {
-            background-color: rgba(37, 99, 235, 0.1);
-            border-left: 4px solid var(--accent-blue);
-            padding: 15px;
+        h2 {
+            font-size: 24px;
+            margin-top: 0;
             margin-bottom: 20px;
-            border-radius: 0 8px 8px 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
         }
+
+        /* Сітка з червоними кнопками в Системі НПУ */
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-card {
+            background-color: var(--danger-red);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 15px;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+        }
+
+        .nav-card:hover {
+            background-color: var(--danger-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Блоки оформлення тексту */
+        .alert-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger-red);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .law-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .law-item {
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .law-item::before { content: "⚖️"; margin-right: 12px; }
+
+        .career-card {
+            background: linear-gradient(145deg, #131c2e, #1e293b);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .career-title {
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .career-list {
+            list-style: none;
+            padding-left: 10px;
+            margin: 5px 0;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .quote { text-align: center; font-style: italic; color: var(--accent-gold); margin-top: 20px; }
+        .footer-info { font-size: 12px; color: var(--text-muted); text-align: right; margin-top: 20px; }
+        
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .back-btn:hover { background-color: rgba(255, 255, 255, 0.15); }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Національна Поліція України</h1>
-    <p>Офіційний інформаційний портал | Сервер 06 Подільський Край</p>
+    <p>06 Сервер • Подільський Край</p>
 </header>
 
 <div class="container">
-    <div class="tabs-menu">
-        <button class="tab-btn active" onclick="openTab(event, 'main')">База знань (F.A.Q.)</button>
-        <button class="tab-btn" onclick="openTab(event, 'statut')">Стройовий статут</button>
-        <button class="tab-btn" onclick="openTab(event, 'codes')">Коди та Тен-коди</button>
-        <button class="tab-btn" onclick="openTab(event, 'law')">Законодавство</button>
+    <div class="sidebar">
+        <h3>НАВІГАЦІЯ</h3>
+        <button class="tab-btn active" id="btn-main-page" onclick="openTab('main-page')">🏠 Головна сторінка</button>
+        <button class="tab-btn" id="btn-npu-system" onclick="openTab('npu-system')">🚔 Система НПУ</button>
     </div>
 
-    <div id="main" class="tab-content active">
-        <h2>Інформація для нового співробітника</h2>
-        <div class="alert-box">
-            <strong>Важливо!</strong> Кожен співробітник зобов'язаний знати основні законодавчі акти, субординацію та внутрішні регламенти фракції.
+    <div class="main-content">
+        
+        <div id="main-page" class="tab-content active">
+            <h2>База знань працівника Національної поліції</h2>
+            <p>У цьому розділі зібрано основні теми, які повинен знати кожен працівник Національної поліції України. Матеріали допоможуть підвищити професійний рівень, орієнтуватися в законодавстві та ефективно виконувати службові обов’язки.</p>
+            
+            <h3 style="color: var(--accent-blue);">Законодавча база</h3>
+            <p>Інші документи про порядок діяльності працівника поліції:</p>
+            <ul class="law-list">
+                <li class="law-item">Кримінальний Кодекс</li>
+                <li class="law-item">Кодекс України Про АП</li>
+                <li class="law-item">Кримінальний Процесуальний Кодекс</li>
+                <li class="law-item">Конституція Подільського Краю</li>
+                <li class="law-item">Закон про Національну поліцію</li>
+                <li class="law-item">Етичний Кодекс Держ. Структур</li>
+            </ul>
+
+            <div class="alert-box">
+                <strong>⚠️ Важливо:</strong> Кожен співробітник зобов'язаний знати основи законодавства, субординацію та внутрішні регламенти фракції. Недотримання правил може призвести до дисциплінарних стягнень.
+            </div>
+
+            <div class="career-card">
+                <h3 style="margin:0; font-size: 16px;">Генерал НПУ ГУНП м. Дніпро</h3>
+                <div class="career-title">Західна Україна 02</div>
+                <ul class="career-list">
+                    <li>Майор Заст.Кер КОРД <span style="color:var(--text-muted)">(24.01.2025 - 26.02.2025)</span></li>
+                    <li>Підполковник Кер.КОРД <span style="color:var(--text-muted)">(26.02.2025 - 18.04.2025)</span></li>
+                    <li>Полковник Куратор КОРД <span style="color:var(--text-muted)">(18.04.2025 - 13.05.2025)</span></li>
+                    <li>ВРУ | Народний депутат <span style="color:var(--text-muted)">(16.05.2025 - 02.06.2025)</span></li>
+                </ul>
+                <div class="career-title">Подільський Край 06</div>
+                <ul class="career-list">
+                    <li>Підполковник Кер.КОРД <span style="color:var(--text-muted)">(20.03.2026 - 10.04.2026)</span></li>
+                    <li>Полковник Куратор ДВБ <span style="color:var(--text-muted)">(10.04.2026 - 17.05.2026)</span></li>
+                    <li><strong style="color: #4ade80;">Генерал НПУ</strong> <span style="color:var(--text-muted)">(17.05.2026 - хх.хх.хххх)</span></li>
+                </ul>
+                <div class="quote">👑 "Надягнувши корону, будь готовий витримати її тяжкість." 👑</div>
+            </div>
+            <div class="footer-info">Останнє редагування: Середа о 13:38</div>
         </div>
-        <p>Вітаємо на офіційному порталі НПУ ГУНП м. Дніпро / м. Київ. Тут зібрано всі необхідні матеріали для успішного проходження служби та підвищення у званні.</p>
-        <p><em>(Сюди можна вставити основний текст привітання або форму подачі заявок)</em></p>
-    </div>
 
-    <div id="statut" class="tab-content">
-        <h2>Стройовий статут</h2>
-        <p><strong>Стрій</strong> — визначене Стройовим статутом розміщення військовослужбовців (співробітників), підрозділів і частин для спільних дій у пішому порядку або на машинах.</p>
-        <p><strong>Шеренга</strong> — стрій, у якому військовослужбовці розміщені один біля одного на одній лінії.</p>
-        <p><em>(Місце для повного тексту стройового статуту з вашого відео)</em></p>
-    </div>
+        <div id="npu-system" class="tab-content">
+            <h2>Система НПУ</h2>
+            <p>Оберіть потрібний розділ для перегляду детальної інформації:</p>
+            
+            <div class="system-grid">
+                <button class="nav-card" onclick="openSubTab('sub-terminology')">⚖️ Термінологія законодавства</button>
+                <button class="nav-card" onclick="openSubTab('sub-schedule')">📅 Графік роботи</button>
+                <button class="nav-card" onclick="openSubTab('sub-subordination')">🗣️ Субординація</button>
+                <button class="nav-card" onclick="openSubTab('sub-codes')">📻 Коди та тен-коди</button>
+                <button class="nav-card" onclick="openSubTab('sub-otz')">🚗 Реєстрація ОТЗ</button>
+                <button class="nav-card" onclick="openSubTab('sub-miranda')">📜 Правила Міранди</button>
+                <button class="nav-card" onclick="openSubTab('sub-oath')">✋ Присяга</button>
+                <button class="nav-card" onclick="openSubTab('sub-promotion')">📈 Система підвищення</button>
+                <button class="nav-card" onclick="openSubTab('sub-statut')">🧍 Стройовий статут</button>
+                <button class="nav-card" onclick="openSubTab('sub-reprimand')">❌ Система зняття доган</button>
+                <button class="nav-card" onclick="openSubTab('sub-fleet')">🚔 Автопарк</button>
+            </div>
+        </div>
 
-    <div id="codes" class="tab-content">
-        <h2>Загальні коди та Тен-коди</h2>
-        <ul>
-            <li><strong>Код-1</strong> — Стан стабільний.</li>
-            <li><strong>Код-2</strong> — Порушення у відділку.</li>
-            <li><strong>Код-3</strong> — Тривога у відділку / місті.</li>
-            <li><strong>Код-4</strong> — Надзвичайний стан.</li>
-        </ul>
-        <p><em>(Місце для додаткових тен-кодів патрулювання)</em></p>
-    </div>
+        <div id="sub-terminology" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>⚖️ Термінологія законодавства</h2>
+            <p><em>Текст про термінологію очікується...</em></p>
+        </div>
 
-    <div id="law" class="tab-content">
-        <h2>Кримінальний Кодекс Подільського Краю</h2>
-        <p>Кримінальний кодекс має своїм завданням правове забезпечення охорони прав і свобод людини і громадянина, власності, громадського порядку та безпеки.</p>
-        <p><em>(Місце для переліку статей та мір покарання)</em></p>
+        <div id="sub-schedule" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>📅 Графік роботи</h2>
+            <p><em>Текст про графік роботи очікується...</em></p>
+        </div>
+
+        <div id="sub-subordination" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>🗣️ Субординація</h2>
+            <p><em>Текст про субординацію очікується...</em></p>
+        </div>
+
+        <div id="sub-codes" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>📻 Коди та тен-коди</h2>
+            <p><em>Текст про коди очікується...</em></p>
+        </div>
+
+        <div id="sub-otz" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>🚗 Реєстрація ОТЗ</h2>
+            <p><em>Текст про реєстрацію особистого транспорту очікується...</em></p>
+        </div>
+
+        <div id="sub-miranda" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>📜 Правила Міранди</h2>
+            <p><em>Текст правила Міранди очікується...</em></p>
+        </div>
+
+        <div id="sub-oath" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>✋ Присяга працівника поліції</h2>
+            <p><em>Текст присяги очікується...</em></p>
+        </div>
+
+        <div id="sub-promotion" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>📈 Система підвищення</h2>
+            <p><em>Текст про систему підвищення очікується...</em></p>
+        </div>
+
+        <div id="sub-statut" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>🧍 Стройовий статут</h2>
+            <p><em>Текст стройового статуту очікується...</em></p>
+        </div>
+
+        <div id="sub-reprimand" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>❌ Система зняття доган</h2>
+            <p><em>Текст про зняття доган очікується...</em></p>
+        </div>
+
+        <div id="sub-fleet" class="tab-content">
+            <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
+            <h2>🚔 Автопарк фракції</h2>
+            <p><em>Текст або список автопарку очікується...</em></p>
+        </div>
+
     </div>
 </div>
 
 <script>
-    function openTab(evt, tabName) {
-        // Ховаємо весь контент вкладок
-        const tabContents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < tabContents.length; i++) {
-            tabContents[i].classList.remove("active");
+    // Функція для перемикання головних вкладок через бокове меню
+    function openTab(tabId) {
+        const contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) {
+            contents[i].classList.remove("active");
         }
 
-        // Прибираємо клас active з усіх кнопок
-        const tabButtons = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tabButtons.length; i++) {
-            tabButtons[i].classList.remove("active");
+        const buttons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
         }
 
-        // Показуємо поточну вкладку та додаємо клас активності кнопці
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
+        document.getElementById(tabId).classList.add("active");
+        
+        const activeBtn = document.getElementById("btn-" + tabId);
+        if (activeBtn) activeBtn.classList.add("active");
+    }
+
+    // Функція для відкриття підвкладок з меню "Система НПУ"
+    function openSubTab(subTabId) {
+        const contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) {
+            contents[i].classList.remove("active");
+        }
+        document.getElementById(subTabId).classList.add("active");
     }
 </script>
 
