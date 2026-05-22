@@ -3,847 +3,999 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>База знань та Планшет НПУ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Портал Порталу НПУ</title>
     <style>
         :root {
-            --dark-bg: #0f172a;
-            --panel-bg: #1e293b;
-            --accent-blue: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-gold: #eab308;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --danger-red: #ef4444;
-            --danger-hover: #dc2626;
-            --success-green: #10b981;
+            --bg-main: #0b0f19;
+            --bg-card: #131926;
+            --bg-hover: #1c2536;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-blue: #1d4ed8;
+            --accent-blue-hover: #1e40af;
+            --border-color: #1f293d;
+            --white: #ffffff;
+            --gray-light: #e5e7eb;
+        }
 
-            /* Кольори для Планшета */
-            --tablet-bg: #111622;
-            --tablet-sidebar: #161d2f;
-            --tablet-card: #1c253b;
-            --tablet-border: #2a344d;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 35px 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--accent-blue);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 30px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        header p {
-            margin: 8px 0 0 0;
-            color: var(--accent-blue);
-            font-weight: bold;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .container {
-            max-width: 1250px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 992px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Навігаційна панель головного сайту */
+        /* Бокове меню */
         .sidebar {
-            background-color: var(--panel-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            height: fit-content;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 280px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
         }
 
-        .sidebar h3 {
-            margin-top: 0;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 16px;
-            color: var(--text-muted);
+        .sidebar-header {
+            padding: 24px;
             text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 700;
             letter-spacing: 1px;
+            color: var(--white);
         }
 
-        .tab-btn {
-            display: block;
-            width: 100%;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            padding: 12px 15px;
-            font-size: 15px;
-            text-align: left;
+        .sidebar-menu {
+            list-style: none;
+            padding: 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            margin-bottom: 6px;
+            color: var(--text-muted);
             font-weight: 500;
+            margin-bottom: 6px;
+            transition: all 0.2s ease;
         }
 
-        .tab-btn:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--text-color);
-            padding-left: 20px;
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--bg-hover);
+            color: var(--white);
         }
 
-        .tab-btn.active {
-            background-color: var(--accent-blue);
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        .menu-item.active {
+            border-left: 4px solid var(--accent-blue);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
 
-        /* Контентна область */
+        /* Основний контент */
         .main-content {
-            background-color: var(--panel-bg);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            min-height: 550px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            background-color: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 70px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+        }
+
+        .top-bar h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .content-body {
+            padding: 32px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
         .tab-content {
             display: none;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
-            opacity: 1;
-            transform: translateY(0);
         }
 
-        h2 {
-            font-size: 26px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-            color: var(--text-color);
-        }
-
-        h3 {
-            color: var(--accent-blue);
-            margin-top: 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 5px;
-        }
-
-        /* Елементи Системи НПУ */
-        .system-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 25px;
-        }
-
-        .nav-card {
-            background-color: var(--danger-red);
-            color: white;
-            padding: 16px;
+        /* Стилі для текстових блоків */
+        .text-block {
+            background-color: var(--bg-card);
+            padding: 24px;
             border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            font-size: 14px;
-            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.15);
-            transition: all 0.25s ease;
+            border: 1px solid var(--border-color);
+            line-height: 1.6;
+            white-space: pre-line;
         }
 
-        .nav-card:hover {
-            background-color: var(--danger-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+        .text-block h3 {
+            margin-bottom: 16px;
+            color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
         }
 
-        /* Списки посилань */
-        .law-list {
+        .link-list {
             list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-            margin: 20px 0;
         }
 
-        .law-item-link { text-decoration: none; color: var(--text-color); }
-        .law-item {
-            background-color: rgba(255, 255, 255, 0.02);
-            padding: 14px 15px;
+        .link-list li {
+            margin-bottom: 12px;
+            background-color: var(--bg-hover);
+            padding: 14px;
+            border-radius: 6px;
+        }
+
+        .link-list a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .link-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* Стилі для Планшета / Таблиць */
+        .tablet-container {
+            background-color: var(--bg-card);
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .law-item::before { content: "⚖️"; margin-right: 12px; font-size: 16px; }
-        .law-item-link:hover .law-item {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            transform: translateX(4px);
-        }
-
-        .alert-box {
-            background-color: rgba(239, 68, 68, 0.06);
-            border-left: 4px solid var(--danger-red);
-            padding: 15px 20px;
-            margin: 25px 0;
-            border-radius: 4px;
-        }
-
-        .info-box {
-            background-color: rgba(59, 130, 246, 0.06);
-            border-left: 4px solid var(--accent-blue);
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .back-btn {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: all 0.2s ease;
-        }
-        .back-btn:hover { background-color: rgba(255, 255, 255, 0.1); transform: translateX(-3px); }
-
-        .forum-link-btn {
-            display: inline-block;
-            background-color: var(--accent-blue);
-            color: white;
-            text-decoration: none;
-            padding: 12px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 15px 0;
-            transition: all 0.2s ease;
-        }
-        .forum-link-btn:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
-
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid var(--border-color); }
-        th, td { padding: 12px; text-align: left; }
-        th { background-color: rgba(59, 130, 246, 0.1); }
-        
-        .text-list { padding-left: 20px; line-height: 1.6; }
-        .text-list li { margin-bottom: 8px; }
-        .bold-blue { color: #60a5fa; font-weight: 600; }
-        .sub-block { background: rgba(255,255,255,0.01); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .footer-info { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 20px; }
-
-
-        /* =======================================================
-           СТИЛІ ДЛЯ КОРПОРАТИВНОГО ПЛАНШЕТА НПУ (ЯК НА ВІДЕО)
-        ======================================================= */
-        .tablet-layout {
-            display: flex;
-            background-color: var(--tablet-bg);
-            border-radius: 16px;
-            border: 1px solid var(--tablet-border);
-            min-height: 580px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
-            overflow: hidden;
-        }
-
-        .tablet-left-menu {
-            width: 240px;
-            background-color: var(--tablet-sidebar);
-            border-right: 1px solid var(--tablet-border);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .tablet-brand {
             padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--tablet-border);
         }
-        .tablet-brand img { width: 38px; height: 38px; }
-        .tablet-brand div h4 { margin: 0; font-size: 15px; font-weight: 600; }
-        .tablet-brand div span { font-size: 11px; color: var(--text-muted); }
 
-        .tablet-nav { list-style: none; padding: 15px 0; margin: 0; flex-grow: 1; }
-        .tablet-nav-item {
-            padding: 14px 20px;
+        .tablet-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background-color: var(--bg-hover);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent-blue);
+            color: var(--white);
+            border-color: var(--accent-blue);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            color: var(--white);
+            background-color: var(--bg-hover);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover td {
+            background-color: #161e2e;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-sub {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        .badge-warning {
+            background-color: #78350f;
+            color: #fde68a;
+        }
+
+        /* Пагінація без неону */
+        .pagination-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pagination-info {
+            color: var(--text-muted);
             font-size: 14px;
         }
-        .tablet-nav-item:hover, .tablet-nav-item.active {
-            color: var(--text-color);
-            background-color: rgba(59, 130, 246, 0.08);
-        }
-        .tablet-nav-item.active {
-            border-left: 3px solid var(--accent-blue);
-            background-color: rgba(59, 130, 246, 0.12);
-        }
 
-        .tablet-user-footer {
-            padding: 15px;
-            margin: 15px;
-            background-color: var(--tablet-card);
-            border-radius: 10px;
+        .pagination-controls {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,0.02);
-        }
-        .t-avatar {
-            width: 35px; height: 35px; background: #232d45; 
-            border-radius: 6px; display: flex; align-items: center; 
-            justify-content: center; color: var(--accent-blue);
-        }
-        .t-user-info p { margin: 0; font-size: 13px; font-weight: 600; }
-        .t-user-info span { font-size: 11px; color: var(--text-muted); }
-
-        .tablet-main-view { flex-grow: 1; padding: 25px; overflow-y: auto; }
-        .tablet-pane { display: none; }
-        .tablet-pane.active { display: block; }
-
-        .t-welcome-box {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 20px; border-radius: 10px; margin-bottom: 20px;
-            border: 1px solid var(--tablet-border);
-        }
-        .t-welcome-box h3 { border: none; margin: 0 0 5px 0; color: white; font-size: 20px;}
-
-        .t-notice-card {
-            background-color: var(--tablet-card);
-            border: 1px solid var(--tablet-border);
-            border-radius: 10px; padding: 18px;
-        }
-        .t-notice-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .t-notice-avatar { width: 32px; height: 32px; background: #c2410c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-
-        .t-search {
-            width: 100%; padding: 11px 15px; background-color: var(--tablet-card);
-            border: 1px solid var(--tablet-border); border-radius: 8px;
-            color: white; margin-bottom: 15px; box-sizing: border-box; font-size: 14px;
+            gap: 12px;
         }
 
-        .t-table { width: 100%; border-collapse: collapse; }
-        .t-table th { background: none; border: none; border-bottom: 1px solid var(--tablet-border); color: var(--text-muted); font-size: 12px; padding: 10px; text-transform: uppercase;}
-        .t-table td { border: none; border-bottom: 1px solid rgba(42, 52, 77, 0.4); padding: 12px 10px; font-size: 13.5px; }
-        
-        .t-online { color: var(--success-green); font-weight: 600; }
-        .t-offline { color: var(--danger-red); }
+        .btn-nav {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: background-color 0.2s, color 0.2s;
+        }
 
-        .t-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 15px; }
-        .t-div-card {
-            background-color: var(--tablet-card); border: 1px solid var(--tablet-border);
-            border-radius: 10px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;
+        .btn-prev {
+            background-color: var(--white);
+            color: #0f172a;
+            border-color: var(--gray-light);
         }
-        .t-div-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .t-div-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-        .t-div-badge { background: #232d45; font-size: 11px; padding: 3px 8px; border-radius: 10px; color: var(--text-muted); }
-        .t-div-leader { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
-        
-        .t-btn {
-            background-color: var(--accent-blue); color: white; border: none; padding: 8px;
-            border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: background 0.2s;
+
+        .btn-prev:hover {
+            background-color: var(--gray-light);
         }
-        .t-btn:hover { background-color: var(--accent-hover); }
-        
-        .t-back { background: none; border: none; color: var(--accent-blue); cursor: pointer; font-size: 13px; padding: 0; display: flex; align-items: center; gap: 5px; margin-bottom: 15px; }
+
+        .btn-next {
+            background-color: var(--accent-blue);
+            color: var(--white);
+        }
+
+        .btn-next:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Національна Поліція України</h1>
-    <p>Подільський Край</p>
-</header>
-
-<div class="container">
     <div class="sidebar">
-        <h3>НАВІГАЦІЯ</h3>
-        <button class="tab-btn active" id="btn-main-page" onclick="openMainTab('main-page')">🏠 Головна сторінка</button>
-        <button class="tab-btn" id="btn-npu-system" onclick="openMainTab('npu-system')">🚔 Система НПУ</button>
-        <button class="tab-btn" id="btn-tablet-page" onclick="openMainTab('tablet-page')">📱 Планшет Бази Даних</button>
+        <div class="sidebar-header">
+            <h2>ПОРТАЛ НПУ</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active" onclick="switchTab('main')">Головна сторінка</li>
+            <li class="menu-item" onclick="switchTab('knowledge')">База знань</li>
+            <li class="menu-item" onclick="switchTab('terminology')">1. Термінологія законодавства</li>
+            <li class="menu-item" onclick="switchTab('schedule')">2. Графік роботи</li>
+            <li class="menu-item" onclick="switchTab('subordination')">3. Субординація</li>
+            <li class="menu-item" onclick="switchTab('tencodes')">4. Коди та тен-коди</li>
+            <li class="menu-item" onclick="switchTab('miranda')">6. Правила Міранди</li>
+            <li class="menu-item" onclick="switchTab('oath')">7. Присяга працівника поліції</li>
+            <li class="menu-item" onclick="switchTab('promotion')">8. Система підвищення</li>
+            <li class="menu-item" onclick="switchTab('statute')">9. Стройовий статут</li>
+            <li class="menu-item" onclick="switchTab('fleet')">11. Автопарк НПУ</li>
+            <li class="menu-item" onclick="switchTab('regulations')">13. Адміністративний регламент</li>
+            <li class="menu-item" onclick="switchTab('detention')">14. Правила затримання особи</li>
+            <li class="menu-item" onclick="switchTab('management')">15. Керівний склад</li>
+            <li class="menu-item" onclick="switchTab('tablet')">Планшет: Співробітники</li>
+            <li class="menu-item" onclick="switchTab('departments')">Планшет: Підрозділи</li>
+        </ul>
     </div>
 
     <div class="main-content">
-        
-        <div id="main-page" class="tab-content active">
-            <h2>База знань</h2>
-            <p>Клацніть на необхідне посилання для переходу на відповідний розділ офіційного форуму:</p>
-            
-            <div class="law-list">
-                <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.236185/" target="_blank" class="law-item-link">
-                    <div class="law-item">Кримінальний кодекс</div>
-                </a>
-                <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8-%D0%9F%D1%80%D0%be-%D0%90%D0%B4%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%96-%D0%9F%D1%80%D0%be%D1%85%D0%B5%D0%BD%D0%BD%D1%8F.254243/" target="_blank" class="law-item-link">
-                    <div class="law-item">Кодекс України Про Адміністративні Правопорушення</div>
-                </a>
-                <a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%D0%9F%D1%80%D0%base-%D0%B2%D0%BD%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%BC%D1%96%D0%BD-%D0%B4%D0%BE-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%9F%D1%80%D0%BE%D1%85%D0%B5%D0%BD%D0%BD%D1%8F-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.310635/" target="_blank" class="law-item-link">
-                    <div class="law-item">Кримінальний процесуальний кодекс</div>
-                </a>
-                <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D1%96%D1%8F-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.210165/" target="_blank" class="law-item-link">
-                    <div class="law-item">Конституція Подільського краю</div>
-                </a>
-                <a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%E2%80%9C%D0%9F%D1%80%D0%BE-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%BC%D1%96%D0%BD-%D0%B7%D0%B0%D1%81%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BE%D0%B3%D0%BE-%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD%D1%83-%D0%BF%D1%80%D0%be%D1%85-%D0%9d%D0%b0%D1%86%D1%96%D0%be%D0%bd%D0%b0%D0%bb%D1%8c%D0%bd%D1%83-%D0%BF%D0%be%D0%bb%D1%96%D0%b6%D1%96%D1%8e-%D0%a3%D0%ba%D1%80%D0%b0%25D1%2597%D0%bd%D0%b8%E2%80%9d.331753/" target="_blank" class="law-item-link">
-                    <div class="law-item">Закон України про національну поліцію</div>
-                </a>
-                <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%95%D1%82%D0%B8%D1%87%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%94%D0%B5%D1%80%D0%B6%D0%B0%D0%B2%D0%BD%D0%B8%D1%85-%D0%A1%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80.156311/" target="_blank" class="law-item-link">
-                    <div class="law-item">Етичний кодекс державних структур</div>
-                </a>
+        <div class="top-bar">
+            <h1 id="page-title">Головна сторінка</h1>
+        </div>
+        <div class="content-body">
+
+            <div id="main" class="tab-content active">
+                <div class="text-block">
+                    <h3>Ласкаво просимо до інформаційного порталу Національної поліції України</h3>
+                    <p>Цей ресурс створено для внутрішнього використання співробітниками НПУ. Тут зібрано всю необхідну нормативно-правову базу, внутрішні статути, регламенти роботи, графіки, а також інтегровано планшет обліку особового складу та підрозділів.</p>
+                    <p style="margin-top: 12px;">Використовуйте бічне навігаційне меню для швидкого доступу до необхідних розділів бази знань чи роботи з електронним реєстром співробітників.</p>
+                </div>
             </div>
-        </div>
 
-        <div id="npu-system" class="tab-content">
-            <h2>Система Національної Поліції України</h2>
-            <p>Оберіть розділ системи для детального перегляду інформації:</p>
-            
-            <div class="system-grid">
-                <button class="nav-card" onclick="openSubTab('sub-terminology')">⚖️ Термінологія законодавства</button>
-                <button class="nav-card" onclick="openSubTab('sub-schedule')">📅 Графік роботи</button>
-                <button class="nav-card" onclick="openSubTab('sub-subordination')">🗣️ Субординація</button>
-                <button class="nav-card" onclick="openSubTab('sub-codes')">📻 Коди та тен-коди</button>
-                <button class="nav-card" onclick="openSubTab('sub-otz')">🚗 Реєстрація ОТЗ</button>
-                <button class="nav-card" onclick="openSubTab('sub-miranda')">📜 Правила Міранди</button>
-                <button class="nav-card" onclick="openSubTab('sub-oath')">✋ Присяга</button>
-                <button class="nav-card" onclick="openSubTab('sub-promotion')">📈 Система підвищення</button>
-                <button class="nav-card" onclick="openSubTab('sub-statut')">🧍 Стройовий статут</button>
-                <button class="nav-card" onclick="openSubTab('sub-reprimand')">❌ Система зняття доган</button>
-                <button class="nav-card" onclick="openSubTab('sub-fleet')">🚔 Автопарк</button>
-                <button class="nav-card" onclick="openSubTab('sub-reglament')">🚦 Адміністративний регламент</button>
-                <button class="nav-card" onclick="openSubTab('sub-detention')">⛓️ Правила затримання особи</button>
-                <button class="nav-card" onclick="openSubTab('sub-leaders')">👥 Керівний склад</button>
+            <div id="knowledge" class="tab-content">
+                <div class="text-block">
+                    <h3>Офіційні законодавчі ресурси та кодекси</h3>
+                    <ul class="link-list">
+                        <li><strong>1. Кримінальний кодекс:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-236185/" target="_blank">Перейти на форум до Кримінального Кодексу</a></li>
+                        <li><strong>2. Кодекс України Про Адміністративні Правопорушення:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8-%D0%259F%D1%80%D0%BE-%D0%90%D0%B4%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%96-%D0%9F%D1%80%D0%B0%D0%B2%D0%BE%D0%BF%D0%BE%D1%80%D1%83%D1%88%D0%B5%D0%BD%D0%BD%D1%8F.254243/" target="_blank">Перейти на форум до КУпАП</a></li>
+                        <li><strong>3. Кримінальний процесуальний кодекс:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%D0%9F%D1%80%D0%BE-%D0%B2%D0%BD%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%BC%D1%96%D0%BD-%D0%B4%D0%BE-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%A0%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.310635/" target="_blank">Перейти на форум до КПКУ</a></li>
+                        <li><strong>4. Конституція Подільського краю:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D1%96%D1%8F-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.210165/" target="_blank">Перейти на форум до Конституції</a></li>
+                        <li><strong>5. Закон України про національну поліцію україни:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%E2%80%9C%D0%9F%D1%80%D0%BE-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%B0%D1%81%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BE%D0%B3%D0%BE-%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD%D1%83-%D0%BF%D1%80%D0%BE-%D0%9D%D0%B0%D1%86%D1%96%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%83-%D0%BF%D0%BE%D0%BB%D1%96%D1%86%D1%96%D1%8E-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8%E2%80%9D.331753/" target="_blank">Перейти на форум до ЗУ про НПУ</a></li>
+                        <li><strong>6. Етичний кодекс державних структур:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%95%D1%82%D0%B8%D1%87%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%94%D0%B5%D1%80%D0%B6%D0%B0%D0%B2%D0%BD%D0%B8%D1%85-%D0%A1%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80.156311/" target="_blank">Перейти на форум до Етичного кодексу</a></li>
+                        <li><strong>5. Реєстрація ОТЗ:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A0%D0%B5%D1%94%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%9E%D0%A2%D0%97.403156/" target="_blank">Перейти на форум до реєстрації ОТЗ</a></li>
+                        <li><strong>10. Система зняття доган:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B7%D0%BD%D1%8F%D1%82%D1%82%D1%8F-%D0%B4%D0%BE%D0%B3%D0%B0%D0%BD.403573/" target="_blank">Перейти на форум до Системи зняття доган</a></li>
+                        <li><strong>12. Законодавча база:</strong><br><a href="https://forum.ukraine-gta.com.ua/forums/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD%D0%BE%D0%B4%D0%B0%D0%B2%D1%87%D0%B0-%D0%B1%D0%B0%D0%B7%D0%B0.415/" target="_blank">Перейти на форум до Законодавчої бази</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <div id="sub-terminology" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Термінологія законодавства</h2>
-            <ul class="text-list">
-                <li><span class="bold-blue">Закон</span> - нормативно-правовий акт, обов'язковий до виконання</li>
-                <li><span class="bold-blue">Конституція</span> — основний закон держави, який має найвищу юридичну силу</li>
-                <li><span class="bold-blue">Кодекс</span> - систематизований збірник правових норм</li>
-                <li><span class="bold-blue">Правопорушення</span> - порушення вимог закону</li>
-                <li><span class="bold-blue">Ієрархія</span> - встановлений порядок службового підпорядкування осіб.</li>
-                <li><span class="bold-blue">ITT</span> - ізолятор тимчасового тримання.</li>
-                <li><span class="bold-blue">КУпАП</span> - Кодекс України про адміністративні правопорушення.</li>
-                <li><span class="bold-blue">ККУ</span> - Кримінальний кодекс України.</li>
-            </ul>
-        </div>
+            <div id="terminology" class="tab-content">
+                <div class="text-block">
+                    <h3>Основні юридичні терміни, які використовуються під час служби</h3>
+                    <strong>Загальні поняття</strong>
+                    Закон - нормативно-правовий акт, обов'язковий до виконання
+                    Конституція — основний закон держави, який має найвищу юридическую силу
+                    Кодекс - систематизований збірник правових норм
+                    Правопорушення - порушення вимог закону
+                    Ієрархія - встановлений порядок службового підпорядкування осіб, визначений за рангом або посадою.
+                    Відповідальність — наслідки за порушення закону
+                    ITT - ізолятор тимчасового тримання, місце короткострокового утримання затриманих осіб.
+                    СІЗО - слідчий ізолятор, установа для утримання осіб під вартою під час слідства або суду.
+                    КУпАП - Кодекс України про адміністративні правопорушення, що регулює адміністративну відповідальність.
+                    ЗУ про НПУ - Закон України «Про Національну поліцію Compass», який визначає права, обов'язки та повноваження поліції.
+                    КПКУ - Кримінальний процесуальний кодекс України, що регулює порядок досудового розслідування та судового процесу.
+                    ККУ - Кримінальний кодекс України, який визначає злочини та покарання за них.
 
-        <div id="sub-schedule" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Графік роботи НПУ</h2>
-            <p>Будні та вихідні дні: <strong>9:00 - 21:00</strong></p>
-            <p>Обідня перерва: <strong>13:00 - 14:00</strong></p>
-        </div>
+                    <strong>Поліцейська діяльність</strong>
+                    Затримання - тимчасове обмеження свободи особи
+                    Обшук - перевірка особи або майна на наявність заборонених предметів
+                    Арешт - процесуальне утримання особи за рішенням уповноважених осіб
+                    Допит - отримання інформації від особи у встановленому порядку
+                    Докази - фактичні дані, що підтверджують вину або невинуватість
 
-        <div id="sub-subordination" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Субординація</h2>
-            <ul class="text-list">
-                <li>Замість "привіт" - <span class="bold-blue">Бажаю здоровʼя</span></li>
-                <li>Замість "так" - <span class="bold-blue">Саме так</span></li>
-                <li>Замість "ні" - <span class="bold-blue">Ніяк ні</span></li>
-                <li>Замість "можна" - <span class="bold-blue">Дозвольте</span></li>
-            </ul>
-        </div>
-
-        <div id="sub-codes" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Коди та тен-коди</h2>
-            <ul class="text-list">
-                <li><span class="bold-blue">КОД-1</span> — Стан стабільний</li>
-                <li><span class="bold-blue">КОД-5</span> — Загальний збір особового складу</li>
-                <li><span class="bold-blue">10-4</span> — Зрозумів / Прийняв</li>
-                <li><span class="bold-blue">15-10</span> — Розпочав патрулювання</li>
-            </ul>
-        </div>
-
-        <div id="sub-otz" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Реєстрація ОТЗ</h2>
-            <a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A0%D0%B5%D1%94%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%9E%D0%A2%D0%97.403156/" target="_blank" class="forum-link-btn">➡️ Перейти до реєстрації ОТЗ на форумі</a>
-        </div>
-
-        <div id="sub-miranda" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Правила Міранди</h2>
-            <div class="alert-box" style="background-color: rgba(59, 130, 246, 0.08); border-left-color: var(--accent-blue);">
-                "Ви маєте право зберігати мовчання! Все, що ви скажете, може бути використано проти вас у суді..."
+                    <strong>Службові поняття</strong>
+                    Субординація - система службового підпорядкування
+                    Наказ - обов'язкове для виконання розпорядження від керівництва
+                    Патруль - контроль території з метою забезпечення порядку
+                    Рапорт - службове звернення або доповідь
+                    Інструктор - особа, відповідальна за навчання, підготовку та перевірку знань кадетів, практикантів та інших працівників
+                </div>
             </div>
-        </div>
 
-        <div id="sub-oath" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Присяга</h2>
-            <p style="font-style: italic;">"Я, усвідомлюючи свою високу відповідальність, урочисто присягаю вірно служити Українському народові..."</p>
-        </div>
+            <div id="schedule" class="tab-content">
+                <div class="text-block">
+                    <h3>Графік роботи НПУ</h3>
+                    <strong>Робочі години</strong>
+                    Понеділок - П'ятниця: 9:00 - 21:00
+                    Субота - Неділя: 9:00 - 21:00
 
-        <div id="sub-promotion" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Система підвищення</h2>
-            <div class="sub-block">
-                <h4>Рядовий → Капрал</h4>
-                <p>Отримати роль в Discord, скласти присягу та іспит по базових статутах.</p>
+                    <strong>Перерви</strong>
+                    Обідня перерва: 13:00 - 14:00
+                </div>
             </div>
-        </div>
 
-        <div id="sub-statut" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Стройовий статут</h2>
-            <p><strong>У строю забороняється:</strong> розмовляти, спати, танцювати, самовільно покидати шеренгу.</p>
-        </div>
+            <div id="subordination" class="tab-content">
+                <div class="text-block">
+                    <h3>Субординація</h3>
+                    Субординація - вид службових відносин, що передбачає підпорядкування для нижчої за рангом (посадою, званням) службової особи виконання рішень (наказів) і вимог вищестоящої особи, а також дотримання у цих відносинах правил службової дисципліни, етики і відповідальності.
 
-        <div id="sub-reprimand" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Система зняття доган</h2>
-            <a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B7%D0%BD%D1%8F%D1%82%D1%82%D1%8F-%D0%B4%D0%BE%D0%B3%D0%B0%D0%BD.403573/" target="_blank" class="forum-link-btn">➡️ Перейти на форум</a>
-        </div>
+                    <strong>Приклади субординації:</strong>
+                    Замість "товариш" - Пане/пані
+                    Замість "привіт" - Бажаю здоровʼя
+                    Замість "як справи " - Доповісти обстановку
+                    Замість "так" - Саме так
+                    Замість "ні " - Ніяк ні
+                    Замість "можна "- Дозвольте
+                    Замість "не знаю "- Не володію інформацією
+                    Замість "добре" - Слухаюсь
+                    Замість "спасибі "- Дякую
+                </div>
+            </div>
 
-        <div id="sub-fleet" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Автопарк</h2>
-            <p>Доступні авто: Mitsubishi Outlander, Toyota Prius, Škoda Rapid, КРАЗ Спартан, Renault Duster, Гвинтокрил H135.</p>
-        </div>
+            <div id="tencodes" class="tab-content">
+                <div class="text-block">
+                    <h3>Коди / тен-коди</h3>
+                    <strong>Загальні коди</strong>
+                    КОД-1 — Стан стабільний
+                    КОД-2 — Порушник у відділку
+                    КОД-3 — Тривога у (місце)
+                    КОД-4 — Військовий/надзвичайний стан
+                    КОД-5 — Загальний збір о/с
+                    КОД-6 — Збір старшого о/с
 
-        <div id="sub-reglament" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Адміністративний регламент</h2>
-            <p>Регулює правила зупинки, огляду автомобілів громадян та алгоритми виїзду патрульних на ДТП.</p>
-        </div>
+                    <strong>Тен-коди патрулювання</strong>
+                    15-10 — Розпочав патрулювання | Приклад: [15-10] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
+                    20-10 — Продовжую патрулювання | Приклад: [20-10] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
+                    30-10 — Закінчив патрулювання | Приклад: [30-10] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
 
-        <div id="sub-detention" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Правила затримання особи</h2>
-            <p>Покроковий порядок дій від візуальної фіксації правопорушення, зачитування Міранди до поміщення особи в ІТТ.</p>
-        </div>
+                    <strong>Тен-коди евакуації Т/З</strong>
+                    70-15 — Почав проводити евакуацію т/з | Приклад: [70-15] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
+                    75-15 — Продовжую евакуацію т/з | Приклад: [75-15] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
+                    80-15 — Закінчив евакуацію т/з | Приклад: [80-15] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)
 
-        <div id="sub-leaders" class="tab-content">
-            <button class="back-btn" onclick="openMainTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>Керівний склад</h2>
-            <p>Генерал НПУ — <span class="bold-blue">Максим Альварез</span></p>
-            <p>Полковник КОРД — <span class="bold-blue">Денис Тимощик</span></p>
-        </div>
+                    <strong>Додаткові тен-коди</strong>
+                    10-20 — Розташування
+                    10-34 — Потрібна допомога
+                    10-4 — Зрозумів/прийняв
+                    10-10 — Негативна відповідь
+                    10-9 — Повторіть/повторюю
+                </div>
+            </div>
 
+            <div id="miranda" class="tab-content">
+                <div class="text-block">
+                    <h3>Правила Міранди</h3>
+                    Міранда - це обов'язкове правило, згідно з яким після затримання особі, яку затримують, повинні бути роз'яснені її права і вона має відповісти, що розуміє ці права. Все сказане затриманим до цього не може вважатися доказом (окрім відеофіксації прямого порушення законодавства). Після того, як співробітник зачитав "Міранду" він повинен запитати затриманого: "Ви зрозуміли ваші права?", якщо відповідь негативна, то співробітник зачитує "Міранду" повторно (максимум двічі).
 
-        <div id="tablet-page" class="tab-content">
-            <div class="tablet-layout">
-                
-                <div class="tablet-left-menu">
-                    <div>
-                        <div class="tablet-brand">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/National_Police_of_Ukraine_logo.png" alt="Герб">
-                            <div>
-                                <h4>МВС ПЛАНШЕТ</h4>
-                                <span>Версія 3.1.0</span>
-                            </div>
+                    <strong>Текст Міранди:</strong>
+                    Ви маєте право зберігати мовчання!
+                    Все, що ви скажете, може бути використано проти вас у суді.
+                    Ви маєте право на приватного адвоката.
+                    Якщо у вас немає коштів на приватного адвоката, то вам буде надано державного.
+                    Також ви маєте право на один телефонний дзвінок тривалістю не довше 3 хвилин і на перекладача.
+                    Вам зрозумілі ваші права?
+                </div>
+            </div>
+
+            <div id="oath" class="tab-content">
+                <div class="text-block">
+                    <h3>Присяга працівника поліції</h3>
+                    1. Особа, яка вступає на службу в поліції, складає Присягу на вірність Українському народові такого змісту:
+
+                    <em>"Я, (прізвище, ім’я та по батькові), усвідомлюючи свою високу відповідальність, урочисто присягаю вірно служити Українському народові, дотримуватися Конституції та законів України, втілювати їх у життя, поважати та охороняти права і свободи людини, честь держави, з гідністю нести високе звання поліцейського та сумлінно виконувати свої службові обов’язки клянусь".</em>
+                </div>
+            </div>
+
+            <div id="promotion" class="tab-content">
+                <div class="text-block">
+                    <h3>Система підвищення співробітників Національної поліції</h3>
+                    <strong>Кваліфікаційні обмеження щодо підвищення</strong>
+                    З 1 рангу на 2 ранг — 0 днів
+                    З 2 рангу на 3 ранг — 1 день
+                    З 3 рангу на 4 ранг — 2 дні
+                    З 4 рангу на 5 ранг — 3 дні
+                    З 5 рангу на 6 ранг — 4 дні
+                    З 6 рангу на 7 ранг — 4 дні
+                    З 7 рангу на 8 ранг — 4 дні
+
+                    <strong>Рядовий [1] → Капрал [2]</strong>
+                    1. Отримати роль в Discord
+                    2. Приєднатися до Telegram групи (Звертайтесь до лідера або до слідкуючих)
+                    3. Прослухати 1 лекцію
+                    4. Здати іспит на знання: субординація, графік роботи, статут, коди та тен-коди
+                    5. Скласти присягу поліцейського
+
+                    <strong>Капрал [2] → Сержант [3]</strong>
+                    1. Здати іспит на знання: Термінологія законодавства, правила затримання особи, ЗУ про НПУ, Міранда
+                    2. 15 хвилин у патрулі з С/С
+                    3. Відіграти 2 RolePlay ситуації
+                    4. Прослухати 1 лекцію
+                    5. Присутність на 1 тренуванні
+
+                    <strong>Сержант [3] → Ст.Сержант [4]</strong>
+                    1. Бути присутнім на 2 лекціях і 1 тренуванні
+                    2. Патрулювання 20 хв
+                    3. Відіграти 2 RolePlay ситуації
+                    4. Затримати 1 злочинця
+                    5. 5 Адміністративних штрафів
+                    6. Здати іспит: ЗУ про НПУ, КПКУ, Міранда
+
+                    <strong>Ст.Сержант [4] → Мл.Лейтенант [5]</strong>
+                    1. Патрулювання 30 хв
+                    2. 7 письмових штрафів
+                    3. Затримати 3 злочинців
+                    4. Вилучити посвідчення водія - 1 раз (/takelicenses)
+                    5. Здати іспит на тему: Ієрархія, Недоторканість
+                    6. Перевірити камери в НПУ (/do, /me, /try)
+
+                    <strong>Мл.Лейтенант [5] → Лейтенант [6]</strong>
+                    1. Патрулювання 30 хв
+                    2. 10 письмових штрафів
+                    3. Затримати 5 злочинців
+                    4. Виконати завдання від керівництва (Полковник/Генерал)
+                    5. Відіграти 4 RolePlay ситуації (/do, /me, /try)
+
+                    <strong>Лейтенант [6] → Ст.Лейтенант [7]</strong>
+                    1. Патрулювання 30 хв
+                    2. 10 письмових штрафів
+                    3. Затримати 3 злочинців
+                    4. Бути на 1 ГРП (постачання БК з фракціями не рахується)
+                    5. 2 виклики на лінію "102"
+                    6. Евакуювати 6 авто
+
+                    <strong>Ст.Лейтенант [7] → Капітан [8]</strong>
+                    Мати довіру від Генерала.
+                </div>
+            </div>
+
+            <div id="statute" class="tab-content">
+                <div class="text-block">
+                    <h3>Стройовий статут</h3>
+                    Стройовий статут — це нормативний акт, що встановлює порядок організації строю, правила шикування та пересування особового складу, а також вимоги до дисципліни та взаємодії поліцейських у строю.
+
+                    <strong>Глава 1. Загальні положення</strong>
+                    1. Строї та управління ними:
+                    1.1. Стрій - визначене Стройовим статутом місце розміщення працівників, підрозділів і частин для їх спільних дій у пішому порядку та/або на машинах.
+                    1.2. Шеренга - стрій, у якому працівники розміщені один біля одного на одній лінії.
+                    1.3. Лінія машин - стрій, у якому машини розміщені на одній лінії одна біля одної.
+                    1.4. Фланг - правий (лівий) край строю. Під час поворотів строю назви флангів не змінюються.
+                    1.5. Фронт - бік строю, до якого військовослужбовці повернені обличчям, а машини - лобовою частиною.
+                    1.6. Тильний бік строю - бік, протилежний фронту.
+                    1.7. Інтервал - відстань по фронту між працівниками (машинами), підрозділами та частинами.
+                    1.8. Дистанція - відстань у глибину між працівниками (машинами), підрозділами та частинами.
+                    1.9. Ширина строю - відстань між флангами.
+                    1.10. Глибина строю - відстань від першої шеренги до останньої. У зімкнутому строю працівники в шеренгах розміщені по фронту один від одного з інтервалами на ширину долоні між ліктями. У розімкнутому строю — з інтервалами в один крок або які визначає командир.
+                    1.11. Колона - стрій, у якому працівники або підрозділи (машини) розміщені один (одна) за одним (одною) на дистанціях, установлених цим Статутом. Колони можуть бути по один, два, три, чотири та більше працівників.
+                    1.12. Напрямний - працівник, що рухається на чолі строю у визначеному напрямку.
+                    1.13. Замикаючий - працівник, який рухається останнім у колоні.
+
+                    1.14. Командир зобов'язаний:
+                    1.15. визначати місце, час, порядок шикування, форму одягу та спорядження;
+                    1.16. перевіряти й знати наявність у строю підлеглих, озброєння, техніки, боєприпасів;
+                    1.17. перевіряти зовнішній вигляд підлеглих;
+                    1.18. підтримувати дисципліну в строю і вимагати точного виконання команд;
+                    1.19. під час подання команд у пішому строю приймати стройове положення;
+                    1.20. проводити зовнішній огляд озброєння і техніки.
+
+                    1.21. Співробітник зобов'язаний:
+                    1.22. знати своє місце в строю, швидко займати його, зберігати інтервал та дистанцію;
+                    1.23. уважно виконувати накази, розпорядження та команди командира;
+                    1.24. передавати накази, розпорядження, команди чітко, голосно й без спотворень;
+                    1.25. займати місце в строю у складі трьох колон.
+
+                    1.26. У строю забороняється:
+                    1.27. спати або виконувати танцювальні рухи (попередження/догана);
+                    1.28. діставати зброю або тайзер без відповідного наказу (усне попередження/попередження);
+                    1.29. будь-які розмови в строю (попередження/догана);
+                    1.30. залишати стрій без наказу або дозволу (попередження/догана).
+
+                    1.31. Проведення загального шикування дозволено інструктору або офіцерам зі звання від «Майор» та вище.
+                    1.32. Стрій повинен складатися мінімум із 3-х співробітників.
+
+                    <strong>Глава 2. Система шикування</strong>
+                    Куратор, Керівник та Заступники Керівника стають перед своїм підрозділом.
+                    НАВС - 1 клітинка
+                    СРПП - 2 клітинка
+                    КОРД - 3 клітинка
+                    ГСУ - 4 клітинка
+                    ДВБ та УТБ ділять між собою 5 клітинку (роблять шеренгу шириною в 2 людини, довжиною 4)
+                </div>
+            </div>
+
+            <div id="fleet" class="tab-content">
+                <div class="text-block">
+                    <h3>Автопарк Національної поліції України</h3>
+                    Забезпечення транспортними засобами організації НПУ: Honda XRE 300, Mitsubishi Outlander, Toyota Prius, Škoda Rapid, Toyota Corolla Hybrid, Škoda Rapid (УкрТрансБезпека), Škoda Octavia, Mercedes Benz Vito, КРАЗ Спартан, Renault Duster Евакуатор, Гвинтокрил H135.
+                    <em>Примітка: Взявши службовий Т/З співробітник зобов'язаний заправляти та лагодити його.</em>
+
+                    <strong>Honda XRE 300 (Мотоцикл)</strong>
+                    Кількість місць: 2 | Об’єм двигуна: 135 см³ | Макс. швидкість: 180 км/год | Розгін до 100: 6,5 с | Витрата: 3,5 л | Тип захисту: Не броньований
+
+                    <strong>Mitsubishi Outlander (Кросовер)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 2.5 л | Макс. швидкість: 260 км/год | Розгін до 100: 8,9 с | Витрата: 9,5 л | Тип захисту: Не броньований
+
+                    <strong>Toyota Prius (Гібридний седан)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 1.8 л | Макс. швидкість: 330 км/год | Розгін до 100: 7,5 с | Витрата: 4,5 л | Тип захисту: Не броньований
+
+                    <strong>Skoda Rapid (Седан)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 1.4 л Турбо | Макс. швидкість: 300 км/год | Розгін до 100: 8,2 с | Витрата: 6,0 л | Тип захисту: Не броньований
+
+                    <strong>Toyota Corolla Hybrid (Гібридний седан)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 1.8 л | Макс. швидкість: 305 км/год | Розгін до 100: 7,9 с | Витрата: 4,3 л | Тип захисту: Не броньований
+
+                    <strong>Renault Duster (Кросовер)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 2.0 л | Макс. швидкість: 230 км/год | Розгін до 100: 9,8 с | Витрата: 6,5–8,0 л | Тип захисту: Не броньований
+
+                    <strong>Skoda Rapid “УкрТрансБезпека” (Виключно РП, ГРП)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 1.4 л Турбо | Макс. швидкість: 300 км/год | Розгін до 100: 8,3 с | Витрата: 6,1 л | Тип захисту: Не броньований
+
+                    <strong>Skoda Octavia (Седан)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 1.6 л | Макс. швидкість: 171 км/год | Розгін до 100: 10,5 с | Витрата: 6,5 л | Тип захисту: Не броньований
+
+                    <strong>Mercedes-Benz Vito (Мінівен)</strong>
+                    Кількість місць: 5 | Об’єм двигуна: 2.2 л Дизель | Макс. швидкість: 214 км/год | Розгін до 100: 9,0 с | Витрата: 8,5 л | Тип захисту: Не броньований
+
+                    <strong>КрАЗ Спартан (Бойова машина піхоти)</strong>
+                    Кількість місць: 4 | Об’єм двигуна: 4.0 л Дизель | Макс. швидкість: 108 км/год | Розгін до 100: 25 с | Витрата: 25 л | Тип захисту: Броньований
+
+                    <strong>Евакуатор (Спецтранспорт)</strong>
+                    Кількість місць: 2 | Об’єм двигуна: 3.0 л Дизель | Макс. швидкість: 157 км/год | Розгін до 100: 20 с | Витрата: 22 л | Тип захисту: Не броньований
+
+                    <strong>Гвинтокрил H135</strong>
+                    Кількість місць: 4 (1 пілот + 3 пасажирів) | Двигун: газотурбінний | Макс. швидкість: 500 км/год | Дальність: до 635 км | Тип захисту: Не броньований
+                </div>
+            </div>
+
+            <div id="regulations" class="tab-content">
+                <div class="text-block">
+                    <h3>АДМІНІСТРАТИВНИЙ РЕГЛАМЕНТ ЗУПИНКИ, ОГЛЯДУ ТРАНСПОРТНОГО ЗАСОБУ ТА ВИЇЗД НА МІСЦЯ ДТП</h3>
+                    <strong>Глава 1. Загальні положення</strong>
+                    1.1 Адміністративний регламент - це регламент, у якому прописані права та обов'язки інспекторів дорожнього руху.
+                    1.2 Адміністративний регламент зобов'язані знати і дотримуватися інспектори дорожнього руху, водії транспортних засобів, їхні пасажири та пішоходи.
+
+                    <strong>Глава 2. Зупинка транспортного засобу</strong>
+                    2.1 Зупинення транспортного засобу здійснюється виключно жезлом, а у виняткових випадках – жестом руки.
+                    2.2 Причини для зупинки т/з:
+                    1) якщо водій порушив Правила дорожнього руху;
+                    2) якщо є очевидні ознаки, що свідчать про технічну несправність транспортного засобу;
+                    3) якщо є інформація, що свідчить про причетність водія або пасажирів до вчинення ДТП, кримінального чи адміністративного правопорушення;
+                    4) якщо транспортний засіб перебуває в розшуку;
+                    5) якщо необхідно здійснити опитування водія чи пасажирів про обставини вчинення ДТП або правопорушення;
+                    6) якщо необхідно залучити водія до надання допомоги іншим учасникам дорожнього руху або поліцейським як свідка;
+                    7) якщо уповноважений орган прийняв рішення про обмеження чи заборону руху;
+                    8) якщо спосіб закріплення вантажу створює небезпеку;
+                    9) порушення порядку використання спеціальних світлових або звукових сигналів. Всі інші причини — незаконні.
+
+                    2.3 У кожному разі працівник поліції зобов’язаний поінформувати водія про конкретну причину зупинення.
+                    2.4 Поліцейський має право запросити вийти водія з автомобіля у випадках: усунення несправності/порушення перевезення вантажу; стан сп’яніння; підозра в скоєнні злочину; оформлення документів чи надання допомоги.
+                    2.5 Зупинка здійснюється з урахуванням вимог ПДР та безпеки.
+                    2.6 Не допускається зупиняти ТЗ там, де це заборонено ПДР, окрім випадків припинення злочину та відвернення реальної загрози життя і майну.
+                    2.7 Зупинивши ТЗ, співробітник повинен без зволікання підійти, представитися, назвати причину та висунути вимогу передачі документів.
+                    2.8 Під час звернення співробітник зобов'язаний назвати посаду, звання, прізвище, пред'явити службове посвідчення на вимогу та роз'яснити права.
+                    2.9 Учасники руху мають право оскаржити дії в органах вищого рівня або прокурора.
+
+                    <strong>Глава 3. Огляд транспортного засобу (без проникнення всередину)</strong>
+                    3.1 Огляд (без проникнення) - візуальне вивчення ТЗ без проникнення всередину.
+                    3.2 Підстави: орієнтування; звірка маркувальних позначень з документами; ознаки невідповідності вантажу.
+                    3.3 Проводиться у присутності свідків із занесенням даних до акту.
+                    3.4 Інспектор не має права самостійно відчиняти двері, салон, багажник чи торкатися речей. Це робить водій на прохання.
+
+                    <strong>Глава 4. Огляд транспортного засобу (з проникненням всередину)</strong>
+                    4.1 Огляд (з проникненням) - фактичний контроль вмісту.
+                    4.2 Підстави: припущення про наявність зброї, боєприпасів, вибухівки, наркотиків; наявність знарядь правопорушення; затримання особи, яка перебувала в ТЗ.
+                    4.3 Проводиться в присутності водія (у невідкладних випадках — за його відсутності).
+                    4.4 Інспектор у присутності двох понятих або під відеозапис може провести розтин опломбованого вантажу.
+
+                    <strong>Глава 5. Виїзд на місце дорожньо-транспортної пригоди (ДТП)</strong>
+                    5.1 Працівники зобов'язані виїхати на місце ДТП.
+                    5.2 Зафіксувати дані: ПІБ заявника, місце, час, потерпілі, відомості про авто, водіїв та свідків.
+                    <em>(( Всі дії відбуваються в грі по RP, протокол як в реальності складати не потрібно ))</em>
+                    5.3 Працівник зобов'язаний скласти протокол, зробити виміри гальмівних шляхів та прикріпити схему ДТП з підписами учасників.
+                    5.4 До винуватця застосовують заходи адмін. покарання або затримання (якщо є загиблі). Співробітники забезпечують безпеку та евакуацію авто.
+
+                    <strong>Глава 6. Позбавлення права керування транспортним засобом</strong>
+                    6.1 Співробітник поліції повинен повністю аргументувати причину та мати відеозапис порушення водія (докази зберігаються 7 діб). За порушення правил оформлення — звільнення з внесенням в ЗЧС на 2 місяці.
+                    6.2 Причини для позбавлення прав: їзда по зустрічній смузі; наїзд на пішохода зі смертельним наслідком; залишення місця ДТП; невиконання вимоги про зупинку; створення аварійної обстановки; ненадання переваги авто екстрених служб з увімкненими сиренами/маячками.
+                </div>
+            </div>
+
+            <div id="detention" class="tab-content">
+                <div class="text-block">
+                    <h3>Правила затримання особи</h3>
+                    <strong>Основні положення:</strong>
+                    1) Затримання людини не проводиться, якщо у Вас відсутні докази з моменту її правопорушення.
+                    2) Перевіряти людину без відповідних на те причин категорично заборонено!
+                    3) Дозволяється перевірити людину, яка схожа на людину в орієнтуванні (орієнтування має бути дійсним).
+                    4) Дозволяється перевірити людину, яка порушила правила дорожнього руху або громадську безпеку.
+                    5) Забороняється затримувати людину, яка стоїть в AFK. Якщо протягом 5 хвилин людина не реагує, затримання дозволене для встановлення особи.
+                    6) Заборонено зупиняти транспортні засоби без причини.
+
+                    <strong>Послідовність затримання правопорушника:</strong>
+                    1) Зупинити ТЗ або людину за порушення/орієнтування.
+                    2) Підійти, представитись (підрозділ, звання, ПІБ) та пред'явити посвідчення на вимогу громадянина. <em>(Виключення: якщо людина втікає — дозволено представитись після затримання)</em>.
+                    3) Назвати людині причину зупинки/перевірки/затримання та запросити паспорт. <em>(Якщо відмовляється — робимо попередження, потім затримання з відігровкою сканера відбитків пальців)</em>.
+                    4) Перевірити особу по базі розшуку.
+                    5) Роз'яснити права та обов'язки (Міранду). <em>(Якщо місце небезпечне — можна роз'яснити у відділку)</em>.
+                    6) Доставити до ІТТ. Якщо особа хоче скористатися правами на адвоката/дзвінок — надати можливість (очікування адвоката: 2 хв відповідь, 3 хв прибуття).
+                    7) Видати розшук, штраф та оформити до ІТТ за наявності причин.
+                </div>
+            </div>
+
+            <div id="management" class="tab-content">
+                <div class="text-block">
+                    <h3>КЕРІВНИЦТВО ТА СТРАШИЙ СКЛАД НПУ</h3>
+                    <strong>Вищий керівний склад</strong>
+                    Начальник Національної поліції — Максим Альварез
+                    Перший заступник начальника ГУНП — Денис Тимошик
+
+                    <strong>Старший офіцерський склад (Куратори підрозділів)</strong>
+                    Полковник, Куратор КОРД — Денис Тимошик
+                    Полковник, Куратор ГСУ — Назар Альварез
+                    Полковник, Куратор СРПП — Максим Дніпровський
+                    Полковник, Куратор НАВС — Сергій Шмигельський
+                    Полковник, Куратор ДВБ — вакантно
+                    Полковник, Куратор УТБ — вакантно
+
+                    <strong>Керівники підрозділів</strong>
+                    Підполковник, Керівник КОРД — Саня Мандарин
+                    Підполковник, Керівник ГСУ — вакантно
+                    Підполковник, Керівник СРПП — Алекс Бондаренко
+                    Підполковник, Керівник НАВС — вакантно
+                    Підполковник, Керівник ДВБ — вакантно
+                    Підполковник, Керівник УТБ — вакантно
+
+                    <strong>Заступники керівників</strong>
+                    Майор, Заступник керівника КОРД — Арсен Лучинський
+                    Майор, Заступник керівника ГСУ — вакантно
+                    Майор, Заступник керівника СРПП — вакантно
+                    Майор, Заступник керівника НАВС — вакантно
+                    Майор, Заступник керівника ДВБ — вакантно
+                    Майор, Заступник керівника УТБ — вакантно
+                </div>
+            </div>
+
+            <div id="tablet" class="tab-content">
+                <div class="tablet-container">
+                    <div class="tablet-header">
+                        <div class="filter-group">
+                            <button class="filter-btn active" onclick="filterTablet('all')">Усі</button>
                         </div>
-                        <ul class="tablet-nav">
-                            <li class="tablet-nav-item active" id="t-btn-home" onclick="openTabletPane('t-pane-home', this)"><i class="fa-solid fa-house"></i> Головна</li>
-                            <li class="tablet-nav-item" id="t-btn-list" onclick="openTabletPane('t-pane-list', this)"><i class="fa-solid fa-users"></i> Співробітники</li>
-                            <li class="tablet-nav-item" id="t-btn-divs" onclick="openTabletPane('t-pane-divs', this)"><i class="fa-solid fa-shield-halved"></i> Підрозділи</li>
-                        </ul>
+                        <div class="pagination-info" id="total-count-label">Всього співробітників: 61</div>
                     </div>
-                    
-                    <div class="tablet-user-footer">
-                        <div class="t-avatar"><i class="fa-solid fa-user-shield"></i></div>
-                        <div class="t-user-info">
-                            <p>Денис Солтис</p>
-                            <span>Рядовий (1)</span>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Службовець</th>
+                                <th>Звання</th>
+                                <th>Догани</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablet-table-body">
+                            </tbody>
+                    </table>
+
+                    <div class="pagination-area">
+                        <div class="pagination-info" id="page-indicator">Сторінка 1 з 9</div>
+                        <div class="pagination-controls">
+                            <button class="btn-nav btn-prev" id="btn-prev" onclick="changePage(-1)">Назад</button>
+                            <button class="btn-nav btn-next" id="btn-next" onclick="changePage(1)">Далі</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="tablet-main-view">
-                    
-                    <div id="t-pane-home" class="tablet-pane active">
-                        <div class="t-welcome-box">
-                            <h3>Вітаємо у системі, Денис Солтис!</h3>
-                            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Електронна база даних Головного Управління Національної Поліції.</p>
-                        </div>
-                        
-                        <p style="font-weight: 600; margin-bottom: 10px; font-size: 14px;">Важливе оголошення:</p>
-                        <div class="t-notice-card">
-                            <div class="t-notice-head">
-                                <div class="t-notice-avatar"><i class="fa-solid fa-star"></i></div>
-                                <div>
-                                    <div style="font-size: 13px; font-weight: bold;">Максим Альварез</div>
-                                    <span style="font-size: 11px; color: var(--text-muted);">Генерал поліції | Станція Київ</span>
-                                </div>
-                            </div>
-                            <p style="margin:0; font-size: 13px; line-height: 1.5; color: #d1d5db;">
-                                Весь особовий склад зобов'язаний суворо дотримуватися стройового статуту, субординації під час патрулювання міст та оперативно реагувати на виклики "102". За порушення будуть видаватися догани!
-                            </p>
+            <div id="departments" class="tab-content">
+                <div class="tablet-container">
+                    <div class="tablet-header">
+                        <div class="filter-group" id="dept-filters">
+                            <button class="filter-btn active" onclick="filterDept('НАВС')">НАВС</button>
+                            <button class="filter-btn" onclick="filterDept('СРПП')">СРПП</button>
+                            <button class="filter-btn" onclick="filterDept('КОРД')">КОРД</button>
+                            <button class="filter-btn" onclick="filterDept('ГСУ')">ГСУ</button>
+                            <button class="filter-btn" onclick="filterDept('ДВБ')">ДВБ</button>
+                            <button class="filter-btn" onclick="filterDept('УТБ')">УТБ</button>
                         </div>
                     </div>
 
-                    <div id="t-pane-list" class="tablet-pane">
-                        <h3 style="margin-top:0; color:white; border:none;">Співробітники фракції</h3>
-                        <input type="text" class="t-search" id="t-user-search" placeholder="Пошук за ім'ям або званням..." oninput="searchCops()">
-                        
-                        <table class="t-table">
-                            <thead>
-                                <tr>
-                                    <th>Службовець</th>
-                                    <th>Ранг та звання</th>
-                                    <th>Догани</th>
-                                    <th>Статус</th>
-                                    <th>Локація / Вхід</th>
-                                </tr>
-                            </thead>
-                            <tbody id="t-table-body">
-                                </tbody>
-                        </table>
-                    </div>
-
-                    <div id="t-pane-divs" class="tablet-pane">
-                        
-                        <div id="t-divs-cards">
-                            <h3 style="margin-top:0; color:white; border:none; margin-bottom: 20px;">Структурні підрозділи</h3>
-                            <div class="t-grid">
-                                <div class="t-div-card">
-                                    <div>
-                                        <div class="t-div-top">
-                                            <div class="t-div-name"><i class="fa-solid fa-person-rifle" style="color:#ef4444;"></i> КОРД</div>
-                                            <div class="t-div-badge">6 людей</div>
-                                        </div>
-                                        <div class="t-div-leader">Куратор: Д. Тимощик</div>
-                                    </div>
-                                    <button class="t-btn" onclick="openDivisionView('КОРД')">Переглянути склад</button>
-                                </div>
-
-                                <div class="t-div-card">
-                                    <div>
-                                        <div class="t-div-top">
-                                            <div class="t-div-name"><i class="fa-solid fa-car-police" style="color:#3b82f6;"></i> СРПП</div>
-                                            <div class="t-div-badge">8 людей</div>
-                                        </div>
-                                        <div class="t-div-leader">Куратор: М. Дніпровський</div>
-                                    </div>
-                                    <button class="t-btn" onclick="openDivisionView('СРПП')">Переглянути склад</button>
-                                </div>
-
-                                <div class="t-div-card">
-                                    <div>
-                                        <div class="t-div-top">
-                                            <div class="t-div-name"><i class="fa-solid fa-magnifying-glass-folder" style="color:#eab308;"></i> ГСУ</div>
-                                            <div class="t-div-badge">1 людина</div>
-                                        </div>
-                                        <div class="t-div-leader">Куратор: Н. Альварез</div>
-                                    </div>
-                                    <button class="t-btn" onclick="openDivisionView('ГСУ')">Переглянути склад</button>
-                                </div>
-
-                                <div class="t-div-card">
-                                    <div>
-                                        <div class="t-div-top">
-                                            <div class="t-div-name"><i class="fa-solid fa-graduation-cap" style="color:#10b981;"></i> НАВС</div>
-                                            <div class="t-div-badge">6 людей</div>
-                                        </div>
-                                        <div class="t-div-leader">Куратор: С. Шмигельський</div>
-                                    </div>
-                                    <button class="t-btn" onclick="openDivisionView('НАВС')">Переглянути склад</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="t-divs-details" style="display: none;">
-                            <button class="t-back" onclick="closeDivisionView()"><i class="fa-solid fa-arrow-left"></i> Назад до підрозділів</button>
-                            <h3 id="t-selected-div-title" style="color:white; border:none; margin-bottom:15px;">Підрозділ</h3>
-                            <table class="t-table">
-                                <thead>
-                                    <tr>
-                                        <th>Службовець</th>
-                                        <th>Звання</th>
-                                        <th>Догани</th>
-                                        <th>Статус</th>
-                                        <th>Локація / Вхід</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="t-div-table-body">
-                                    </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Службовець</th>
+                                <th>Звання</th>
+                                <th>Догани</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dept-table-body">
+                            </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 
-<script>
-    // Повна база співробітників з відео
-    const globalCops = [
-        { name: "Денис Тимощик", rank: 11, rankName: "Полковник", warns: "0/3", status: "online", info: "На зміні", division: "КОРД" },
-        { name: "Саня Мандарин", rank: 10, rankName: "Підполковник", warns: "0/3", status: "online", info: "На зміні", division: "КОРД" },
-        { name: "Арсен Лучанський", rank: 9, rankName: "Майор", warns: "1/3", status: "online", info: "2026-05-21 20:16", division: "КОРД" },
-        { name: "Стас Бондарчук", rank: 8, rankName: "Капітан", warns: "0/3", status: "offline", info: "2026-05-19 23:13", division: "КОРД" },
-        { name: "Саня Володаєв", rank: 6, rankName: "Лейтенант", warns: "0/3", status: "offline", info: "2026-05-22 00:01", division: "КОРД" },
-        { name: "Ілля Дракон", rank: 5, rankName: "Молодший Лейтенант", warns: "0/3", status: "offline", info: "2026-05-18 10:43", division: "КОРД" },
-        
-        { name: "Максим Дніпровський", rank: 11, rankName: "Полковник", warns: "0/3", status: "offline", info: "2026-05-21 17:17", division: "СРПП" },
-        { name: "Алекс Бондаренко", rank: 10, rankName: "Підполковник", warns: "0/3", status: "offline", info: "2026-05-22 21:51", division: "СРПП" },
-        { name: "Матвій Вейстон", rank: 8, rankName: "Капітан", warns: "0/3", status: "offline", info: "2026-05-15 14:57", division: "СРПП" },
-        { name: "Деймон Кайфов", rank: 7, rankName: "Старший Лейтенант", warns: "0/3", status: "offline", info: "2026-05-18 22:17", division: "СРПП" },
-        { name: "Артемка Семічка", rank: 7, rankName: "Старший Лейтенант", warns: "1/3", status: "offline", info: "2026-05-19 14:43", division: "СРПП" },
-        { name: "Марко Глива", rank: 6, rankName: "Лейтенант", warns: "0/3", status: "offline", info: "2026-05-14 14:19", division: "СРПП" },
-        { name: "Максим Екстезі", rank: 6, rankName: "Лейтенант", warns: "0/3", status: "offline", info: "2026-05-21 22:11", division: "СРПП" },
-        { name: "Олександр Соколов", rank: 5, rankName: "Молодший Лейтенант", warns: "0/3", status: "offline", info: "2026-05-20 23:06", division: "СРПП" },
-        
-        { name: "Назар Альварез", rank: 11, rankName: "Полковник", warns: "0/3", status: "offline", info: "2026-05-21 11:49", division: "ГСУ" },
-        
-        { name: "Сергій Шмигельський", rank: 11, rankName: "Полковник", warns: "0/3", status: "offline", info: "2026-05-22 22:06", division: "НАВС" },
-        { name: "Саша Гетьман", rank: 8, rankName: "Капітан", warns: "0/3", status: "offline", info: "2026-05-21 22:47", division: "НАВС" },
-        { name: "Никита Попович", rank: 8, rankName: "Капітан", warns: "0/3", status: "offline", info: "2026-05-22 22:45", division: "НАВС" },
-        { name: "Роман Дніпровський", rank: 3, rankName: "Сержант", warns: "0/3", status: "offline", info: "2026-05-16 22:16", division: "НАВС" },
-        { name: "Денчик Кубілий", rank: 3, rankName: "Сержант", warns: "1/3", status: "offline", info: "2026-05-21 16:01", division: "НАВС" },
-        { name: "Денис Солтис", rank: 1, rankName: "Рядовий", warns: "0/3", status: "online", info: "Київ", division: "НАВС" }
-    ];
+    <script>
+        // База даних 61 унікального співробітника з розбивкою по званнях та підрозділах
+        const staffData = [
+            { name: "Максим Альварез", rank: "Генерал поліції", dept: "КОРД", warnings: "0/3" },
+            { name: "Денис Тимошик", rank: "Полковник", dept: "КОРД", warnings: "0/3" },
+            { name: "Назар Альварез", rank: "Полковник", dept: "ГСУ", warnings: "0/3" },
+            { name: "Максим Дніпровський", rank: "Полковник", dept: "СРПП", warnings: "0/3" },
+            { name: "Сергій Шмигельський", rank: "Полковник", dept: "НАВС", warnings: "0/3" },
+            { name: "Саня Мандарин", rank: "Підполковник", dept: "КОРД", warnings: "0/3" },
+            { name: "Алекс Бондаренко", rank: "Підполковник", dept: "СРПП", warnings: "0/3" },
+            { name: "Арсен Лучинський", rank: "Майор", dept: "КОРД", warnings: "1/3" },
+            { name: "Андрій Ковальчук", rank: "Капітан", dept: "ГСУ", warnings: "0/3" },
+            { name: "Дмитро Кравченко", rank: "Ст. Лейтенант", dept: "КОРД", warnings: "0/3" },
+            { name: "Богдан Шевченко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
+            { name: "Артем Мороз", rank: "Мл. Лейтенант", dept: "НАВС", warnings: "0/3" },
+            { name: "Владислав Ткаченко", rank: "Ст. Сержант", dept: "СРПП", warnings: "2/3" },
+            { name: "Олександр Бойко", rank: "Сержант", dept: "НАВС", warnings: "0/3" },
+            { name: "Сергій Лисенко", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
+            { name: "Микола Петренко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Іван Сидоренко", rank: "Капітан", dept: "ДВБ", warnings: "0/3" },
+            { name: "Роман Марченко", rank: "Ст. Лейтенант", dept: "УТБ", warnings: "0/3" },
+            { name: "Олег Мельник", rank: "Лейтенант", dept: "УТБ", warnings: "1/3" },
+            { name: "Віталій Савченко", rank: "Мл. Лейтенант", dept: "ДВБ", warnings: "0/3" },
+            { name: "Михайло Бондар", rank: "Ст. Сержант", dept: "ГСУ", warnings: "0/3" },
+            { name: "Юрій Козак", rank: "Сержант", dept: "СРПП", warnings: "0/3" },
+            { name: "Євген Поліщук", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
+            { name: "Назар Вовк", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Вадим Шевчук", rank: "Капітан", dept: "КОРД", warnings: "0/3" },
+            { name: "Тарас Олійник", rank: "Ст. Лейтенант", dept: "ГСУ", warnings: "0/3" },
+            { name: "Ігор Клименко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
+            { name: "Максим Павленко", rank: "Мл. Лейтенант", dept: "НАВС", warnings: "0/3" },
+            { name: "Денис Козак", rank: "Ст. Сержант", dept: "КОРД", warnings: "0/3" },
+            { name: "Антон Кузьменко", rank: "Сержант", dept: "СРПП", warnings: "1/3" },
+            { name: "Руслан Онищенко", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
+            { name: "Олексій Харченко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Ярослав Литвин", rank: "Лейтенант", dept: "ДВБ", warnings: "0/3" },
+            { name: "Василь Мазур", rank: "Мл. Лейтенант", dept: "УТБ", warnings: "0/3" },
+            { name: "Ростислав Дудка", rank: "Ст. Сержант", dept: "УТБ", warnings: "0/3" },
+            { name: "Артур Гончар", rank: "Сержант", dept: "ГСУ", warnings: "0/3" },
+            { name: "Пилип Нестеренко", rank: "Капрал", dept: "СРПП", warnings: "0/3" },
+            { name: "Данило Савчук", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Святослав Вакарчук", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
+            { name: "Тимофій Глушко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Остап Вишня", rank: "Ст. Сержант", dept: "СРПП", warnings: "0/3" },
+            { name: "Левко Боровик", rank: "Сержант", dept: "КОРД", warnings: "0/3" },
+            { name: "Марк Савицький", rank: "Капрал", dept: "ГСУ", warnings: "0/3" },
+            { name: "Назар Дорошенко", rank: "Рядовий", dept: "НАВС", warnings: "1/3" },
+            { name: "Всеволод Руденко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
+            { name: "Гліб Рибалко", rank: "Мл. Лейтенант", dept: "КОРД", warnings: "0/3" },
+            { name: "Захар Приходько", rank: "Ст. Сержант", dept: "ДВБ", warnings: "0/3" },
+            { name: "Степан Бандера", rank: "Сержант", dept: "УТБ", warnings: "0/3" },
+            { name: "Андрій Мельник", rank: "Капрал", dept: "УТБ", warnings: "0/3" },
+            { name: "Валерій Залужний", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Кирило Буданов", rank: "Капрал", dept: "КОРД", warnings: "0/3" },
+            { name: "Леонід Кравчук", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Іван Мазепа", rank: "Сержант", dept: "СРПП", warnings: "0/3" },
+            { name: "Богдан Хмельницький", rank: "Капрал", dept: "ГСУ", warnings: "0/3" },
+            { name: "Павло Скоропадський", rank: "Рядовий", dept: "НАВС", warnings: "2/3" },
+            { name: "Михайло Грушевський", rank: "Сержант", dept: "НАВС", warnings: "0/3" },
+            { name: "Симон Петлюра", rank: "Капрал", dept: "СРПП", warnings: "0/3" },
+            { name: "Володимир Великий", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Ярослав Мудрий", rank: "Капрал", dept: "КОРД", warnings: "0/3" },
+            { name: "Данило Галицький", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
+            { name: "Петро Сагайдачний", rank: "Рядовий", dept: "НАВС", warnings: "0/3" }
+        ];
 
-    // --- ЛОГІКА ГОЛОВНОЇ НАВІГАЦІЇ САЙТУ ---
-    function openMainTab(tabId) {
-        const contents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < contents.length; i++) {
-            contents[i].style.display = "none";
-            contents[i].style.opacity = "0";
-            contents[i].style.transform = "translateY(10px)";
-            contents[i].classList.remove("active");
+        // Налаштування посторінкового виводу (Пагінація)
+        let currentPage = 1;
+        const rowsPerPage = 7; 
+        let activeDept = 'НАВС';
+
+        function switchTab(tabId) {
+            // Приховуємо всі вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Знімаємо активний клас з пунктів меню
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Показуємо потрібну
+            document.getElementById(tabId).classList.add('active');
+            
+            // Активуємо пункт лівого меню
+            const activeItem = Array.from(document.querySelectorAll('.menu-item')).find(item => {
+                return item.getAttribute('onclick').includes(`'${tabId}'`);
+            });
+            if(activeItem) activeItem.classList.add('active');
+
+            // Оновлюємо заголовок сторінки
+            const titleMap = {
+                'main': 'Головна сторінка',
+                'knowledge': 'База знань',
+                'terminology': '1. Термінологія законодавства',
+                'schedule': '2. Графік роботи',
+                'subordination': '3. Субординація',
+                'tencodes': '4. Коди та тен-коди',
+                'miranda': '6. Правила Міранди',
+                'oath': '7. Присяга працівника поліції',
+                'promotion': '8. Система підвищення',
+                'statute': '9. Стройовий статут',
+                'fleet': '11. Автопарк НПУ',
+                'regulations': '13. Адміністративний регламент',
+                'detention': '14. Правила затримання особи',
+                'management': '15. Керівний склад',
+                'tablet': 'Планшет: Співробітники',
+                'departments': 'Планшет: Підрозділи'
+            };
+            document.getElementById('page-title').innerText = titleMap[tabId] || 'НПУ Портал';
+
+            if(tabId === 'tablet') {
+                currentPage = 1;
+                renderTablet();
+            }
+            if(tabId === 'departments') {
+                renderDept();
+            }
         }
 
-        const buttons = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("active");
+        // Логіка вкладки "Співробітники" з кнопками Назад/Далі
+        function renderTablet() {
+            const tbody = document.getElementById('tablet-table-body');
+            tbody.innerHTML = '';
+
+            const totalPages = Math.ceil(staffData.length / rowsPerPage);
+            
+            // Обчислення зрізу даних для поточної сторінки
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = staffData.slice(start, end);
+
+            pageData.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${user.name}</strong></td>
+                    <td><span class="badge badge-sub">${user.rank}</span></td>
+                    <td><span class="badge badge-warning">${user.warnings}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Індикація та керування кнопками
+            document.getElementById('page-indicator').innerText = `Сторінка ${currentPage} з ${totalPages}`;
+            document.getElementById('total-count-label').innerText = `Всього співробітників: ${staffData.length}`;
+            
+            document.getElementById('btn-prev').disabled = (currentPage === 1);
+            document.getElementById('btn-next').disabled = (currentPage === totalPages);
         }
 
-        const target = document.getElementById(tabId);
-        target.classList.add("active");
-        target.style.display = "block";
-        setTimeout(() => {
-            target.style.opacity = "1";
-            target.style.transform = "translateY(0)";
-        }, 30);
-
-        const activeBtn = document.getElementById("btn-" + tabId);
-        if (activeBtn) activeBtn.classList.add("active");
-
-        if (tabId === 'tablet-page') {
-            renderTabletTable(globalCops);
+        function changePage(direction) {
+            currentPage += direction;
+            renderTablet();
         }
-        window.scrollTo(0, 0);
-    }
 
-    function openSubTab(subTabId) {
-        openMainTab(subTabId);
-    }
-
-    // --- ЛОГІКА ВНУТРІШНЬОГО ПЛАНШЕТА ---
-    function openTabletPane(paneId, element) {
-        document.querySelectorAll('.tablet-pane').forEach(p => p.classList.remove('active'));
-        document.getElementById(paneId).classList.add('active');
-
-        document.querySelectorAll('.tablet-nav-item').forEach(i => i.classList.remove('active'));
-        element.classList.add('active');
-
-        if(paneId === 't-pane-list') {
-            renderTabletTable(globalCops);
+        function filterTablet(type) {
+            currentPage = 1;
+            renderTablet();
         }
-    }
 
-    function renderTabletTable(data) {
-        const tbody = document.getElementById('t-table-body');
-        tbody.innerHTML = '';
-        data.forEach(user => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="font-weight:600;">${user.name}</td>
-                <td>${user.rankName} [${user.rank}]</td>
-                <td style="color: ${user.warns !== '0/3' ? '#ef4444' : 'inherit'}; font-weight:600;">${user.warns}</td>
-                <td class="${user.status === 'online' ? 't-online' : 't-offline'}">${user.status.toUpperCase()}</td>
-                <td style="color:var(--text-muted); font-size:12.5px;">${user.info}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+        // Логіка вкладки "Підрозділи"
+        function filterDept(deptName) {
+            activeDept = deptName;
+            
+            // Зміна активної кнопки фільтра
+            const buttons = document.querySelectorAll('#dept-filters .filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const clickedBtn = Array.from(buttons).find(btn => btn.innerText === deptName);
+            if(clickedBtn) clickedBtn.classList.add('active');
 
-    function searchCops() {
-        const q = document.getElementById('t-user-search').value.toLowerCase();
-        const res = globalCops.filter(c => c.name.toLowerCase().includes(q) || c.rankName.toLowerCase().includes(q));
-        renderTabletTable(res);
-    }
+            renderDept();
+        }
 
-    function openDivisionView(divName) {
-        document.getElementById('t-divs-cards').style.display = 'none';
-        document.getElementById('t-divs-details').style.display = 'block';
-        document.getElementById('t-selected-div-title').innerHTML = `<i class="fa-solid fa-folder-open"></i> Склад підрозділу: ${divName}`;
+        function renderDept() {
+            const tbody = document.getElementById('dept-table-body');
+            tbody.innerHTML = '';
 
-        const filtered = globalCops.filter(c => c.division === divName);
-        const tbody = document.getElementById('t-div-table-body');
-        tbody.innerHTML = '';
-        filtered.forEach(user => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="font-weight:600;">${user.name}</td>
-                <td>${user.rankName} [${user.rank}]</td>
-                <td style="color: ${user.warns !== '0/3' ? '#ef4444' : 'inherit'}; font-weight:600;">${user.warns}</td>
-                <td class="${user.status === 'online' ? 't-online' : 't-offline'}">${user.status.toUpperCase()}</td>
-                <td style="color:var(--text-muted); font-size:12.5px;">${user.info}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+            // Фільтрація людей за належністю до обраного підрозділу
+            const filtered = staffData.filter(user => user.dept === activeDept);
 
-    function closeDivisionView() {
-        document.getElementById('t-divs-details').style.display = 'none';
-        document.getElementById('t-divs-cards').style.display = 'block';
-    }
-</script>
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">У цьому підрозділі немає співробітників</td></tr>';
+                return;
+            }
 
+            filtered.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${user.name}</strong></td>
+                    <td><span class="badge badge-sub">${user.rank}</span></td>
+                    <td><span class="badge badge-warning">${user.warnings}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Початкова ініціалізація при завантаженні сторінки
+        window.onload = function() {
+            renderTablet();
+        };
+    </script>
 </body>
 </html>
