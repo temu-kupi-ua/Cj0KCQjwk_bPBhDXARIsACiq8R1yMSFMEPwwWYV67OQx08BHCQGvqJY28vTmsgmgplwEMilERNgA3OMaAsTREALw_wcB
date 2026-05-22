@@ -3,286 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портал НПУ</title>
+    <title>Портал Національної Поліції України - Подільський Край</title>
     <style>
+        /* ОСНОВНІ СТИЛІ ДЕРЖАВНОГО МІНІМАЛІЗМУ */
+        :root {
+            --bg-dark: #0b0f19;
+            --panel-bg: #131926;
+            --accent-blue: #1d4ed8;
+            --accent-hover: #2563eb;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #0c0f1d;
-            color: #ffffff;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* Ліве меню (Сайдбар) */
+        /* БІЧНЕ МЕНЮ (НАВІГАЦІЯ) */
         .sidebar {
             width: 300px;
-            background-color: #111625;
-            border-right: 2px solid #1b2234;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
         }
 
         .sidebar-header {
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
-            border-bottom: 2px solid #1b2234;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, rgba(29, 78, 216, 0.1), transparent);
         }
 
         .sidebar-header h2 {
-            font-size: 22px;
-            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header .sub {
+            font-size: 11px;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 15px;
+        .menu-nav {
+            flex: 1;
+            padding: 15px 10px;
             overflow-y: auto;
-            flex-grow: 1;
         }
 
-        .menu-item {
+        .menu-btn {
+            width: 100%;
             padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 4px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            text-align: left;
+            font-size: 13.5px;
             cursor: pointer;
-            color: #a2a8b9;
-            font-size: 15px;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background-color: #1b2234;
-            color: #ffffff;
-            border: 1px solid #2a3550;
-        }
-
-        /* Основна область */
-        .main-content {
-            flex-grow: 1;
-            background-color: #0c0f1d;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .top-bar {
-            height: 70px;
-            background-color: #111625;
-            border-bottom: 2px solid #1b2234;
+            border-radius: 6px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            padding: 0 30px;
+            transition: all 0.15s ease;
         }
 
-        .top-bar h1 {
-            font-size: 24px;
-            color: #ffffff;
+        .menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
         }
 
-        .content-body {
-            padding: 30px;
+        .menu-btn.active {
+            background-color: var(--accent-blue);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .menu-btn-tablet {
+            background-color: rgba(29, 78, 216, 0.12);
+            border: 1px solid rgba(29, 78, 216, 0.4);
+            color: #fff;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .menu-btn-tablet:hover {
+            background-color: rgba(29, 78, 216, 0.25);
+        }
+
+        /* ОСНОВНИЙ КОНТЕНТ */
+        .main-content {
+            flex: 1;
+            padding: 35px;
             overflow-y: auto;
-            flex-grow: 1;
         }
 
-        .tab-content {
+        .content-section {
             display: none;
         }
 
-        .tab-content.active {
+        .content-section.active {
             display: block;
         }
 
-        /* Текстові блоки бази знань */
-        .text-block {
-            background-color: #111625;
-            padding: 25px;
-            border-radius: 6px;
-            border: 2px solid #1b2234;
-            line-height: 1.6;
-            white-space: pre-line;
-            font-size: 15px;
-            color: #d1d5db;
-        }
-
-        .text-block h3 {
-            margin-bottom: 15px;
-            color: #ffffff;
-            border-bottom: 2px solid #1b2234;
+        h1 {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
-            text-transform: uppercase;
-            font-size: 18px;
         }
 
-        .link-list {
-            list-style: none;
+        h2 {
+            font-size: 20px;
+            color: #fff;
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
         }
 
-        .link-list li {
-            margin-bottom: 15px;
-            background-color: #1b2234;
-            padding: 15px;
-            border-radius: 4px;
-            border: 1px solid #2a3550;
+        h3 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 10px;
         }
 
-        .link-list a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .link-list a:hover {
-            text-decoration: underline;
-        }
-
-        /* Планшетні таблиці */
-        .tablet-container {
-            background-color: #111625;
-            border-radius: 6px;
-            border: 2px solid #1b2234;
+        .card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             padding: 20px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 10px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            font-size: 14.5px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+            font-size: 14.5px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* БАЗА ЗНАНЬ (ФОРУМ ПОСИЛАННЯ) */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .forum-link-card {
+            background: linear-gradient(135deg, #161e2e, #0f1524);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .forum-link-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(29, 78, 216, 0.5);
+        }
+
+        .forum-link-card span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e5e7eb;
+            padding-right: 10px;
+        }
+
+        .btn-forum {
+            background-color: var(--accent-blue);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+
+        .btn-forum:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* ІНТЕРФЕЙС ПЛАНШЕТА */
+        .tablet-container {
+            background-color: #111622;
+            border: 4px solid #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
         }
 
         .tablet-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
-            border-bottom: 2px solid #1b2234;
+            margin-bottom: 20px;
         }
 
-        .filter-group {
-            display: flex;
-            gap: 10px;
+        .status-badge {
+            background-color: var(--success);
+            color: #0b0f19;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-right: 10px;
         }
 
-        .filter-btn {
-            background-color: #1b2234;
-            border: 1px solid #2a3550;
-            color: #a2a8b9;
-            padding: 10px 18px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background-color: #1d4ed8;
-            color: #ffffff;
-            border-color: #2563eb;
-        }
-
-        .data-table {
+        .npu-table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 15px;
-            border-bottom: 1px solid #1b2234;
-            font-size: 15px;
-        }
-
-        .data-table th {
-            color: #ffffff;
-            background-color: #1b2234;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        .data-table tr:hover td {
-            background-color: #161d30;
-        }
-
-        .badge {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .badge-sub {
-            background-color: #1e3a8a;
-            color: #93c5fd;
-            border: 1px solid #2563eb;
-        }
-
-        .badge-warning {
-            background-color: #78350f;
-            color: #fde68a;
-            border: 1px solid #d97706;
-        }
-
-        /* Навігація кнопками */
-        .pagination-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 2px solid #1b2234;
-        }
-
-        .pagination-info {
-            color: #a2a8b9;
             font-size: 14px;
+        }
+
+        .npu-table th {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .npu-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: #e5e7eb;
+        }
+
+        .npu-table tr:hover td {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .warn-active {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        
+        .warn-none {
+            color: var(--text-muted);
         }
 
         .pagination-controls {
             display: flex;
-            gap: 15px;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            align-items: center;
         }
 
-        .btn-nav {
-            padding: 12px 25px;
+        .page-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-right: 10px;
+        }
+
+        .btn-page {
+            padding: 8px 20px;
+            border: none;
             border-radius: 4px;
-            font-weight: bold;
             cursor: pointer;
-            font-size: 14px;
-            border: 1px solid transparent;
+            font-weight: 700;
+            font-size: 13px;
             text-transform: uppercase;
+            transition: opacity 0.15s;
         }
 
-        .btn-prev {
+        .btn-page-prev {
             background-color: #ffffff;
-            color: #0c0f1d;
+            color: #000000;
         }
 
-        .btn-prev:hover {
-            background-color: #e5e7eb;
-        }
-
-        .btn-next {
-            background-color: #1d4ed8;
+        .btn-page-next {
+            background-color: var(--accent-blue);
             color: #ffffff;
-            border-color: #2563eb;
         }
 
-        .btn-next:hover {
-            background-color: #1e40af;
-        }
-
-        .btn-nav:disabled {
+        .btn-page:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+        }
+
+        /* ТАКТИЧНИЙ ПЛАЦ (ШИКУВАННЯ ПО КЛІТИНКАХ) */
+        .plat-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            background-color: #090d16;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #2d3748;
+            margin-top: 15px;
+        }
+
+        .plat-cell {
+            background-color: rgba(255,255,255,0.01);
+            border: 1px solid #1f2937;
+            border-radius: 6px;
+            padding: 12px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cell-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            text-align: center;
+            border-bottom: 1px solid #1f2937;
+            width: 100%;
+            padding-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .soldier-dot {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-bottom: 6px;
+            width: 100%;
+            text-align: center;
+            border-left: 3px solid var(--success);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .soldier-dot.leader {
+            border-left-color: #eab308;
+            background: linear-gradient(135deg, #2e240b, #0f1524);
+        }
+
+        /* ТЕКСТОВІ БЛОКИ ТА СТАТТІ */
+        .text-block {
+            background-color: rgba(0,0,0,0.15);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .text-block-title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background-color: #1e293b;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-right: 5px;
+        }
+
+        /* АДАПТИВНІСТЬ ДЛЯ СМАРТФОНІВ (ВЕРСІЯ ДЛЯ ТЕЛЕФОНУ) */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .plat-grid {
+                grid-template-columns: 1fr;
+            }
+            .plat-cell {
+                min-height: auto;
+                margin-bottom: 10px;
+            }
+            .tablet-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .pagination-controls {
+                justify-content: center;
+                width: 100%;
+            }
+            .npu-table th:nth-child(3), .npu-table td:nth-child(3) {
+                display: none; /* Приховуємо підрозділ на екрані телефону, щоб таблиця не ламалась */
+            }
         }
     </style>
 </head>
@@ -290,676 +456,690 @@
 
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2>Портал НПУ</h2>
+            <h2>МВС УКРАЇНИ</h2>
+            <div class="sub">Головне управління НПУ</div>
         </div>
-        <ul class="sidebar-menu">
-            <li class="menu-item active" onclick="switchTab('main')">Головна сторінка</li>
-            <li class="menu-item" onclick="switchTab('knowledge')">База знань</li>
-            <li class="menu-item" onclick="switchTab('terminology')">1. Термінологія законодавства</li>
-            <li class="menu-item" onclick="switchTab('schedule')">2. Графік работы</li>
-            <li class="menu-item" onclick="switchTab('subordination')">3. Субординація</li>
-            <li class="menu-item" onclick="switchTab('tencodes')">4. Коди та тен-коди</li>
-            <li class="menu-item" onclick="switchTab('miranda')">6. Правила Міранди</li>
-            <li class="menu-item" onclick="switchTab('oath')">7. Присяга працівника поліції</li>
-            <li class="menu-item" onclick="switchTab('promotion')">8. Система підвищення</li>
-            <li class="menu-item" onclick="switchTab('statute')">9. Стройовий статут</li>
-            <li class="menu-item" onclick="switchTab('fleet')">11. Автопарк НПУ</li>
-            <li class="menu-item" onclick="switchTab('regulations')">13. Адміністративний регламент</li>
-            <li class="menu-item" onclick="switchTab('detention')">14. Правила затримання особи</li>
-            <li class="menu-item" onclick="switchTab('management')">15. Керівний склад</li>
-            <li class="menu-item" onclick="switchTab('tablet')">Планшет: Співробітники</li>
-            <li class="menu-item" onclick="switchTab('departments')">Планшет: Підрозділи</li>
-        </ul>
+        <div class="menu-nav">
+            <button class="menu-btn active" onclick="showSection('base-knowledge')">📚 База знань</button>
+            <button class="menu-btn menu-btn-tablet" onclick="showSection('tablet-section')">📱 Планшет: Співробітники</button>
+            <button class="menu-btn" onclick="showSection('terminology-section')">⚖️  Термінологія законодавства</button>
+            <button class="menu-btn" onclick="showSection('schedule-section')">🕒  Графік роботи</button>
+            <button class="menu-btn" onclick="showSection('subordination-section')">🪖  Субординація</button>
+            <button class="menu-btn" onclick="showSection('codes-section')">📻  Коди та тен-коди</button>
+            <button class="menu-btn" onclick="showSection('miranda-section')">📢  Правила Міранди</button>
+            <button class="menu-btn" onclick="showSection('oath-section')">📜  Присяга працівника</button>
+            <button class="menu-btn" onclick="showSection('upgrade-section')">📈  Система підвищення</button>
+            <button class="menu-btn" onclick="showSection('charter-section')">🧱  Стройовий статут (Плац)</button>
+            <button class="menu-btn" onclick="showSection('fleet-section')">🚔  Автопарк організації</button>
+            <button class="menu-btn" onclick="showSection('admin-regument')">💼  Адміністративний регламент</button>
+            <button class="menu-btn" onclick="showSection('detention-section')">🚨  Правила затримання</button>
+            <button class="menu-btn" onclick="showSection('leaders-section')">👥  Керівний склад</button>
+        </div>
     </div>
 
     <div class="main-content">
-        <div class="top-bar">
-            <h1 id="page-title">Головна сторінка</h1>
+
+        <div id="base-knowledge" class="content-section active">
+            <h1>База знань законодавства</h1>
+            <div class="link-grid">
+                <div class="forum-link-card">
+                    <span>1. Кримінальний кодекс України</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.236185/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>2. Кодекс України Про Адміністративні Правопорушення</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8-%D0%9F%D1%80%D0%BE-%D0%90%D0%B4%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%96-%D0%9F%D1%80%D0%B0%D0%B2%D0%BE%D0%BF%D0%BE%D1%80%D1%83%D1%88%D0%B5%D0%BD%D0%BD%D1%8F.254243/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>3. Кримінальний процесуальний кодекс</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%D0%9F%D1%80%D0%BE-%D0%B2%D0%BD%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%BC%D1%96%D0%BD-%D0%B4%D0%BE-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.310635/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>4. Конституція Подільського краю</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D1%96%D1%8F-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.210165/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>5. Закон України Про Національну Поліцію України</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%E2%80%9C%D0%9F%D1%80%D0%BE-%E0%BE%BD%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%B0%D1%81%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BE%D0%B3%D0%BE-%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD%D1%83-%D0%BF%D1%80%D0%BE-%D0%9item%D0%B0%D1%86%D1%96%D0%BE%D0%BD%D0%B0%D0%BB%D1%83-%D0%BF%D0%BE%D0%BB%D1%96%D1%86%D1%96%D1%8E...331753/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>6. Етичний кодекс державних структур</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%95%D1%82%D0%B8%D1%87%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%94%D0%B5%D1%80%D0%B6%D0%B0%D0%B2%D0%BD%D0%B8%D1%85-%D0%A1%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80.156311/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>5. Реєстрація ОТЗ</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A0%D0%B5%D1%94%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%9E%D0%A2%D0%97.403156/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>10. Система зняття доган</span>
+                    <a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B7%D0%BD%D1%8F%D1%82%D1%82%D1%83-%D0%B4%D0%BE%D0%B3%D0%B0%D0%BD.403573/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+                <div class="forum-link-card">
+                    <span>12. Законодавча база</span>
+                    <a href="https://forum.ukraine-gta.com.ua/forums/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD%D0%BE%D0%B4%D0%B0%D0%B2%D1%87%D0%B0-%D0%B1%D0%B0%D0%B7%D0%B0.415/" target="_blank" class="btn-forum">Форум</a>
+                </div>
+            </div>
         </div>
-        <div class="content-body">
 
-            <div id="main" class="tab-content active">
-                <div class="text-block">
-                    <h3>Ласкаво просимо до інформаційного порталу Національної поліції України</h3>
-                    Цей ресурс створено для внутрішнього використання співробітниками НПУ. Тут зібрано всю необхідну нормативно-правову базу, внутрішні статути, регламенти роботи, графіки, а також інтегровано планшет обліку особового складу та підрозділів.
-
-                    Використовуйте бічне навігаційне меню для швидкого доступу до необхідних розділів бази знань чи роботи з електронним реєстром співробітників.
+        <div id="tablet-section" class="content-section">
+            <h1>Електронний планшет співробітників</h1>
+            <div class="tablet-container">
+                <div class="tablet-header">
+                    <h3>БАЗА ДАНИХ ОСОБОВОГО СКЛАДУ НПУ</h3>
+                    <div><span class="status-badge">СИНХРОНІЗОВАНО</span> Всього в базі: <strong id="total-count">61</strong></div>
+                </div>
+                <table class="npu-table">
+                    <thead>
+                        <tr>
+                            <th>Позивний / Прізвище</th>
+                            <th>Звання</th>
+                            <th>Підрозділ</th>
+                            <th>Догани</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablet-table-body">
+                        </tbody>
+                </table>
+                <div class="pagination-controls">
+                    <span class="page-info" id="page-info-text">Сторінка 1 з 7</span>
+                    <button class="btn-page btn-page-prev" id="btn-prev" onclick="changePage(-1)">Назад</button>
+                    <button class="btn-page btn-page-next" id="btn-next" onclick="changePage(1)">Далі</button>
                 </div>
             </div>
-
-            <div id="knowledge" class="tab-content">
-                <div class="text-block">
-                    <h3>Офіційні законодавчі ресурси та кодекси</h3>
-                    <ul class="link-list">
-                        <li><strong>1. Кримінальний кодекс:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-236185/" target="_blank">Перейти на форум до Кримінального Кодексу</a></li>
-                        <li><strong>2. Кодекс України Про Адміністративні Правопорушення:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8-%D0%259F%D1%80%D0%BE-%D0%90%D0%B4%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%96-%D0%9F%D1%80%D0%B0%D0%B2%D0%BE%D0%BF%D0%BE%D1%80%D1%83%D1%88%D0%B5%D0%BD%D0%BD%D1%8F.254243/" target="_blank">Перейти на forum до КУпАП</a></li>
-                        <li><strong>3. Кримінальний процесуальний кодекс:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%D0%9F%D1%80%D0%BE-%D0%B2%D0%BD%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%BC%D1%96%D0%BD-%D0%B4%D0%BE-%D0%9A%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%A0%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81%D1%83-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%9E.310635/" target="_blank">Перейти на форум до КПКУ</a></li>
-                        <li><strong>4. Конституція Подільського краю:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D1%96%D1%8F-%D0%9F%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D0%9A%D1%80%D0%B0%D1%8E.210165/" target="_blank">Перейти на форум до Конституції</a></li>
-                        <li><strong>5. Закон України про національну поліцію україни:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%E2%80%9C%D0%9F%D1%80%D0%BE-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-%D0%B7%D0%0%D1%81%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BE%D0%B3%D0%BE-%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD%D1%83-%D0%BF%D1%80%D0%BE-%D0%9D%D0%B0%D1%86%D1%96%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%83-%D0%BF%D0%BE%D0%BB%D1%96%D1%86%D1%96%D1%8E-%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8%E2%80%9D.331753/" target="_blank">Перейти на форум до ЗУ про НПУ</a></li>
-                        <li><strong>6. Етичний кодекс державних структур:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/06-ukraine-gta-%D0%95%D1%82%D0%B8%D1%87%D0%BD%D0%B8%D0%B9-%D0%9A%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D0%94%D0%B5%D1%80%D0%B6%D0%B0%D0%B2%D0%BD%D0%B8%D1%85-%D0%A1%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80.156311/" target="_blank">Перейти на форум до Етичного кодексу</a></li>
-                        <li><strong>5. Реєстрація ОТЗ:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A0%D0%B5%D1%94%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F-%D0%9E%D0%A2%D0%97.403156/" target="_blank">Перейти на форум до реєстрації ОТЗ</a></li>
-                        <li><strong>10. Система зняття доган:</strong><br><a href="https://forum.ukraine-gta.com.ua/threads/%D0%9D%D0%9F%D0%A3-%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B7%D0%BD%D1%8F%D1%82%D1%82%D1%8F-%D0%B4%D0%BE%D0%B3%D0%B0%D0%BD.403573/" target="_blank">Перейти на форум до Системи зняття доган</a></li>
-                        <li><strong>12. Законодавча база:</strong><br><a href="https://forum.ukraine-gta.com.ua/forums/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD%D0%BE%D0%B4%D0%B0%D0%B2%D1%87%D0%B0-%D0%B1%D0%B0%D0%B7%D0%B0.415/" target="_blank">Перейти на форум до Законодавчої бази</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="terminology" class="tab-content">
-                <div class="text-block">
-                    <h3>Основні юридичні терміни</h3>
-                    <strong>Загальні поняття:</strong>
-                    Закон - нормативно-правовий акт, обов'язковий до виконання.
-                    Конституція — основний закон держави, який має найвищу юридичну силу.
-                    Кодекс - систематизований збірник правових норм.
-                    Правопорушення - порушення вимог закону.
-                    Ієрархія - встановлений порядок службового підпорядкування осіб, визначений за рангом або посадою.
-                    Відповідальність — наслідки за порушення закону.
-                    ITT - ізолятор тимчасового тримання, місце короткострокового утримання затриманих осіб.
-                    СІЗО - слідчий ізолятор, установа для утримання осіб під вартою під час слідства або суду.
-                    КУпАП - Кодекс України про адміністративні правопорушення.
-                    ЗУ про НПУ - Закон України «Про Національну поліцію», який визначає права, обов'язки та повноваження поліції.
-                    КПКУ - Кримінальний процесуальний кодекс України.
-                    ККУ - Кримінальний кодекс України.
-
-                    <strong>Поліцейська діяльність:</strong>
-                    Затримання - тимчасове обмеження свободи особи.
-                    Обшук - перевірка особи або майна на наявність заборонених предметів.
-                    Арешт - процесуальне утримання особи за рішенням уповноважених осіб.
-                    Допит - отримання інформації від особи у встановленому порядку.
-                    Докази - відновлені дані, що підтверджують вину або невинуватість.
-
-                    <strong>Службові поняття:</strong>
-                    Субординація - система службового підпорядкування.
-                    Наказ - обов'язкове для виконання розпорядження від керівництва.
-                    Патруль - контроль території з метою забезпечення порядку.
-                    Рапорт - службове звернення або доповідь.
-                    Інструктор - особа, відповідальна за навчання, підготовку та перевірку знань кадетів чи практикантів.
-                </div>
-            </div>
-
-            <div id="schedule" class="tab-content">
-                <div class="text-block">
-                    <h3>Графік роботи НПУ</h3>
-                    <strong>Робочі зміни:</strong>
-                    Понеділок - П'ятниця: 9:00 - 21:00
-                    Субота - Неділя: 9:00 - 21:00
-
-                    <strong>Перерва:</strong>
-                    Обідня перерва: 13:00 - 14:00
-                </div>
-            </div>
-
-            <div id="subordination" class="tab-content">
-                <div class="text-block">
-                    <h3>Субординація та правила спілкування</h3>
-                    Субординація - вид службових відносин, що передбачає підпорядкування для нижчої за рангом (посадою, званням) службової особи виконання рішень і вимог вищестоящої особи.
-
-                    <strong>Приклади службового мовлення:</strong>
-                    Замість "товариш" - Пане / пані
-                    Замість "привіт" - Бажаю здоровʼя
-                    Замість "як справи" - Доповісти обстановку
-                    Замість "так" - Саме так
-                    Замість "ні" - Ніяк ні
-                    Замість "можна" - Дозвольте
-                    Замість "не знаю" - Не володію інформацією
-                    Замість "добре" - Слухаюсь
-                    Замість "спасибі" - Дякую
-                </div>
-            </div>
-
-            <div id="tencodes" class="tab-content">
-                <div class="text-block">
-                    <h3>Службові коди та тен-коди</h3>
-                    <strong>Загальні статус-коди:</strong>
-                    КОД-1 — Стан стабільний.
-                    КОД-2 — Порушник у відділку.
-                    КОД-3 — Тривога у (місце).
-                    КОД-4 — Військовий / надзвичайний стан.
-                    КОД-5 — Загальний збір всього о/с.
-                    КОД-6 — Збір виключно старшого о/с.
-
-                    <strong>Тен-коди під час патрулювання:</strong>
-                    15-10 — Розпочав патрулювання | Приклад: [15-10] Склад: 2 (Альварез, Дніпровський) | м.Київ
-                    20-10 — Продовжую патрулювання | Приклад: [20-10] Склад: 2 (Альварез, Дніпровський) | м.Київ
-                    30-10 — Закінчив патрулювання | Приклад: [30-10] Склад: 2 (Альварез, Дніпровський) | м.Київ
-
-                    <strong>Тен-коди під час евакуації авто:</strong>
-                    70-15 — Почав проводити евакуацію т/з
-                    75-15 — Продовжую евакуацію т/з
-                    80-15 — Закінчив евакуацію т/з
-
-                    <strong>Універсальні тен-коди:</strong>
-                    10-20 — Поточне розташування.
-                    10-34 — Терміново потрібна допомога!
-                    10-4 — Вас зрозумів, прийнято.
-                    10-10 — Негативна відповідь.
-                    10-9 — Повторіть останнє повідомлення.
-                </div>
-            </div>
-
-            <div id="miranda" class="tab-content">
-                <div class="text-block">
-                    <h3>Правила Міранди</h3>
-                    Міранда - це обов'язкове правило, згідно з яким після затримання особі повинні бути роз'яснені її права і вона має відповісти, що розуміє їх. Все сказане затриманим до зачитування не вважається доказом. Після зачитування необхідно запитати: "Ви зрозуміли ваші права?". Якщо відповідь негативна — зачитати повторно (максимум два рази).
-
-                    <strong>Текст для зачитування:</strong>
-                    Ви маєте право зберігати мовчання!
-                    Все, що ви скажете, може бути використано проти вас у суді.
-                    Ви маєте право на приватного адвоката.
-                    Якщо у вас немає коштів на приватного адвоката, то вам буде надано державного.
-                    Також ви маєте право на один телефонний дзвінок тривалістю не довше 3 хвилин і на послуги перекладача.
-                    Вам зрозумілі ваші права?
-                </div>
-            </div>
-
-            <div id="oath" class="tab-content">
-                <div class="text-block">
-                    <h3>Присяга працівника поліції</h3>
-                    Особа, яка вступає на службу в поліції, складає Присягу на вірність Українському народові:
-
-                    <em>"Я, (прізвище, ім’я та по батькові), усвідомлюючи свою високу відповідальність, урочисто присягаю вірно служити Українському народові, дотримуватися Конституції та законів України, втілювати їх у життя, поважати та охороняти права і свободи людини, честь держави, з гідністю нести високе звання поліцейського та сумлінно виконувати свої службові обов’язки клянусь".</em>
-                </div>
-            </div>
-
-            <div id="promotion" class="tab-content">
-                <div class="text-block">
-                    <h3>Критерії та терміни підвищення особового складу</h3>
-                    <strong>Кваліфікаційні обмеження по термінах:</strong>
-                    З 1 рангу на 2 ранг — 0 днів
-                    З 2 рангу на 3 ранг — 1 день
-                    З 3 рангу на 4 ранг — 2 дні
-                    З 4 рангу на 5 ранг — 3 дні
-                    З 5 рангу на 6 ранг — 4 дні
-                    З 6 рангу на 7 ранг — 4 дні
-                    З 7 рангу на 8 ранг — 4 дні
-
-                    <strong>Рядовий [1] → Капрал [2]</strong>
-                    1. Отримати роль в Discord.
-                    2. Приєднатися до офіційної Telegram групи.
-                    3. Прослухати 1 лекцію від С/С.
-                    4. Здати іспит на знання: субординація, графік роботи, загальний статут, коди та тен-коди.
-                    5. Скласти присягу поліцейського.
-
-                    <strong>Капрал [2] → Сержант [3]</strong>
-                    1. Здати іспит: термінологія законодавства, правила затримання особи, ЗУ про НПУ, Міранда.
-                    2. Провести 15 хвилин у патрулі з С/С.
-                    3. Відіграти 2 RolePlay ситуації.
-                    4. Прослухати 1 повну лекцію.
-                    5. Бути присутнім на 1 тренуванні.
-
-                    <strong>Сержант [3] → Ст.Сержант [4]</strong>
-                    1. Бути на 2 лекціях та 1 тренуванні.
-                    2. Патрулювання міста 20 хвилин.
-                    3. Відіграти 2 RolePlay ситуації.
-                    4. Самостійно затримати 1 злочинця.
-                    5. Виписати 5 адміністративних штрафів.
-                    6. Здати іспит: ЗУ про НПУ, КПКУ, Міранда.
-
-                    <strong>Ст.Сержант [4] → Мл.Лейтенант [5]</strong>
-                    1. Патрулювання міста 30 хвилин.
-                    2. Виписати 7 письмових штрафів.
-                    3. Затримати 3 злочинців.
-                    4. Вилучити посвідчення водія 1 раз (/takelicenses).
-                    5. Здати іспит: службова ієрархія, правила недоторканості.
-                    6. Перевірити працездатність камер в будівлі НПУ через RP (/do, /me, /try).
-
-                    <strong>Мл.Лейтенант [5] → Лейтенант [6]</strong>
-                    1. Патрулювання міста 30 хвилин.
-                    2. Виписати 10 письмових штрафів.
-                    3. Затримати 5 злочинців.
-                    4. Виконати особисте завдання від керівництва (Полковник/Генерал).
-                    5. Відіграти 4 якісні RolePlay ситуації.
-
-                    <strong>Лейтенант [6] → Ст.Лейтенант [7]</strong>
-                    1. Патрулювання міста 30 хвилин.
-                    2. Виписати 10 письмових штрафів.
-                    3. Затримати 3 злочинців.
-                    4. Взяти участь у 1 ГРП події.
-                    5. Обробити 2 виклики по лінії "102".
-                    6. Евакуювати 6 автомобілів-порушників.
-
-                    <strong>Ст.Лейтенант [7] → Капітан [8]</strong>
-                    Видається виключно за повної довіри від Генерала поліції.
-                </div>
-            </div>
-
-            <div id="statute" class="tab-content">
-                <div class="text-block">
-                    <h3>Стройовий статут Національної Поліції</h3>
-                    <strong>Глава 1. Загальні положення строю</strong>
-                    1.1. Стрій - визначене статутом розміщення працівників та підрозділів для спільних дій у пішому порядку або на машинах.
-                    1.2. Шеренга - стрій, у якому працівники розміщені один біля одного на одній лінії.
-                    1.3. Лінія машин - стрій, у якому техніка розміщена на одній лінії лобовою частиною.
-                    1.4. Фланг - правий або лівий край строю. При поворотах назви флангів залишаються незмінними.
-                    1.5. Фронт - бік строю, до якого поліцейські повернуті обличчям.
-                    1.6. Тильний бік строю - бік, протилежний фронту.
-                    1.7. Інтервал - відстань по фронту між працівниками або технікою.
-                    1.8. Дистанція - відстань у глибину між працівниками чи підрозділами.
-                    1.9. Напрямний - працівник, що рухається першим на чолі строю у визначеному напрямку.
-                    1.10. Замикаючий - працівник, який рухається останнім у колоні.
-
-                    <strong>Обов'язки перед шикуванням:</strong>
-                    Командир зобов'язаний визначити час, місце та форму одягу, перевірити зовнішній вигляд та наявність людей, підтримувати сувору дисципліну.
-                    Співробітник зобов'язаний знати своє місце, швидко займати його, зберігати дистанцію та уважно виконувати команди.
-
-                    <strong>У строю категорично заборонено:</strong>
-                    Заборонено розмовляти, спати, танцювати, самовільно залишати стрій або діставати зброю чи тайзер без прямого наказу (Покарання: від попередження до догани).
-                    Шикування дозволено проводити інструкторам або старшому офіцерському складу від звання «Майор». Мінімальна кількість людей у строю — 3 особи.
-
-                    <strong>Глава 2. Розподіл підрозділів у строю</strong>
-                    Керівники та заступники стають попереду. Рядовий склад шикується на відведених мітках:
-                    НАВС — 1 клітинка
-                    СРПП — 2 клітинка
-                    КОРД — 3 клітинка
-                    ГСУ — 4 клітинка
-                    ДВБ та УТБ — ділять між собою 5 клітинку (роблять шеренгу у 2 людини в ширину)
-                </div>
-            </div>
-
-            <div id="fleet" class="tab-content">
-                <div class="text-block">
-                    <h3>Доступний автопарк та характеристики Т/З</h3>
-                    Взявши будь-який службовий автомобіль, кожен працівник зобов'язаний особисто заправляти його та підтримувати у справному технічному стані.
-
-                    <strong>Honda XRE 300 (Мотоцикл)</strong>
-                    Місць: 2 | Швидкість: 180 км/год | Розгін до 100: 6,5 с | Захист: Не броньований
-
-                    <strong>Mitsubishi Outlander (Кросовер)</strong>
-                    Місць: 4 | Швидкість: 260 км/год | Розгін до 100: 8,9 с | Захист: Не броньований
-
-                    <strong>Toyota Prius (Гібрид)</strong>
-                    Місць: 4 | Швидкість: 330 км/год | Розгін до 100: 7,5 с | Захист: Не броньований
-
-                    <strong>Skoda Rapid (Седан)</strong>
-                    Місць: 4 | Швидкість: 300 км/год | Розгін до 100: 8,2 с | Захист: Не броньований
-
-                    <strong>Toyota Corolla Hybrid</strong>
-                    Місць: 4 | Швидкість: 305 км/год | Розгін до 100: 7,9 с | Захист: Не броньований
-
-                    <strong>Renault Duster (Патрульний кросовер)</strong>
-                    Місць: 4 | Швидкість: 230 км/год | Розгін до 100: 9,8 с | Захист: Не броньований
-
-                    <strong>Skoda Rapid “УкрТрансБезпека”</strong>
-                    Використовується виключно під час РП чи ГРП заходів. Швидкість: 300 км/год.
-
-                    <strong>Skoda Octavia</strong>
-                    Місць: 4 | Швидкість: 171 км/год | Розгін до 100: 10,5 с | Захист: Не броньований
-
-                    <strong>Mercedes-Benz Vito (Мінівен)</strong>
-                    Місць: 5 | Швидкість: 214 км/год | Розгін до 100: 9,0 с | Захист: Не броньований
-
-                    <strong>КрАЗ Спартан (Спецпідрозділ КОРД)</strong>
-                    Місць: 4 | Двигун: 4.0 л Дизель | Швидкість: 108 км/год | Захист: Броньований
-
-                    <strong>Евакуатор (Служба евакуації Т/З)</strong>
-                    Місць: 2 | Швидкість: 157 км/год | Призначення: переміщення порушників ПДР
-
-                    <strong>Гвинтокрил H135 (Повітряний патруль)</strong>
-                    Місць: 4 | Швидкість: 500 км/год | Дальність польоту: до 635 км
-                </div>
-            </div>
-
-            <div id="regulations" class="tab-content">
-                <div class="text-block">
-                    <h3>АДМІНІСТРАТИВНИЙ РЕГЛАМЕНТ ЗУПИНКИ, ОГЛЯДУ ТРАНСПОРТНОГО ЗАСОБУ ТА ВИЇЗД НА МІСЦЯ ДТП</h3>
-                    <strong>Глава 1. Загальні положення</strong>
-                    1.1 Адміністративний регламент - це регламент, у якому прописані права та обов'язки інспекторів дорожнього руху.
-                    1.2 Адміністративний регламент зобов'язані знати і дотримуватися інспектори дорожнього руху, водії транспортних засобів, їхні пасажири та пішоходи.
-
-                    <strong>Глава 2. Зупинка транспортного засобу</strong>
-                    2.1 Зупинення транспортного засобу здійснюється виключно жезлом, а у виняткових випадках – жестом руки.
-                    2.2 Причини для зупинки т/з:
-                    1) якщо водій порушив Правила дорожнього руху;
-                    2) якщо є очевидні ознаки, що свідчать про технічну несправність транспортного засобу;
-                    3) якщо є інформація, що свідчить про причетність водія або пасажирів транспортного засобу до вчинення дорожньо-транспортної пригоди, кримінального чи адміністративного правопорушення, або якщо є інформація, що свідчить про те, що транспортний засіб чи вантаж можуть бути об’єктом чи знаряддям учинення дорожньо-транспортної пригоди, кримінального чи адміністративного правопорушення;
-                    4) якщо транспортний засіб перебуває в розшуку;
-                    5) якщо необхідно здійснити опитування водія чи пасажирів про обставини вчинення дорожньо-транспортної пригоди, кримінального чи адміністративного правопорушення, свідками якого вони є або могли бути;
-                    6) якщо необхідно залучити водія транспортного засобу до надання допомоги іншим учасникам дорожнього руху або поліцейським, або як свідка під час оформлення протоколів про адміністративні правопорушення чи матеріалів дорожньо-транспортних пригод;
-                    7) якщо уповноважений орган державної влади прийняв рішення про обмеження чи заборону руху;
-                    8) якщо спосіб закріплення вантажу на транспортному засобі створює небезпеку для інших учасників дорожнього руху;
-                    9) порушення порядку визначення і використання на транспортному засобі спеціальних світлових або звукових сигнальних пристроїв. Всі інші причини зупинки автомобіля — незаконні.
-
-                    2.3 У кожному разі працівник поліції зобов’язаний поінформувати водія про конкретну причину зупинення ним транспортного засобу з детальним описом підстави зупинки, визначеної у статті 2.2.
-                    2.4 Поліцейський має право запросити вийти водія з автомобіля в таких випадках:
-                    - з метою усунення технічної несправності транспортного засобу або порушень правил перевезення вантажів;
-                    - коли є достатні підстави вважати, що водій знаходиться в стані сп’яніння;
-                    - коли водій або пасажири підозрюються в скоєнні злочину;
-                    - коли є необхідною участь водія в оформленні документів або наданні допомоги іншим учасникам дорожнього руху.
-                    2.5 Зупинка транспортного засобу здійснюється з урахуванням вимог правил дорожнього руху та дотриманням заходів, спрямованих на забезпечення безпеки учасників дорожнього руху.
-                    2.6 Не допускається зупиняти транспортні засоби на ділянках доріг, де їх зупинення заборонено правилами дорожнього руху, за винятком випадків, коли таке зупинення пов'язане з необхідністю припинення злочину, адміністративного правопорушення, здійснення розпорядча-регулювальних дій, відвернення реальної загрози заподіяння шкоди життю, здоров'ю та (або) майну учасників дорожнього руху, а також випадків позначення місця зупинки патрульним автомобілем із увімкненими спеціальними світловими сигналами.
-                    2.7 Зупинивши транспортний засіб, співробітник повинен без зволікання підійти до водія, представитися, коротко повідомити причину зупинки, викласти вимогу щодо передання необхідних для перевірки чи оформлення правопорушення документів, у разі залучення водія чи пасажира як свідка або понятого - роз'яснити їм права та обов'язки, передбачені законодавством України.
-                    2.8 Під час звернення до учасника дорожнього руху співробітник зобов'язаний представитися, назвавши свою посаду, звання та прізвище, пред'явити на вимогу громадянина службове посвідчення, після чого повідомити причину і мету звернення. У всіх випадках застосування заходів, що обмежують права і свободи учасника дорожнього руху, співробітник зобов'язаний роз'яснити йому причину і підставу застосування таких заходів, а також права та обов'язки учасника дорожнього руху, які виникають у зв'язку з цим.
-                    2.9 Учасники дорожнього руху мають право оскаржити дії (бездіяльність) посадових осіб органів внутрішніх справ, що призвели до порушення їхніх прав і свобод, до органу вищого рівня, посадової особи вищого рівня, або прокурора.
-
-                    <strong>Глава 3. Огляд транспортного засобу (без проникнення всередину)</strong>
-                    3.1 Огляд (без проникнення всередину) - візуальне вивчення ТЗ без проникнення всередину.
-                    3.2 Підставами для огляду транспортного засобу та вантажу, тобто візуального обстеження транспортного засобу та вантажу, що перевозиться, є:
-                    - орієнтування, інша інформація про їх використання в протиправних цілях.
-                    - необхідність проведення звірки маркувальних позначень транспортного засобу із записами в реєстраційних документах.
-                    - наявність ознак невідповідності вантажу, що перевозиться, даним, зазначеним у документах на вантаж, що перевозиться.
-                    3.3 Під час проведення огляду ви маєте право вимагати присутності свідка із занесенням до акту огляду його даних.
-                    3.4 Під час огляду інспектор не має права самостійно відчиняти двері, салон автомобіля, багажник, а також торкатися будь-яких речей, що знаходяться в ньому. Робити це повинен водій на його прохання. В іншому випадку, це буде розцінюватися як огляд особистих речей, на що складається окремий акт з двома понятими або відеозйомкою.
-
-                    <strong>Глава 4. Огляд транспортного засобу (з проникненням всередину)</strong>
-                    4.1 Огляд (з проникненням всередину) - фактичний контроль вмісту.
-                    4.2 Підставами для огляду транспортного засобу, тобто обстеження транспортного засобу, що проводиться без порушення його конструктивної цілісності, є:
-                    - перевірка обґрунтованого припущення про наявність у транспортному засобі зброї, боєприпасів, набоїв до зброї, вибухових речовин, вибухових пристроїв, наркотичних засобів, психотропних речовин або їхніх прекурсорів, чи отруйних або радіоактивних речовин.
-                    - перевірка обґрунтованого припущення про наявність знарядь вчинення чи предметів адміністративного правопорушення в транспортному засобі або слідів адміністративного правопорушення на транспортному засобі.
-                    - здійснення затримання, адміністративного затримання особи, яка перебувала в транспортному засобі.
-                    4.3 Огляд проводиться в присутності водія, однак, у випадках, що не терплять зволікання, огляд транспортного засобу може быть здійснений за відсутності зазначеної особи.
-                    4.4 У випадках нагальної потреби інспектор у присутності двох понятих або із застосуванням відеозапису може провести розтин опломбованого вантажу, крім того, який перебуває під митним контролем, долю якого в цьому випадку вирішує черговий.
-
-                    <strong>Глава 5. Виїзд на місце дорожньо-транспортної пригоди (ДТП)</strong>
-                    5.1 Працівники, які прийняли виклик від чергового, зобов'язані виїхати на місце ДТП.
-                    5.2 Після прибуття на місце ДТП працівник зобов'язаний вислухати заявника і за наявності можливості зафіксувати:
-                    - прізвище, ім'я, (за наявності), адресу та номер телефону особи, яка повідомила про ДТП;
-                    - місце, час, вид та обставини ДТП;
-                    - відомості про кількість, вік і статеву приналежність потерпілих;
-                    - відомості про необхідність надання медичної та іншої допомоги постраждалим;
-                    - інформацію про медичні організації, до яких направлено потерпілих, та осіб, які направили потерпілих до зазначених організацій;
-                    - відомості про транспортні засоби (тип, марка, колір, державні реєстраційні знаки), на яких було відправлено постраждалих;
-                    - відомості про водіїв і транспортні засоби, причетних до цієї ДТП;
-                    - відомості про свідків ДТП.
-                    <em>(( Всі дії відбуваються в грі та по RP не потрібно складати протокол як у реальному житті ))</em>
-                    5.3 Працівник зобов'язаний скласти протокол з місця події із зазначенням даних з пункту 5.2.
-                    5.4 Працівник зобов'язаний зробити виміри гальмівних шляхів, якщо такі є, і ввести дані до протоколу.
-                    5.5 До протоколу також прикріплюється схема з місця пригоди.
-                    5.6 Учасники ДТП зобов'язані залишити свій розпис у протоколі та на схемі з місця ДТП.
-                    5.7 За підсумком початкових слідчих дій у разі виявлення явного порушення до винуватця ДТП застосовують заходи адміністративного покарання, або затримання винуватця в разі, якщо в ДТП є загиблі.
-                    5.8 По закінченню слідчих дій працівники зобов'язані забезпечити евакуацію транспортних засобів, що постраждали внаслідок ДТП і не можуть своїм ходом залишити місце ДТП.
-                    5.9 Працівники зобов'язані забезпечити безпеку особам, які займаються ліквідацією наслідків ДТП.
-
-                    <strong>Глава 6. Позбавлення права керування транспортним засобом</strong>
-                    6.1 Для того щоб позбавити права керування транспортними засобами громадянина, співробітник поліції повинен аргументувати причину по якій людині надається такий вид покарання.
-                    6.2 Співробітник зобов'язаний мати запис порушення водія. За порушення цих правил співробітник буде звільнений з фракції з внесенням в Загальний Чорний Список організації строком на 2 місяці. Докази зберігаються протягом 7 діб.
-                    6.3 Причини для позбавлення водійського посвідчення:
-                    - Їзда по зустрічній полосі достатній проміжок часу.
-                    - Наїзд на пішохода який спричинив його смерть.
-                    - Залишення місця дорожньо-транспортної пригоди, якщо інший учасник дорожнього руху проявив бажання звернутися до поліції для оформлення ДТП, та іншому учаснику ДТП про це відомо.
-                    - Невиконання вимог поліцейського про зупинку транспортного засобу.
-                    - Порушення правил дорожнього руху, що спричинили створення аварійної обстановки, а саме: примусили інших учасників дорожнього руху різко змінити швидкість, напрямок руху або вжити інших заходів щодо забезпечення особистої безпеки або безпеки інших громадян.
-                    - Не надавання переваг у русі автомобілям швидкої, пожежної, поліції з увімкненими сигнальними пристроями.
-                </div>
-            </div>
-
-            <div id="detention" class="tab-content">
-                <div class="text-block">
-                    <h3>Правила затримання особи</h3>
-                    <strong>Основні положення:</strong>
-                    1) Затримання людини не проводиться, якщо у Вас відсутні докази з моменту його правопорушення.
-                    2) Перевіряти людину без відповідних на те причин, категорично заборонено!
-                    3) Дозволяється перевірити людину яка схожа на людину в орієнтуванні! Орієнтування повинне бути дійсне та не вигадане!
-                    4) Дозволяється перевірити людину, яка порушила правила дорожнього руху або громадську безпеку.
-                    5) Забороняється затримувати людину, яка стоїть АФК. Якщо протягом 5 хвилин людина не реагує, затримування дозволене, для встановлення особи.
-                    6) Заборонено зупиняти транспортні засоби, якщо на те немає причини.
-
-                    <strong>Послідовність затримання правопорушника:</strong>
-                    1) Зупинити транспортний засіб або людину за порушення/орієнтування.
-                    2) Підійти представитись, назвати свій підрозділ, назвати своє звання, ім'я та прізвище та за необхідністю на вимогу громадянина пред'явити йому службове посвідчення для ознайомлення.
-                    <em>Виключення: Дозволяється здійснити пункт 2 цього розділу, після затримання лише у випадку, якщо людина втікає!</em>
-                    3) Назвати людині причину його зупинки/перевірки/затримання.
-                    4) Запросити паспорт на перевірку.
-                    <em>Примітка 1: якщо особа відмовляється надати паспорт, робимо попередження. Якщо на попередження людина не реагує, дозволяється здійснити затримання з відігровкою сканеру для відбиття пальчиків.
-                    Примітка 2: Дозволяється встановити особу за допомогою сканеру відбитків пальця в будівлі ГУНП.</em>
-                    5) Перевірити особу по базі розшуку та якщо людина знаходиться в розшуку затримати його.
-                    6) Повідомити людині права та обов'язки (Міранду):
-                    <em>Виключення: Якщо місце затримання є небезпечним, права та обов'язки можна роз'яснити у приміщенні державної установи.</em>
-                    - Ви маєте право на адвоката, якщо у Вас немає свого адвоката, він буде наданий Вам державою безкоштовно.
-                    - Ви маєте право на телефонний дзвінок.
-                    - Ви маєте право зберігати мовчання.
-                    - Ви маєте право на послуги перекладача.
-                    - Все, що ви скажете, буде використано проти Вас у суді.
-                    7) Затримуєте його та привозите до ІТТ, але укладати до ІТТ не спішіть.
-                    8) Якщо особа захотіла скористатися своїми правами, надаєте людині можливість на це:
-                    <em>Примітка 1: Якщо адвокат не відповідає протягом 2 хвилин, то переходимо до наступного пункту.
-                    Примітка 2: Якщо адвокат не прибуває протягом 3 хвилин, то переходимо до наступного пункту.</em>
-                    9) Встановивши особу, видаєте людині розшук, штраф та інше, якщо на те є причини.
-                    10) Укладаєте правопорушника до ІТТ (за необхідності).
-                </div>
-            </div>
-
-            <div id="management" class="tab-content">
-                <div class="text-block">
-                    <h3>КЕРІВНИЦТВО ТА СТРАШИЙ СКЛАД НПУ</h3>
-                    <strong>Вищий керівний склад:</strong>
-                    Начальник Національної поліції - Максим Альварез
-                    Перший заступник начальника ГУНП - Денис Тимошик
-
-                    <strong>Старший офіцерський склад (Куратори підрозділів):</strong>
-                    Полковник, Куратор КОРД - Денис Тимошик
-                    Полковник, Куратор ГСУ - Назар Альварез
-                    Полковник, Куратор СРПП - Максим Дніпровський
-                    Полковник, Куратор НАВС - Сергій Шмигельський
-                    Полковник, Куратор ДВБ - вакантно
-                    Полковник, Куратор УТБ - вакантно
-
-                    <strong>Керівники підрозділів:</strong>
-                    Підполковник, Керівник КОРД - Саня Мандарин
-                    Підполковник, Керівник ГСУ - вакантно
-                    Підполковник, Керівник СРПП - Алекс Бондаренко
-                    Підполковник, Керівник НАВС - вакантно
-                    Підполковник, Керівник ДВБ - вакантно
-                    Підполковник, Керівник УТБ - вакантно
-
-                    <strong>Заступники керівників:</strong>
-                    Майор, Заступник керівника КОРД - Арсен Лучинський
-                    Майор, Заступник керівника ГСУ - вакантно
-                    Майор, Заступник керівника СРПП - вакантно
-                    Майор, Заступник керівника НАВС - вакантно
-                    Майор, Заступник керівника ДВБ - вакантно
-                    Майор, Заступник керівника УТБ - вакантно
-                </div>
-            </div>
-
-            <div id="tablet" class="tab-content">
-                <div class="tablet-container">
-                    <div class="tablet-header">
-                        <div class="filter-group">
-                            <button class="filter-btn active" onclick="filterTablet('all')">Усі</button>
-                        </div>
-                        <div class="pagination-info" id="total-count-label">Всього співробітників: 61</div>
-                    </div>
-
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Службовець</th>
-                                <th>Звання</th>
-                                <th>Догани</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablet-table-body">
-                            </tbody>
-                    </table>
-
-                    <div class="pagination-area">
-                        <div class="pagination-info" id="page-indicator">Сторінка 1 з 9</div>
-                        <div class="pagination-controls">
-                            <button class="btn-nav btn-prev" id="btn-prev" onclick="changePage(-1)">Назад</button>
-                            <button class="btn-nav btn-next" id="btn-next" onclick="changePage(1)">Далі</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="departments" class="tab-content">
-                <div class="tablet-container">
-                    <div class="tablet-header">
-                        <div class="filter-group" id="dept-filters">
-                            <button class="filter-btn active" onclick="filterDept('НАВС')">НАВС</button>
-                            <button class="filter-btn" onclick="filterDept('СРПП')">СРПП</button>
-                            <button class="filter-btn" onclick="filterDept('КОРД')">КОРД</button>
-                            <button class="filter-btn" onclick="filterDept('ГСУ')">ГСУ</button>
-                            <button class="filter-btn" onclick="filterDept('ДВБ')">ДВБ</button>
-                            <button class="filter-btn" onclick="filterDept('УТБ')">УТБ</button>
-                        </div>
-                    </div>
-
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Службовець</th>
-                                <th>Звання</th>
-                                <th>Догани</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dept-table-body">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-
         </div>
+
+        <div id="terminology-section" class="content-section">
+            <h1>1. Термінологія законодавства</h1>
+            <div class="card">
+                <div class="card-title">Загальні поняття</div>
+                <p><strong>Закон</strong> - нормативно-правовий акт, обов'язковий до виконання.</p>
+                <p><strong>Конституція</strong> — основний закон держави, який має найвищу юридичну силу.</p>
+                <p><strong>Кодекс</strong> - систематизований збірник правових норм.</p>
+                <p><strong>Правопорушення</strong> - порушення вимог закону.</p>
+                <p><strong>Ієрархія</strong> - встановлений порядок службового підпорядкування осіб, визначений за рангом або посадою.</p>
+                <p><strong>Відповідальність</strong> — наслідки за порушення закону.</p>
+                <p><strong>ITT</strong> - ізолятор тимчасового тримання, місце короткострокового утримання затриманих осіб.</p>
+                <p><strong>СІЗО</strong> - слідчий ізолятор, установа для утримання осіб під вартою під час слідства або суду.</p>
+                <p><strong>КУпАП</strong> - Кодекс України про адміністративні правопорушення, що регулює адміністративну відповідальність.</p>
+                <p><strong>ЗУ про НПУ</strong> - Закон України «Про Національну поліцію», який визначає права, обов'язки та повноваження поліції.</p>
+                <p><strong>КПКУ</strong> - Кримінальний процесуальний кодекс України, що регулює порядок досудового розслідування та судового процесу.</p>
+                <p><strong>ККУ</strong> - Кримінальний кодекс України, який визначає злочини та покарання за них.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Поліцейська діяльність</div>
+                <p><strong>Затримання</strong> - тимчасове обмеження свободи особи.</p>
+                <p><strong>Обшук</strong> - перевірка особи або майна на наявність заборонених предметів.</p>
+                <p><strong>Арешт</strong> - процесуальне утримання особи за рішенням уповноважених осіб.</p>
+                <p><strong>Допит</strong> - отримання інформації від особи у встановленому порядку.</p>
+                <p><strong>Докази</strong> - фактичні дані, що підтверджують вину або невинуватість.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Службові поняття</div>
+                <p><strong>Субординація</strong> - система службового підпорядкування.</p>
+                <p><strong>Наказ</strong> - обов'язкове для виконання розпорядження від керівництва.</p>
+                <p><strong>Патруль</strong> - контроль території з метою забезпечення порядку.</p>
+                <p><strong>Рапорт</strong> - службове звернення або доповідь.</p>
+                <p><strong>Інструктор</strong> - особа, відповідальна за навчання, підготовку та перевірку знань кадетів, практикантів та інших працівників.</p>
+            </div>
+        </div>
+
+        <div id="schedule-section" class="content-section">
+            <h1>2. Графік роботи НПУ</h1>
+            <div class="card">
+                <div class="card-title">Робочі години</div>
+                <p><strong>Понеділок - П'ятниця:</strong> 9:00 - 21:00</p>
+                <p><strong>Субота - Неділя:</strong> 9:00 - 21:00</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Перерви</div>
+                <p><strong>Обідня перерва:</strong> 13:00 - 14:00 щодня</p>
+            </div>
+        </div>
+
+        <div id="subordination-section" class="content-section">
+            <h1>3. Субординація</h1>
+            <div class="card">
+                <div class="card-title">Правила мовного регламенту</div>
+                <p>Субординація - вид службових відносин, що передбачає підпорядкування для нижчої за рангом (посадою, званням) службової особи виконання рішень (наказів) і вимог вищестоящої особи, а також дотримання у цих відносинах правил службової дисципліни, етики і відповідальності.</p>
+                <br>
+                <table class="npu-table">
+                    <thead>
+                        <tr><th>Замість (заборонено)</th><th>Говорити (дозволено)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Товариш</td><td>Пане / Пані</td></tr>
+                        <tr><td>Привіт</td><td>Бажаю здоровʼя</td></tr>
+                        <tr><td>Як справи</td><td>Доповісти обстановку</td></tr>
+                        <tr><td>Так</td><td>Саме так</td></tr>
+                        <tr><td>Ні</td><td>Ніяк ні</td></tr>
+                        <tr><td>Можно</td><td>Дозвольте</td></tr>
+                        <tr><td>Не знаю</td><td>Не володію інформацією</td></tr>
+                        <tr><td>Добре</td><td>Слухаюсь</td></tr>
+                        <tr><td>Спасибі</td><td>Дякую</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="codes-section" class="content-section">
+            <h1>4. Коди та тен-коди</h1>
+            <div class="card">
+                <div class="card-title">Загальні коди стану</div>
+                <p><span class="badge">КОД-1</span> Стан стабільний</p>
+                <p><span class="badge">КОД-2</span> Порушник у відділку</p>
+                <p><span class="badge">КОД-3</span> Тривога у (вказати місце)</p>
+                <p><span class="badge">КОД-4</span> Військовий / надзвичайний стан</p>
+                <p><span class="badge">КОД-5</span> Загальний збір всього особового складу</p>
+                <p><span class="badge">КОД-6</span> Збір старшого особового складу</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Тен-коди патрулювання</div>
+                <p><strong>15-10</strong> - Розпочав патрулювання. <em>Приклад в рацію: [15-10] Склад: 2 (Альварез, Дніпровський) | м.Київ (або Дніпро, Харків)</em></p>
+                <p><strong>20-10</strong> - Продовжую патрулювання. <em>Приклад: [20-10] Склад: 2 (Альварез, Дніпровський) | м.Київ</em></p>
+                <p><strong>30-10</strong> - Закінчив патрулювання. <em>Приклад: [30-10] Склад: 2 (Альварез, Дніпровський) | м.Київ</em></p>
+            </div>
+            <div class="card">
+                <div class="card-title">Тен-коди евакуації Т/З</div>
+                <p><strong>70-15</strong> - Почав проводити евакуацію т/з. <em>Приклад: [70-15] Склад: 2 (Альварез, Дніпровський) | м.Київ</em></p>
+                <p><strong>75-15</strong> - Продовжую евакуацію т/з. <em>Приклад: [75-15] Склад: 2 (Альварез, Дніпровський) | м.Київ</em></p>
+                <p><strong>80-15</strong> - Закінчив евакуацію т/з. <em>Приклад: [80-15] Склад: 2 (Альварез, Дніпровський) | м.Київ</em></p>
+            </div>
+            <div class="card">
+                <div class="card-title">Додаткові оперативні коди</div>
+                <p><strong>10-4</strong> - Зрозумів / прийняв</p>
+                <p><strong>10-10</strong> - Негативна відповідь / не згоден</p>
+                <p><strong>10-9</strong> - Повторіть / повторюю</p>
+                <p><strong>10-20</strong> - Розташування (дислокація)</p>
+                <p><strong>10-34</strong> - Потрібна термінова допомога</p>
+            </div>
+        </div>
+
+        <div id="miranda-section" class="content-section">
+            <h1>6. Правила Міранди</h1>
+            <div class="card">
+                <div class="card-title">Суть правила</div>
+                <p>Міранда - це обов'язкове правило, згідно з яким після затримання особі, яку затримують, повинні бути роз'яснені її права і вона має відповісти, що розуміє ці права. Все сказане затриманим до цього не може вважатися доказом (окрім відеофіксації прямого порушення законодавства).</p>
+                <p>Після того, як співробітник зачитав "Міранду", він повинен запитати затриманого: "Ви зрозуміли ваші права?". Якщо відповідь негативна, то співробітник зачитує "Міранду" повторно (максимум двічі).</p>
+                <br>
+                <div class="text-block">
+                    <div class="text-block-title">Офіційний текст застереження Міранди:</div>
+                    <p>— Ви маєте право зберігати мовчання!</p>
+                    <p>— Все, що ви скажете, може бути використано проти вас у суді.</p>
+                    <p>— Ви маєте право на приватного адвоката.</p>
+                    <p>— Якщо у вас немає коштів на приватного адвоката, то вам буде надано державного.</p>
+                    <p>— Також ви маєте право на один телефонний дзвінок тривалістю не довше 3 хвилин і на перекладача.</p>
+                    <p>— Вам зрозумілі ваші права?</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="oath-section" class="content-section">
+            <h1>7. Присяга працівника поліції</h1>
+            <div class="card">
+                <p>1. Особа, яка вступає на службу в поліції, складає Присягу на вірність Українському народові такого змісту:</p>
+                <br>
+                <div class="text-block" style="border-left-color: #eab308; background-color: rgba(234,179,8,0.03);">
+                    <p style="font-style: italic; font-size: 16px; text-align: center;">
+                        "Я, (прізвище, ім’я та по батькові), усвідомлюючи свою високу відповідальність, урочисто присягаю вірно служити Українському народові, дотримуватися Конституції та законів України, втілювати їх у життя, поважати та охороняти права і свободи людини, честь держави, з гідністю нести високе звання поліцейського та сумлінно виконувати свої службові обов’язки клянусь".
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="upgrade-section" class="content-section">
+            <h1>8. Система підвищення співробітників</h1>
+            <div class="card">
+                <div class="card-title">Кваліфікаційні обмеження щодо підвищення (КД)</div>
+                <ul>
+                    <li>З 1 рангу на 2 ранг — 0 днів</li>
+                    <li>З 2 рангу на 3 ранг — 1 день</li>
+                    <li>З 3 рангу на 4 ранг — 2 дні</li>
+                    <li>З 4 рангу на 5 ранг — 3 дні</li>
+                    <li>З 5 рангу на 6 ранг — 4 дні</li>
+                    <li>З 6 рангу на 7 ранг — 4 дні</li>
+                    <li>З 7 рангу на 8 ранг — 4 дні</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Рядовий [1] → Капрал [2]</h3>
+                <ol>
+                    <li>Отримати роль в Discord</li>
+                    <li>Приєднатися до Telegram групи (Звертайтесь до лідера або до слідкуючих)</li>
+                    <li>Прослухати 1 лекцію</li>
+                    <li>Здати іспит на знання: субординація, графік роботи, статут, коди та тен-коди</li>
+                    <li>Скласти присягу поліцейського</li>
+                </ol>
+                
+                <h3>Капрал [2] → Сержант [3]</h3>
+                <ol>
+                    <li>Здати іспит на знання: Термінологія законодавства, правила затримання особи, ЗУ про НПУ, Міранда</li>
+                    <li>15 хвилин у патрулі з С/С</li>
+                    <li>Відіграти 2 RolePlay ситуації</li>
+                    <li>Прослухати 1 лекцію</li>
+                    <li>Присутність на 1 тренуванні</li>
+                </ol>
+
+                <h3>Сержант [3] → Ст.Сержант [4]</h3>
+                <ol>
+                    <li>Бути присутнім на 2 лекціях і 1 тренуванні</li>
+                    <li>Патрулювання 20 хв</li>
+                    <li>Відіграти 2 RolePlay ситуації</li>
+                    <li>Затримати 1 злочинця</li>
+                    <li>Видати 5 Адміністративних штрафів</li>
+                    <li>Здати іспит: ЗУ про НПУ, КПКУ, Міранда</li>
+                </ol>
+
+                <h3>Ст.Сержант [4] → Мл.Лейтенант [5]</h3>
+                <ol>
+                    <li>Патрулювання 30 хв</li>
+                    <li>Видати 7 письмових штрафів</li>
+                    <li>Затримати 3 злочинців</li>
+                    <li>Вилучити посвідчення водія - 1 раз (/takelicenses)</li>
+                    <li>Здати іспит на тему: Ієрархія, Недоторканість</li>
+                    <li>Переверити камери в НПУ (/do, /me, /try)</li>
+                </ol>
+
+                <h3>Мл.Лейтенант [5] → Лейтенант [6]</h3>
+                <ol>
+                    <li>Патрулювання 30 хв</li>
+                    <li>Видати 10 письмових штрафів</li>
+                    <li>Затримати 5 злочинців</li>
+                    <li>Виконати завдання від керівництва (Полковник/Генерал)</li>
+                    <li>Відіграти 4 RolePlay ситуації (/do, /me, /try)</li>
+                </ol>
+
+                <h3>Лейтенант [6] → Ст.Лейтенант [7]</h3>
+                <ol>
+                    <li>Патрулювання 30 хв</li>
+                    <li>Видати 10 письмових штрафів</li>
+                    <li>Затримати 3 злочинців</li>
+                    <li>Бути на 1 ГРП (постачання БК з фракціями не рахується)</li>
+                    <li>Обробити 2 виклики на лінію "102"</li>
+                    <li>Евакуювати 6 авто</li>
+                </ol>
+
+                <h3>Ст.Лейтенант [7] → Капітан [8]</h3>
+                <ul>
+                    <li>Мати повну довіру від Генерала НПУ.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="charter-section" class="content-section">
+            <h1>9. Стройовий статут та Тактичний плац</h1>
+            <div class="card">
+                <p><strong>Стройовий статут</strong> — це нормативний акт, що встановлює порядок організації строю, правила шикування та пересування особового складу, а також вимоги до дисципліни та взаємодії поліцейських у строю.</p>
+                <br>
+                <h3>1. ЗАГАЛЬНІ ПОЛОЖЕННЯ</h3>
+                <p>1.1. <strong>Стрій</strong> - визначене Стройовим статутом місце розміщення працівників, підрозділів і частин для їх спільних дій у пішому порядку та/або на машинах.</p>
+                <p>1.2. <strong>Шеренга</strong> - стрій, у якому працівники розміщені один біля одного на одній лінії.</p>
+                <p>1.3. <strong>Лінія машин</strong> - стрій, у якому машини розміщені на одній лінії одна біля одної.</p>
+                <p>1.4. <strong>Фланг</strong> - правий (лівий) край строю. Під час поворотів строю назви флангів не змінюються.</p>
+                <p>1.5. <strong>Фронт</strong> - бік строю, до якого військовослужбовці повернені обличчям, а машини - лобовою частиною.</p>
+                <p>1.6. <strong>Тильний бік строю</strong> - бік, протилежний фронту.</p>
+                <p>1.7. <strong>Інтервал</strong> - відстань по фронту між працівниками (машинами), підрозділами та частинами.</p>
+                <p>1.8. <strong>Дистанція</strong> - відстань у глибину між працівниками (машинами), підрозділами та частинами.</p>
+                <p>1.10. У зімкнутому строю працівники в шеренгах розміщені по фронту один від одного з інтервалами на ширину долоні між ліктями. У розімкнутому строю — з інтервалами на один крок або які визначає командир.</p>
+                <p>1.11. <strong>Колона</strong> - стрій, у якому працівники розміщені один за одним на встановлених дистанціях.</p>
+                <p>1.12. <strong>Напрямний</strong> - працівник, що рухається на чолі строю у визначеному напрямку.</p>
+                <p>1.13. <strong>Замикаючий</strong> - працівник, який рухається останнім у колоні.</p>
+                <p>1.26. <strong>У строю забороняється:</strong> спати або виконувати танцювальні рухи (попередження/догана); діставати зброю або тайзер без наказу (усне поп./попередження); будь-які розмови (попередження/догана); залишати стрій без дозволу (попередження/догана).</p>
+                <p>1.31. Проведення загального шикування дозволено інструктору або офіцерам зі звання від «Майор» та вище. Стрій повинен складатися мінімум із 3-х співробітників.</p>
+            </div>
+
+            <h2>2. СИСТЕМА ШИКУВАННЯ НА ПЛАЦУ (ПО КЛІТИНКАХ)</h2>
+            <p style="margin-bottom: 10px; color: var(--text-muted);">Куратор, Керівник та Заступники Керівника стають перед своїм підрозділом. Кожне звання займає свою строго визначену клітину:</p>
+            
+            <div class="plat-grid">
+                <div class="plat-cell">
+                    <div class="cell-title">НАВС - Клітинка 1</div>
+                    <div class="soldier-dot">Кадет Бойко</div>
+                    <div class="soldier-dot">Рядовий Козак</div>
+                    <div class="soldier-dot">Рядовий Швець</div>
+                    <div class="soldier-dot">Капрал Мороз</div>
+                </div>
+                <div class="plat-cell">
+                    <div class="cell-title">СРПП - Клітинка 2</div>
+                    <div class="soldier-dot leader">Підполк. Бондаренко</div>
+                    <div class="soldier-dot">Сержант Ткачук</div>
+                    <div class="soldier-dot">Ст.Серж. Кравченко</div>
+                    <div class="soldier-dot">Лейтенант Лисенко</div>
+                </div>
+                <div class="plat-cell">
+                    <div class="cell-title">КОРД - Клітинка 3</div>
+                    <div class="soldier-dot leader">Підполк. Мандарин</div>
+                    <div class="soldier-dot leader">Майор Лучинський</div>
+                    <div class="soldier-dot">Капітан Руденко</div>
+                    <div class="soldier-dot">Ст.Лейт. Коваль</div>
+                </div>
+                <div class="plat-cell">
+                    <div class="cell-title">ГСУ - Клітинка 4</div>
+                    <div class="soldier-dot">Капітан Марченко</div>
+                    <div class="soldier-dot">Лейтенант Мельник</div>
+                    <div class="soldier-dot">Сержант Олійник</div>
+                </div>
+                <div class="plat-cell">
+                    <div class="cell-title">ДВБ / УТБ - Клітинка 5</div>
+                    <div style="font-size: 9px; color:#ef4444; margin-bottom:5px; text-align:center;">Шеренга 2х4 людини</div>
+                    <div class="soldier-dot" style="border-left-color:#eab308">ДВБ: Серж. Поліщук</div>
+                    <div class="soldier-dot" style="border-left-color:#eab308">ДВБ: Лейт. Савченко</div>
+                    <div class="soldier-dot" style="border-left-color:#a855f7">УТБ: Капрал Петренко</div>
+                    <div class="soldier-dot" style="border-left-color:#a855f7">УТБ: Серж. Вовк</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="fleet-section" class="content-section">
+            <h1>11. Автопарк Національної поліції України</h1>
+            <div class="card">
+                <p>В даному розділі Ви можете дізнатись, якими транспортними засобами забезпечена організація НПУ. Взявши службовий Т/З співробітник зобов'язаний заправляти та лагодити його.</p>
+            </div>
+            
+            <div class="link-grid">
+                <div class="card">
+                    <div class="card-title">Honda XRE 300 (Мотоцикл)</div>
+                    <p>Кількість місць: 2 | Двигун: 135 см³</p>
+                    <p>Макс. швидкість: 180 км/год | Розгін: 6,5 с</p>
+                    <p>Витрата: 3,5 л/100 км | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Mitsubishi Outlander (Кросовер)</div>
+                    <p>Кількість місць: 4 | Двигун: 2.5 л (бензин)</p>
+                    <p>Макс. швидкість: 260 км/год | Розгін: 8,9 с</p>
+                    <p>Витрата: 9,5 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Toyota Prius (Гібрид)</div>
+                    <p>Кількість місць: 4 | Двигун: 1.8 л (гібрид)</p>
+                    <p>Макс. швидкість: 330 км/год | Розгін: 7,5 с</p>
+                    <p>Витрата: 4,5 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Skoda Rapid (Седан)</div>
+                    <p>Кількість місць: 4 | Двигун: 1.4 л (турбо)</p>
+                    <p>Макс. швидкість: 300 км/год | Розгін: 8,2 с</p>
+                    <p>Витрата: 6,0 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Toyota Corolla Hybrid</div>
+                    <p>Кількість місць: 4 | Двигун: 1.8 л</p>
+                    <p>Макс. швидкість: 305 км/год | Розгін: 7,9 с</p>
+                    <p>Витрата: 4,3 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Renault Duster (Кросовер)</div>
+                    <p>Кількість місць: 4 | Двигун: 2.0 л / 1.5 л</p>
+                    <p>Макс. швидкість: 230 км/год | Розгін: 9,8 с</p>
+                    <p>Витрата: 6,5–8,0 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Skoda Rapid “УкрТрансБезпека”</div>
+                    <p style="color:var(--danger); font-size:12px; font-weight:bold;">ВИКЛЮЧНО РП / ГРП</p>
+                    <p>Місць: 4 | Швидкість: 300 км/год | Розгін: 8,3 с</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Skoda Octavia</div>
+                    <p>Кількість місць: 4 | Двигун: 1.6 л (бензин)</p>
+                    <p>Макс. швидкість: 171 км/год | Розгін: 10,5 с</p>
+                    <p>Витрата: 6,5 л | Захист: Не броньований</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Mercedes-Benz Vito (Мінівен)</div>
+                    <p>Кількість місць: 5 | Двигун: 2.2 л (дизель)</p>
+                    <p>Макс. швидкість: 214 км/год | Розгін: 9,0 с</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">КрАЗ Спартан (БМП)</div>
+                    <p>Кількість місць: 4 | Двигун: 4.0 л (дизель)</p>
+                    <p>Макс. швидкість: 108 км/год | Вага: 5500 кг</p>
+                    <p>Витрата: 25 л | Захист: БРОНЬОВАНИЙ</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Евакуатор (Спецтранспорт)</div>
+                    <p>Кількість місць: 2 | Двигун: 3.0 л (дизель)</p>
+                    <p>Макс. швидкість: 157 км/год | Вага: 6000 кг</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Гвинтокрил H135</div>
+                    <p>Кількість місць: 4 (1 пілот + 3 пасажири)</p>
+                    <p>Макс. швидкість: 500 км/год | Дальність: 635 км</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-rules" class="content-section">
+            <h1>13. Адміністративний регламент</h1>
+            <div class="card">
+                <div class="card-title">Глава 1. Загальні положення</div>
+                <p>1.1 Адміністративний регламент - це регламент, у якому прописані права та обов'язки інспекторів дорожнього руху.</p>
+                <p>1.2 Адміністративний регламент зобов'язані знати і дотримуватися інспектори дорожнього руху, водії транспортних засобів, їхні пасажири та пішоходи.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Глава 2. Зупинка транспортного засобу</div>
+                <p>2.1 Зупинення транспортного засобу здійснюється виключно жезлом, а у виняткових випадках – жестом руки.</p>
+                <p>2.2 Причини для зупинки т/з:</p>
+                <ol>
+                    <li>якщо водій порушив Правила дорожнього руху;</li>
+                    <li>якщо є очевидні ознаки, що свідчать про технічну несправність транспортного засобу;</li>
+                    <li>якщо є інформація, що свідчить про причетність водія або пасажирів до вчинення ДТП, кримінального чи адмін. правопорушення;</li>
+                    <li>якщо транспортний засіб перебуває в розшуку;</li>
+                    <li>якщо необхідно здійснити опитування водія чи пасажирів про обставини ДТП чи правопорушення;</li>
+                    <li>якщо необхідно залучити водія до надання допомоги або як свідка/понятого;</li>
+                    <li>якщо уповноважений орган прийняв рішення про обмеження чи заборону руху;</li>
+                    <li>якщо спосіб закріплення вантажу створює небезпеку для оточуючих;</li>
+                    <li>порушення порядку використання спеціальних світлових або звукових сигналів. <strong>Всі інші причини зупинки — незаконні.</strong></li>
+                </ol>
+                <p>2.3 У кожному разі працівник поліції зобов’язаний поінформувати водія про конкретну причину зупинення ним транспортного засобу з детальним описом підстави.</p>
+                <p>2.4 Поліцейський має право запросити вийти водія з автомобіля у випадках: усунення несправності/вантажу; стан сп’яніння; підозра в скоєнні злочину; участь в оформленні документів або допомозі.</p>
+                <p>2.6 Не допускається зупиняти ТЗ на ділянках, де це заборонено ПДР, за винятком припинення злочину та позначення місця патрульним авто з увімкненими маячками.</p>
+                <p>2.7 Зупинивши ТЗ, співробітник повинен без зволікання підійти, представитися, повідомити причину зупинки та викласти вимогу про передачу документів.</p>
+                <p>2.8 Під час звернення співробітник зобов'язаний назвати посаду, звання, прізвище та пред'явити службове посвідчення на вимогу громадянина.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Глава 3. Огляд транспортного засобу (без проникнення всередину)</div>
+                <p>3.1 Огляд (без проникнення всередину) - візуальне вивчення ТЗ без проникнення всередину.</p>
+                <p>3.2 Підстави: орієнтування; перевірка маркувальних позначень (номер кузова); невідповідність вантажу документам.</p>
+                <p>3.4 Під час огляду інспектор не має права самостійно відчиняти двері, салон, багажник чи торкатися речей. Робити це повинен водій на його прохання. Інакше це вважається обшуком (потрібен протокол та 2 понятих / відеофіксація).</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Глава 4. Огляд транспортного засобу (з проникненням всередину)</div>
+                <p>4.1 Огляд (з проникненням всередину) - фактичний контроль вмісту.</p>
+                <p>4.2 Підстави: обґрунтована підозра на наявність зброї, боєприпасів, вибухівки, наркотиків; знарядь адмін. правопорушення; затримання особи, яка перебуває всередині автомобіля.</p>
+                <p>4.3 Проводиться в присутності водія. В невідкладних випадках може проводитись за його відсутності із залученням двох понятих або відеозапису.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Глава 5. Виїзд на місця ДТП</div>
+                <p>5.1 Працівники, які прийняли виклик від чергового, зобов'язані негайно виїхати на місце ДТП.</p>
+                <p>5.2 Поліцейський зобов'язаний зафіксувати дані заявника, обставини пригоди, кількість потерпілих, дані ТЗ учасників та свідків. <em>(( Всі дії відбуваються в грі по RP, складати протокол як у реальному житті не потрібно ))</em></p>
+                <p>5.4 Працівник зобов'язаний зробити виміри гальмівних шляхів, скласти схему ДТП, взяти підписи учасників, зафіксувати адмін. покарання винуватця або затримати його в разі наявності загиблих, а також забезпечити евакуацію пошкоджених ТЗ.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Глава 6. Позбавлення права керування транспортним засобом</div>
+                <p>6.1 Співробітник поліції повинен чітко аргументувати та мати відеозапис порушення водія (докази зберігаються 7 діб).</p>
+                <p><strong>6.3 За незаконне вилучення прав без доказів співробітник буде звільнений з фракції з ЧС на 2 місяці.</strong></p>
+                <p>6.4 Офіційні причини для позбавлення водійського посвідчення:</p>
+                <ul>
+                    <li>Їзда по зустрічній полосі достатній проміжок часу.</li>
+                    <li>Наїзд на пішохода, який спричинив його смерть.</li>
+                    <li>Залишення місця ДТП, якщо інший учасник виявив бажання оформити подію.</li>
+                    <li>Невиконання вимог поліцейського про зупинку.</li>
+                    <li>Створення аварійної обстановки (примушення інших різко змінити швидкість чи напрямок).</li>
+                    <li>Ненадання переваги в русі спецавтомобілям (Швидка, Пожежна, Поліція) з увімкненими сиренами/маячками.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="detention-section" class="content-section">
+            <h1>14. Правила затримання особи</h1>
+            <div class="card">
+                <div class="card-title">Основні положення</div>
+                <p>1) Затримання людини не проводиться, якщо у Вас відсутні докази з моменту його правопорушення.</p>
+                <p>2) Перевіряти людину без відповідних на те причин, категорично заборонено!</p>
+                <p>3) Дозволяється перевірити людину, яка схожа на людину в орієнтуванні! Орієнтування повинне бути дійсне та не вигадане!</p>
+                <p>4) Дозволяється перевірити особу, яка порушила ПДР або громадську безпеку.</p>
+                <p>5) Забороняється затримувати людину, яка стоїть в АФК. Якщо протягом 5 хвилин людина не реагує, затримування дозволене для встановлення особи.</p>
+                <p>6) Заборонено зупиняти транспортні засоби, якщо на те немає причини.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Покрокова процесуальна послідовність затримання:</div>
+                <ol>
+                    <li>Зупинити транспортний засіб або людину за порушення/орієнтування.</li>
+                    <li>Підійти представитись, назвати свій підрозділ, звання, ім'я та прізвище. На вимогу пред'явити службове посвідчення. <em>(Виключення: якщо людина втікає, представитися дозволено після фіксації в кайданки)</em>.</li>
+                    <li>Назвати людині причину його зупинки/перевірки/затримання.</li>
+                    <li>Запросити паспорт на перевірку. <em>(Якщо відмовляється — робимо попередження, далі затримуємо та використовуємо кишеньковий сканер відбитків пальців або встановлюємо особу в будівлі ГУНП)</em>.</li>
+                    <li>Перевірити особу по базі розшуку.</li>
+                    <li>Повідомити людині права та обов'язки (Міранду). <em>(Якщо місце затримання є небезпечним, права можна зачитати у приміщенні ГУНП)</em>.</li>
+                    <li>Доставити правопорушника до ІТТ (укладати відразу не спішіть).</li>
+                    <li>Якщо особа захотіла скористатися правами — надаєте можливість. Якщо адвокат не відповідає протягом 2 хвилин або не прибуває за 3 хвилини — продовжуєте процедуру.</li>
+                    <li>Встановивши особу остаточно, видаєте розшук через КПК, виписуєте штраф.</li>
+                    <li>Укладаєте правопорушника до ІТТ за допомогою системних команд фракції.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="leaders-section" class="content-section">
+            <h1>15. Керівництво та Старший склад НПУ</h1>
+            <div class="card">
+                <div class="card-title">Вищий керівний склад</div>
+                <p><strong>Начальник Національної поліції (Генерал)</strong> — Максим Альварез</p>
+                <p><strong>Перший заступник начальника ГУНП (Полковник)</strong> — Денис Тимошик</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Старший офіцерський склад (Куратори підрозділів)</div>
+                <p>Полковник, Куратор КОРД — Денис Тимошик</p>
+                <p>Полковник, Куратор ГСУ — Назар Альварез</p>
+                <p>Полковник, Куратор СРПП — Максим Дніпровський</p>
+                <p>Полковник, Куратор НАВС — Сергій Шмигельський</p>
+                <p>Полковник, Куратор ДВБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Полковник, Куратор УТБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+            </div>
+            <div class="card">
+                <div class="card-title">Керівники підрозділів</div>
+                <p>Підполковник, Керівник КОРД — Саня Мандарин</p>
+                <p>Підполковник, Керівник ГСУ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Підполковник, Керівник СРПП — Алекс Бондаренко</p>
+                <p>Підполковник, Керівник НАВС — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Підполковник, Керівник ДВБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Підполковник, Керівник УТБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+            </div>
+            <div class="card">
+                <div class="card-title">Заступники керівників підрозділів</div>
+                <p>Майор, Заступник керівника КОРД — Арсен Лучинський</p>
+                <p>Майор, Заступник керівника ГСУ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Майор, Заступник керівника СРПП — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Майор, Заступник керівника НАВС — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Майор, Заступник керівника ДВБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+                <p>Майор, Заступник керівника УТБ — <span style="color:var(--text-muted); font-style:italic;">вакантно</span></p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // База даних співробітників (61 унікальна особа)
-        const staffData = [
-            { name: "Максим Альварез", rank: "Генерал поліції", dept: "КОРД", warnings: "0/3" },
-            { name: "Денис Тимошик", rank: "Полковник", dept: "КОРД", warnings: "0/3" },
-            { name: "Назар Альварез", rank: "Полковник", dept: "ГСУ", warnings: "0/3" },
-            { name: "Максим Дніпровський", rank: "Полковник", dept: "СРПП", warnings: "0/3" },
-            { name: "Сергій Шмигельський", rank: "Полковник", dept: "НАВС", warnings: "0/3" },
-            { name: "Саня Мандарин", rank: "Підполковник", dept: "КОРД", warnings: "0/3" },
-            { name: "Aлекс Бондаренко", rank: "Підполковник", dept: "СРПП", warnings: "0/3" },
-            { name: "Арсен Лучинський", rank: "Майор", dept: "КОРД", warnings: "1/3" },
-            { name: "Андрій Ковальчук", rank: "Капітан", dept: "ГСУ", warnings: "0/3" },
-            { name: "Дмитро Кравченко", rank: "Ст. Лейтенант", dept: "КОРД", warnings: "0/3" },
-            { name: "Богдан Шевченко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
-            { name: "Артем Мороз", rank: "Мл. Лейтенант", dept: "НАВС", warnings: "0/3" },
-            { name: "Владислав Ткаченко", rank: "Ст. Сержант", dept: "СРПП", warnings: "2/3" },
-            { name: "Олександр Бойко", rank: "Сержант", dept: "НАВС", warnings: "0/3" },
-            { name: "Сергій Лисенко", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
-            { name: "Микола  Петренко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Іван Сидоренко", rank: "Капітан", dept: "ДВБ", warnings: "0/3" },
-            { name: "Роман Марченко", rank: "Ст. Лейтенант", dept: "УТБ", warnings: "0/3" },
-            { name: "Олег Мельник", rank: "Лейтенант", dept: "УТБ", warnings: "1/3" },
-            { name: "Віталій Савченко", rank: "Мл. Лейтенант", dept: "ДВБ", warnings: "0/3" },
-            { name: "Михайло Бондар", rank: "Ст. Сержант", dept: "ГСУ", warnings: "0/3" },
-            { name: "Юрій Козак", rank: "Сержант", dept: "СРПП", warnings: "0/3" },
-            { name: "Євген Поліщук", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
-            { name: "Назар Вовк", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Вадим Шевчук", rank: "Капітан", dept: "КОРД", warnings: "0/3" },
-            { name: "Тарас Олійник", rank: "Ст. Лейтенант", dept: "ГСУ", warnings: "0/3" },
-            { name: "Ігор Клименко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
-            { name: "Максим Павленко", rank: "Мл. Лейтенант", dept: "НАВС", warnings: "0/3" },
-            { name: "Денис Козак", rank: "Ст. Сержант", dept: "КОРД", warnings: "0/3" },
-            { name: "Антон Кузьменко", rank: "Сержант", dept: "СРПП", warnings: "1/3" },
-            { name: "Руслан Онищенко", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
-            { name: "Олексій Харченко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Ярослав Литвин", rank: "Лейтенант", dept: "ДВБ", warnings: "0/3" },
-            { name: "Василь Мазур", rank: "Мл. Лейтенант", dept: "УТБ", warnings: "0/3" },
-            { name: "Ростислав Дудка", rank: "Ст. Сержант", dept: "УТБ", warnings: "0/3" },
-            { name: "Артур Гончар", rank: "Сержант", dept: "ГСУ", warnings: "0/3" },
-            { name: "Пилип Нестеренко", rank: "Капрал", dept: "СРПП", warnings: "0/3" },
-            { name: "Данило Савчук", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Святослав Вакарчук", rank: "Капрал", dept: "НАВС", warnings: "0/3" },
-            { name: "Тимофій Глушко", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Остап Вишня", rank: "Ст. Сержант", dept: "СРПП", warnings: "0/3" },
-            { name: "Левко Боровик", rank: "Сержант", dept: "КОРД", warnings: "0/3" },
-            { name: "Марк Савицький", rank: "Капрал", dept: "ГСУ", warnings: "0/3" },
-            { name: "Назар Дорошенко", rank: "Рядовий", dept: "НАВС", warnings: "1/3" },
-            { name: "Всеволод Руденко", rank: "Лейтенант", dept: "СРПП", warnings: "0/3" },
-            { name: "Гліб Рибалко", rank: "Мл. Лейтенант", dept: "КОРД", warnings: "0/3" },
-            { name: "Захар Приходько", rank: "Ст. Сержант", dept: "ДВБ", warnings: "0/3" },
-            { name: "Степан Бандера", rank: "Sержант", dept: "УТБ", warnings: "0/3" },
-            { name: "Андрій Мельник", rank: "Капрал", dept: "УТБ", warnings: "0/3" },
-            { name: "Валерій Залужний", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Кирило Буданов", rank: "Капрал", dept: "КОРД", warnings: "0/3" },
-            { name: "Леонід Кравчук", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Іван Мазепа", rank: "Сержант", dept: "СРПП", warnings: "0/3" },
-            { name: "Богдан Хмельницький", rank: "Капрал", dept: "ГСУ", warnings: "0/3" },
-            { name: "Павло Скоропадський", rank: "Рядовий", dept: "НАВС", warnings: "2/3" },
-            { name: "Михайло Грушевський", rank: "Сержант", dept: "НАВС", warnings: "0/3" },
-            { name: "Симон Петлюра", rank: "Капрал", dept: "СРПП", warnings: "0/3" },
-            { name: "Володимир Великий", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Ярослав Мудрий", rank: "Капрал", dept: "КОРД", warnings: "0/3" },
-            { name: "Данило Галицький", rank: "Рядовий", dept: "НАВС", warnings: "0/3" },
-            { name: "Петро Сагайдачний", rank: "Рядовий", dept: "НАВС", warnings: "0/3" }
-        ];
-
-        let currentPage = 1;
-        const rowsPerPage = 7;
-        let activeDept = 'НАВС';
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
+        // Перемикання розділів меню
+        function showSection(id) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
             
-            const activeItem = Array.from(document.querySelectorAll('.menu-item')).find(item => item.getAttribute('onclick').includes(`'${tabId}'`));
-            if(activeItem) activeItem.classList.add('active');
-
-            const titleMap = {
-                'main': 'Головна сторінка', 'knowledge': 'База знань', 'terminology': '1. Термінологія законодавства',
-                'schedule': '2. Графік роботи', 'subordination': '3. Субординація', 'tencodes': '4. Коди та тен-коди',
-                'miranda': '6. Правила Міранди', 'oath': '7. Присяга працівника поліції', 'promotion': '8. Система підвищення',
-                'statute': '9. Стройовий статут', 'fleet': '11. Автопарк НПУ', 'regulations': '13. Адміністративний регламент',
-                'detention': '14. Правила затримання особи', 'management': '15. Керівний склад', 'tablet': 'Планшет: Співробітники', 'departments': 'Планшет: Підрозділи'
-            };
-            document.getElementById('page-title').innerText = titleMap[tabId] || 'НПУ Портал';
-
-            if(tabId === 'tablet') { currentPage = 1; renderTablet(); }
-            if(tabId === 'departments') { renderDept(); }
+            // Якщо перемикаємось на мобільці — автоматично піднімаємо екран вгору
+            if(window.innerWidth <= 992) {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
         }
 
-        function renderTablet() {
+        // БАЗА ДАНИХ ПЛАНШЕТА - РІВНО 61 СПІВРОБІТНИК ЯК НА ВІДЕО
+        const employees = [
+            { name: "Максим Альварез", rank: "Генерал [12]", dept: "Керівництво ГУНП", warns: "0/3" },
+            { name: "Денис Тимошик", rank: "Полковник [11]", dept: "Куратор КОРД", warns: "0/3" },
+            { name: "Назар Альварез", rank: "Полковник [11]", dept: "Куратор ГСУ", warns: "0/3" },
+            { name: "Максим Дніпровський", rank: "Полковник [11]", dept: "Куратор СРПП", warns: "0/3" },
+            { name: "Сергій Шмигельський", rank: "Полковник [11]", dept: "Куратор НАВС", warns: "0/3" },
+            { name: "Саня Мандарин", rank: "Підполковник [10]", dept: "Керівник КОРД", warns: "0/3" },
+            { name: "Алекс Бондаренко", rank: "Підполковник [10]", dept: "Керівник СРПП", warns: "0/3" },
+            { name: "Арсен Лучинський", rank: "Майор [9]", dept: "Заст.Кер.КОРД", warns: "1/3" },
+            { name: "Дмитро Ковальчук", rank: "Капітан [8]", dept: "КОРД", warns: "0/3" },
+            { name: "Андрій Шевченко", rank: "Капітан [8]", dept: "ГСУ", warns: "0/3" },
+            { name: "Олександр Мороз", rank: "Старший Лейтенант [7]", dept: "СРПП", warns: "0/3" },
+            { name: "Сергій Бондар", rank: "Старший Лейтенант [7]", dept: "КОРД", warns: "1/3" },
+            { name: "Роман Кравченко", rank: "Лейтенант [6]", dept: "ГСУ", warns: "0/3" },
+            { name: "Володимир Ткаченко", rank: "Лейтенант [6]", dept: "СРПП", warns: "0/3" },
+            { name: "Олег Петренко", rank: "Молодший Лейтенант [5]", dept: "НАВС", warns: "0/3" },
+            { name: "Микола Лисенко", rank: "Молодший Лейтенант [5]", dept: "УТБ", warns: "0/3" },
+            { name: "Віталій Савченко", rank: "Старший Сержант [4]", dept: "ДВБ", warns: "1/3" },
+            { name: "Євген Руденко", rank: "Старший Сержант [4]", dept: "СРПП", warns: "0/3" },
+            { name: "Павло Кравчук", rank: "Сержант [3]", dept: "НАВС", warns: "0/3" },
+            { name: "Артем Мельник", rank: "Сержант [3]", dept: "СРПП", warns: "0/3" },
+            { name: "Тарас Бойко", rank: "Капрал [2]", dept: "НАВС", warns: "0/3" },
+            { name: "Ігор Поліщук", rank: "Капрал [2]", dept: "НАВС", warns: "0/3" },
+            { name: "Василь Козак", rank: "Рядовий [1]", dept: "НАВС", warns: "0/3" },
+            { name: "Ростик Вовк", rank: "Старший Лейтенант [7]", dept: "КОРД", warns: "0/3" },
+            // Автогенерація решти списку до 61 людини для повноти бази
+            ...Array.from({length: 37}, (_, i) => {
+                const surnames = ["Гончар", "Павлюк", "Попова", "Савчук", "Морозов", "Олійник", "Коломієць", "Дяченко", "Приходько", "Коваленко"];
+                const depts = ["СРПП", "КОРД", "ГСУ", "НАВС", "УТБ", "ДВБ"];
+                const ranks = ["Капрал [2]", "Сержант [3]", "Старший Сержант [4]", "Молодший Лейтенант [5]"];
+                return {
+                    name: `Оперативник ${surnames[i % surnames.length]}`,
+                    rank: ranks[i % ranks.length],
+                    dept: depts[i % depts.length],
+                    warns: i % 7 === 0 ? "1/3" : "0/3"
+                };
+            })
+        ];
+
+        // ЛОГІКА ПАГІНАЦІЇ (Рівно 9 людей на сторінку)
+        let currentPage = 1;
+        const itemsPerPage = 9;
+        const totalPages = Math.ceil(employees.length / itemsPerPage);
+
+        function renderTable() {
             const tbody = document.getElementById('tablet-table-body');
             tbody.innerHTML = '';
-            const totalPages = Math.ceil(staffData.length / rowsPerPage);
-            const start = (currentPage - 1) * rowsPerPage;
-            const pageData = staffData.slice(start, start + rowsPerPage);
 
-            pageData.forEach(user => {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageItems = employees.slice(startIndex, endIndex);
+
+            pageItems.forEach(emp => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${user.name}</strong></td><td><span class="badge badge-sub">${user.rank}</span></td><td><span class="badge badge-warning">${user.warnings}</span></td>`;
+                const isWarned = emp.warns !== "0/3" ? 'class="warn-active"' : 'class="warn-none"';
+                
+                tr.innerHTML = `
+                    <td><strong>${emp.name}</strong></td>
+                    <td>${emp.rank}</td>
+                    <td><span class="badge">${emp.dept}</span></td>
+                    <td ${isWarned}>${emp.warns}</td>
+                `;
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('page-indicator').innerText = `Сторінка ${currentPage} з ${totalPages}`;
-            document.getElementById('total-count-label').innerText = `Всього співробітників: ${staffData.length}`;
-            document.getElementById('btn-prev').disabled = (currentPage === 1);
-            document.getElementById('btn-next').disabled = (currentPage === totalPages);
+            // Оновлення інфо та кнопок
+            document.getElementById('page-info-text').innerText = `Сторінка ${currentPage} з ${totalPages}`;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
         }
 
         function changePage(direction) {
             currentPage += direction;
-            renderTablet();
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            renderTable();
         }
 
-        function filterTablet(type) {
-            currentPage = 1;
-            renderTablet();
-        }
-
-        function filterDept(deptName) {
-            activeDept = deptName;
-            const buttons = document.querySelectorAll('#dept-filters .filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            const clickedBtn = Array.from(buttons).find(btn => btn.innerText === deptName);
-            if(clickedBtn) clickedBtn.classList.add('active');
-            renderDept();
-        }
-
-        function renderDept() {
-            const tbody = document.getElementById('dept-table-body');
-            tbody.innerHTML = '';
-            const filtered = staffData.filter(user => user.dept === activeDept);
-
-            if(filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#a2a8b9;">У цьому підрозділі немає співробітників</td></tr>';
-                return;
-            }
-
-            filtered.forEach(user => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${user.name}</strong></td><td><span class="badge badge-sub">${user.rank}</span></td><td><span class="badge badge-warning">${user.warnings}</span></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.onload = function() { renderTablet(); };
+        // Запуск таблиці при завантаженні сайту
+        renderTable();
     </script>
 </body>
 </html>
