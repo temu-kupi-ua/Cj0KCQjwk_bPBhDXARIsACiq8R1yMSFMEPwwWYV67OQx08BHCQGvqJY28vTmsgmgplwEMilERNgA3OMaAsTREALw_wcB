@@ -15,6 +15,7 @@
             --border-color: #334155;
             --danger-red: #ef4444;
             --danger-hover: #dc2626;
+            --success-green: #10b981;
         }
 
         body {
@@ -137,12 +138,18 @@
             margin-bottom: 20px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
+            color: var(--text-color);
         }
 
-        /* Сітка з червоними кнопками в Системі НПУ */
+        h3 {
+            color: var(--accent-blue);
+            margin-top: 25px;
+        }
+
+        /* Кнопки в Системі НПУ */
         .system-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -167,7 +174,7 @@
             box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
         }
 
-        /* Блоки оформлення тексту */
+        /* Списки та блоки */
         .alert-box {
             background-color: rgba(239, 68, 68, 0.1);
             border-left: 4px solid var(--danger-red);
@@ -220,6 +227,8 @@
             border-left: 2px solid var(--border-color);
         }
 
+        .career-list li { margin-bottom: 4px; font-size: 14px; }
+
         .quote { text-align: center; font-style: italic; color: var(--accent-gold); margin-top: 20px; }
         .footer-info { font-size: 12px; color: var(--text-muted); text-align: right; margin-top: 20px; }
         
@@ -234,6 +243,33 @@
             font-weight: 500;
         }
         .back-btn:hover { background-color: rgba(255, 255, 255, 0.15); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+
+        ul.text-list {
+            padding-left: 20px;
+        }
+        ul.text-list li {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -256,7 +292,7 @@
             <h2>База знань працівника Національної поліції</h2>
             <p>У цьому розділі зібрано основні теми, які повинен знати кожен працівник Національної поліції України. Матеріали допоможуть підвищити професійний рівень, орієнтуватися в законодавстві та ефективно виконувати службові обов’язки.</p>
             
-            <h3 style="color: var(--accent-blue);">Законодавча база</h3>
+            <h3>Законодавча база</h3>
             <p>Інші документи про порядок діяльності працівника поліції:</p>
             <ul class="law-list">
                 <li class="law-item">Кримінальний Кодекс</li>
@@ -272,13 +308,13 @@
             </div>
 
             <div class="career-card">
-                <h3 style="margin:0; font-size: 16px;">Генерал НПУ ГУНП м. Дніпро</h3>
+                <h3 style="margin:0; font-size: 16px; color: white;">Генерал НПУ ГУНП м. Дніпро</h3>
                 <div class="career-title">Західна Україна 02</div>
                 <ul class="career-list">
                     <li>Майор Заст.Кер КОРД <span style="color:var(--text-muted)">(24.01.2025 - 26.02.2025)</span></li>
                     <li>Підполковник Кер.КОРД <span style="color:var(--text-muted)">(26.02.2025 - 18.04.2025)</span></li>
                     <li>Полковник Куратор КОРД <span style="color:var(--text-muted)">(18.04.2025 - 13.05.2025)</span></li>
-                    <li>ВРУ | Народний депутат <span style="color:var(--text-muted)">(16.05.2025 - 02.06.2025)</span></li>
+                    <li>ВРУ | Narodnyi Deputat <span style="color:var(--text-muted)">(16.05.2025 - 02.06.2025)</span></li>
                 </ul>
                 <div class="career-title">Подільський Край 06</div>
                 <ul class="career-list">
@@ -313,74 +349,178 @@
         <div id="sub-terminology" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>⚖️ Термінологія законодавства</h2>
-            <p><em>Текст про термінологію очікується...</em></p>
+            <ul class="text-list">
+                <li><strong>Правопорушення</strong> — суспільно небезпечне або шкідливе, протиправне діяння (допущене у формі дії або бездіяльності).</li>
+                <li><strong>Адміністративне правопорушення</strong> — протиправна, винна дія чи бездіяльність, яка посягає на громадський порядок чи власність і за яку передбачено адмін. відповідальність.</li>
+                <li><strong>Кримінальне правопорушення</strong> — передбачене Кримінальним Кодексом суспільно небезпечне діяння, вчинене суб’єктом злочину.</li>
+                <li><strong>Затримання</strong> — тимчасовий запобіжний захід правоохоронних органів з метою припинення правопорушення та встановлення особи (до 30 хвилин в межах RP процесу).</li>
+            </ul>
         </div>
 
         <div id="sub-schedule" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>📅 Графік роботи</h2>
-            <p><em>Текст про графік роботи очікується...</em></p>
+            <p>Кожен співробітник повинен перебувати на зміні у визначений час:</p>
+            <table>
+                <tr>
+                    <th>Дні тижня</th>
+                    <th>Робоча зміна</th>
+                    <th>Обідня перерва</th>
+                </tr>
+                <tr>
+                    <td>Понеділок - П'ятниця</td>
+                    <td>10:00 - 21:00</td>
+                    <td>13:00 - 14:00</td>
+                </tr>
+                <tr>
+                    <td>Субота - Неділя</td>
+                    <td>11:00 - 20:00</td>
+                    <td>13:00 - 14:30</td>
+                </tr>
+            </table>
+            <p><small style="color:var(--danger-red);">* Перебування без форми під час робочої зміни без дозволу Керівництва карається доганою!</small></p>
         </div>
 
         <div id="sub-subordination" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>🗣️ Субординація</h2>
-            <p><em>Текст про субординацію очікується...</em></p>
+            <h2>🗣️ Субординація та правила спілкування</h2>
+            <p>Заміна неформальної мови на офіційно-службову:</p>
+            <ul>
+                <li>Замість <em>"Привіт / Здарова"</em> ➡️ <strong>"Бажаю здоров'я!"</strong> або <strong>"Вітаю!"</strong></li>
+                <li>Замість <em>"Так / Ага"</em> ➡️ <strong>"Саме так!"</strong></li>
+                <li>Замість <em>"Ні / Неа"</em> ➡️ <strong>"Ніяк ні!"</strong></li>
+                <li>Замість <em>"Можна?"</em> ➡️ <strong>"Дозвольте звернутися?"</strong></li>
+                <li>Замість <em>"Я не знаю"</em> ➡️ <strong>"Не володію інформацією!"</strong></li>
+                <li>Замість <em>"Добре / Ок"</em> ➡️ <strong>"Прийнято!"</strong> або <strong>"Слухаюсь!"</strong></li>
+            </ul>
         </div>
 
         <div id="sub-codes" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>📻 Коди та тен-коди</h2>
-            <p><em>Текст про коди очікується...</em></p>
+            <h2>📻 Коди та тен-коди радіообміну</h2>
+            <h3>Загальні коди ситуацій:</h3>
+            <ul>
+                <li><strong>Код-1</strong> — Стан стабільний / Спокійно.</li>
+                <li><strong>Код-2</strong> — Напад / Порушення порядку біля ДЧ чи на посту.</li>
+                <li><strong>Код-3</strong> — Терміновий збір на парковці (Усім бути в зброї та броні).</li>
+                <li><strong>Код-4</strong> — Надзвичайний стан (Захоплення будівлі, ВП, масштабні теракти).</li>
+                <li><strong>Код-5</strong> — Побудова на закритій парковці.</li>
+            </ul>
+            <h3>Тен-коди:</h3>
+            <ul>
+                <li><strong>10-4</strong> — Прийнято / Зрозумів.</li>
+                <li><strong>10-9</strong> — Повторіть останнє повідомлення.</li>
+                <li><strong>10-10</strong> — Негативний відповідь / Не прийнято.</li>
+                <li><strong>10-20</strong> — Яке ваше місце розташування? (або Доповідаю дислокацію).</li>
+                <li><strong>10-34</strong> — Потрібна термінова підмога підрозділів!</li>
+            </ul>
         </div>
 
         <div id="sub-otz" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>🚗 Реєстрація ОТЗ</h2>
-            <p><em>Текст про реєстрацію особистого транспорту очікується...</em></p>
+            <h2>🚗 Реєстрація Особистого Транспорту (ОТЗ)</h2>
+            <p>Співробітники від звання <strong>Майор [9]</strong> мають право використовувати власний автомобіль для службових цілей після схвалення рапорту Генералом.</p>
+            <p><strong>Вимоги до ОТЗ:</strong></p>
+            <ul class="text-list">
+                <li>Державний колір авто: Чорний, Темно-синій, Білий, Сірий (без яскравих вінілів).</li>
+                <li>Тонування скла — дозволено.</li>
+                <li>Обов'язкова наявність номерного знаку.</li>
+                <li>Заборонено використовувати неон та нестандартні сигнальні елементи non-RP типу.</li>
+            </ul>
         </div>
 
         <div id="sub-miranda" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>📜 Правила Міранди</h2>
-            <p><em>Текст правила Міранди очікується...</em></p>
+            <p>Юридична вимога, яку поліцейський <strong>зобов’язаний</strong> зачитати затриманому одразу після обмеження його свободи:</p>
+            <div class="alert-box" style="background-color: rgba(59, 130, 246, 0.1); border-left-color: var(--accent-blue);">
+                <p style="margin: 0; font-size: 16px; font-style: italic; color: white;">
+                    "Ви затримані. Ви маєте право зберігати мовчання. Все, що ви скажете, може і буде використано проти вас у суді. Ви маєте право на один телефонний дзвінок тривалістю до 3 хвилин, а також право на присутність адвоката. Якщо вам не зрозумілі ваші права, я можу зачитати їх повторно."
+                </p>
+            </div>
         </div>
 
         <div id="sub-oath" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>✋ Присяга працівника поліції</h2>
-            <p><em>Текст присяги очікується...</em></p>
+            <p>Складається Рядовими для отримання першого серйозного підвищення:</p>
+            <div style="background-color: rgba(255,255,255,0.02); padding: 20px; border-radius: 8px; border: 1px dashed var(--border-color);">
+                <p>«Я, (Прізвище, Ім'я), вступаючи на службу до Національної поліції України, усвідомлюючи свою високу відповідальність, урочисто присягаю вірно служити Українському народові, дотримуватися Конституції та законів України, втілювати їх у життя, поважати та охороняти права і свободи людини, честь держави, з гідністю нести високе звання поліцейського та сумлінно виконувати свої службові обов’язки!»</p>
+            </div>
         </div>
 
         <div id="sub-promotion" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>📈 Система підвищення</h2>
-            <p><em>Текст про систему підвищення очікується...</em></p>
+            <h2>📈 Система підвищення особового складу</h2>
+            <ul>
+                <li><strong>Рядовий [1] ➡️ Капрал [2]:</strong> Скласти присягу, стройовий статут та правила Міранди.</li>
+                <li><strong>Капрал [2] ➡️ Сержант [3]:</strong> Здати іспит на знання ККУ, КУпАП, відстояти на посту ДЧ 30 хвилин (з доповідями кожні 10 хв).</li>
+                <li><strong>Сержант [3] ➡️ Старший Сержант [4]:</strong> Патрулювання міста 40 хвилин, затримання 3-х злочинців, участь в 1 лекції чи тренуванні.</li>
+                <li><strong>Старший Сержант [4] та вище:</strong> Виконання нормативів своїх підрозділів (УПП, КОРД, ДВБ) за щотижневими рапортами.</li>
+            </ul>
         </div>
 
         <div id="sub-statut" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>🧍 Стройовий статут</h2>
-            <p><em>Текст стройового статуту очікується...</em></p>
+            <p><strong>Основні правила поведінки в строю:</strong></p>
+            <ul class="text-list">
+                <li>В строю заборонено використовувати будь-які анімації (танцювати, лежати тощо).</li>
+                <li>Заборонено діставати зброю без команди організатора шикування.</li>
+                <li>Заборонено говорити без дозволу (розмовляти в мікрофон або писати в чат дозволено виключно після фрази: "Дозвольте сказати?").</li>
+                <li>Заборонено самовільно покидати стрій або виходити з нього.</li>
+            </ul>
         </div>
 
         <div id="sub-reprimand" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
             <h2>❌ Система зняття доган</h2>
-            <p><em>Текст про зняття доган очікується...</em></p>
+            <p>Якщо ви отримали догану за порушення статуту, її необхідно відпрацювати:</p>
+            <ul class="text-list">
+                <li><strong>Для Младшого складу (1-4 ранги):</strong> Чергування на КПП чи ДЧ протягом 60 хвилин, помити 3 патрульних авто (по RP процесу через команди `/me`, `/do`, `/try`), виконати завдання від Старшого Складу.</li>
+                <li><strong>Для Старшого складу (5-8 ранги):</strong> Організувати 3 патрулі, провести 2 лекції особовому складу, допомогти на 2-х наборах.</li>
+                <li><strong>Для Керівничого складу (9-11 ранги):</strong> Завдання видаються особисто Генералом НПУ.</li>
+            </ul>
         </div>
 
         <div id="sub-fleet" class="tab-content">
             <button class="back-btn" onclick="openTab('npu-system')">⬅️ Назад до Системи НПУ</button>
-            <h2>🚔 Автопарк фракції</h2>
-            <p><em>Текст або список автопарку очікується...</em></p>
+            <h2>🚔 Автопарк фракції НПУ</h2>
+            <p>Розподіл транспортних засобів за рангами співробітників:</p>
+            <table>
+                <tr>
+                    <th>Марка авто</th>
+                    <th>Доступне звання</th>
+                    <th>Призначення</th>
+                </tr>
+                <tr>
+                    <td>Renault Duster</td>
+                    <td>Капрал [2]</td>
+                    <td>Патрулювання та виїзди на виклики громади</td>
+                </tr>
+                <tr>
+                    <td>Skoda Octavia / Toyota Camry</td>
+                    <td>Сержант [3]</td>
+                    <td>Швидкісне реагування, евакуація та переслідування</td>
+                </tr>
+                <tr>
+                    <td>Mitsubishi L200 / ЗСУ КрАЗ</td>
+                    <td>Старшина [5] / КОРД</td>
+                    <td>Спецоперації, блок-пости та рейди</td>
+                </tr>
+                <tr>
+                    <td>BMW X5 / Мерседес С-класу</td>
+                    <td>Майор [9] / Керівництво</td>
+                    <td>Особистий транспорт Керівництва ГУНП</td>
+                </tr>
+            </table>
         </div>
 
     </div>
 </div>
 
 <script>
-    // Функція для перемикання головних вкладок через бокове меню
+    // Перемикання головних розділів
     function openTab(tabId) {
         const contents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < contents.length; i++) {
@@ -398,7 +538,7 @@
         if (activeBtn) activeBtn.classList.add("active");
     }
 
-    // Функція для відкриття підвкладок з меню "Система НПУ"
+    // Перемикання на підвкладки червоних кнопок
     function openSubTab(subTabId) {
         const contents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < contents.length; i++) {
