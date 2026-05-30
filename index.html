@@ -34,6 +34,12 @@
 		.map-placeholder { width: 100%; height: 100px; background: #0d0e12; border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); margin-top: 8px; }
 		.sidebar-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
 		.sidebar-title { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--bf-glow); margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+		
+		/* СТИЛІ ДЛЯ ПУНКТІВ МЕНЮ ПРОФІЛЮ */
+		.menu-link { color: #a6b1c2; text-decoration: none; padding: 6px 10px; border-radius: 3px; display: flex; align-items: center; gap: 10px; transition: background 0.15s, color 0.15s; }
+		.menu-link:hover { background: #1c1f2d; color: #fff; }
+		.menu-link-active { background: #232738; color: #fff; font-weight: bold; }
+		.menu-icon-fake { font-family: monospace; font-size: 14px; color: #64748b; width: 14px; text-align: center; }
 	</style>
 </head>
 <body>
@@ -52,10 +58,10 @@
 			<span style="font-size: 9px; color: var(--text-muted);">▼</span>
 
 			<!-- ВИПАДАЮЧЕ МЕНЮ ЯК НА СКРІНШОТІ -->
-			<div id="userDropdownMenu" style="display: none; position: absolute; top: 140%; right: 0; width: 280px; background: #12141c; border: 1px solid #1f2331; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left; cursor: default;" onclick="event.stopPropagation()">
+			<div id="userDropdownMenu" style="display: none; position: absolute; top: 140%; right: 0; width: 300px; background: #12141c; border: 1px solid #1f2331; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left; cursor: default;" onclick="event.stopPropagation()">
 				
 				<!-- Вкладки верхні -->
-				<div style="display: flex; border-bottom: 1px solid #1f2331; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+				<div style="display: flex; border-bottom: 1px solid #1f2331; font-size: 12px; font-weight: bold; text-transform: uppercase; background: #141620;">
 					<div style="padding: 12px 15px; color: var(--bf-glow); border-bottom: 2px solid var(--bf-purple); flex: 1; text-align: center;">Ваш обліковий запис</div>
 					<div style="padding: 12px 15px; color: #64748b; flex: 1; text-align: center; cursor: pointer;">Закладки</div>
 				</div>
@@ -77,28 +83,30 @@
 					</div>
 				</div>
 
-				<!-- Пункти налаштувань -->
-				<div style="display: grid; grid-template-columns: 1fr 1fr; padding: 8px; gap: 2px; font-size: 12px; border-bottom: 1px solid #1f2331;">
-					<div style="display: flex; flex-direction: column;">
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">📰 Новинна стрічка</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px; background: #1a1c26; font-weight: bold;">💬 Ваші публікації</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">👤 Інформація</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">🛡️ Безпека</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">🔒 Конфіденційність</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">⚙️ Налаштування</a>
+				<!-- Пункти налаштувань (БЕЗ СМАЙЛИКІВ, ОРИГІНАЛЬНИЙ СТИЛЬ) -->
+				<div style="display: grid; grid-template-columns: 1.1fr 0.9fr; padding: 8px; gap: 2px; font-size: 13px; border-bottom: 1px solid #1f2331; background: #12141c;">
+					<!-- Ліва колонка -->
+					<div style="display: flex; flex-direction: column; gap: 1px;">
+						<a href="#" class="menu-link"><span class="menu-icon-fake">☱</span> Новинна стрічка</a>
+						<a href="#" class="menu-link menu-link-active"><span class="menu-icon-fake" style="color:#fff;">🗩</span> Ваші публікації</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">🛈</span> Інформація</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">🛡</span> Безпека</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">🔒</span> Конфіденційність</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">⚙</span> Налаштування</a>
 					</div>
-					<div style="display: flex; flex-direction: column;">
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">✍️ Підпис</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px; font-size:11px; line-height:1.1;">🔗 Зв'язані акаунти</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">👤+ Підписки</a>
-						<a href="#" style="color:#f1f5f9; text-decoration:none; padding: 5px 6px; border-radius:3px;">👤- Ігнорування</a>
+					<!-- Права колонка -->
+					<div style="display: flex; flex-direction: column; gap: 1px;">
+						<a href="#" class="menu-link"><span class="menu-icon-fake">✍</span> Підпис</a>
+						<a href="#" class="menu-link" style="font-size:11px; padding: 6px 4px;"><span class="menu-icon-fake">🔗</span> Зв'язані акаунти</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">👤+</span> Підписки</a>
+						<a href="#" class="menu-link"><span class="menu-icon-fake">👤-</span> Ігнорування</a>
 					</div>
 				</div>
 
 				<!-- Статус і Вихід -->
-				<div style="padding: 10px; font-size: 12px;">
-					<a href="#" style="color:#f1f5f9; text-decoration:none; display:block; padding: 4px 6px; border-radius:3px; margin-bottom: 6px;">🚪 Вихід</a>
-					<input type="text" placeholder="Оновити свій статус..." style="width: 88%; background: #0b0c10; border: 1px solid #1f2331; color: #fff; padding: 5px 8px; border-radius: 3px; font-size: 11px; outline: none;">
+				<div style="padding: 10px; font-size: 13px; background: #12141c;">
+					<a href="#" class="menu-link" style="margin-bottom: 6px;"><span class="menu-icon-fake">⏻</span> Вихід</a>
+					<input type="text" placeholder="Оновити свій статус..." style="width: 88%; background: #0b0c10; border: 1px solid #1f2331; color: #fff; padding: 6px 10px; border-radius: 3px; font-size: 12px; outline: none;">
 				</div>
 
 			</div>
@@ -121,7 +129,7 @@
 				<div class="node-row" onclick="toggle('clan-1')"><div class="node-icon">📜</div><div><div class="node-title">Статут та правила сім'ї</div><div class="node-desc">Права, обов'язки та внутрішні правила кодексу.</div></div><div class="node-stats">Тем: 1</div></div>
 				<div id="clan-1" class="node-content"><p>Кожен член клану зобов'язаний дотримуватися субординації та внутрішнього статуту.</p></div>
 				
-				<div class="node-row" onclick="toggle('clan-2')"><div class="node-icon">📢</div><div><div class="node-title">Оголошення та Новини</div><div class="node-desc">Важливі події та плани на найближчі битви.</div></div><div class="node-stats">Тем: 12</div></div>
+				<div class="node-row" onclick="toggle('clan-2')"><div class="node-icon">📢</div><div><div class="node-title">Оголошення та Новини</div><div class="node-desc">Важливі події та plans на найближчі битви.</div></div><div class="node-stats">Тем: 12</div></div>
 				<div id="clan-2" class="node-content"><p>Готуємося до вечірнього збору на битву за бізнес.</p></div>
 
 				<div class="node-row" onclick="toggle('clan-3')"><div class="node-icon">🛡️</div><div><div class="node-title">Штаб / Старший Склад</div><div class="node-desc">Розділ для обговорення стратегій та дипломатії.</div></div><div class="node-stats">Тем: 14</div></div>
@@ -432,13 +440,11 @@
 	</div>
 
 	<script>
-		// Функція для розкриття списків автосалонів
 		function toggle(id) {
 			var e = document.getElementById(id);
 			e.style.display = (e.style.display === 'block') ? 'none' : 'block';
 		}
 
-		// Функція для кліку по нікнейму (відкрити/закрити меню)
 		function toggleUserMenu(event) {
 			event.stopPropagation();
 			var menu = document.getElementById('userDropdownMenu');
@@ -449,7 +455,6 @@
 			}
 		}
 
-		// Закривати меню акаунта, якщо клікнути в будь-яке інше місце сайту
 		window.addEventListener('click', function() {
 			var menu = document.getElementById('userDropdownMenu');
 			if (menu) menu.style.display = 'none';
