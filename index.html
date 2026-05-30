@@ -1,41 +1,383 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html id="XF" lang="uk-UA" dir="LTR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloody-FamQ</title>
-    <style>
-        body {
-            background-color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        /* Акуратний розмір для логотипу клану */
-        .clan-logo {
-            max-width: 350px;
-            border-radius: 10px;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>UKRAINE GTA x Bloody-FamQ</title>
+	<style>
+		:root { --bg-main: #0b0c10; --bg-card: #111319; --bg-header: #161820; --border: #1f2331; --text: #f1f5f9; --text-muted: #64748b; --bf-purple: #8a2be2; --bf-glow: #bd53ff; }
+		html, body { background: var(--bg-main); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; }
+		body { background-image: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #0b0c10 70%); background-attachment: fixed; }
+		.p-header { background: var(--bg-header); border-bottom: 3px solid var(--bf-purple); padding: 15px 30px; box-shadow: 0 4px 25px rgba(138,43,226,0.25); display: flex; justify-content: space-between; align-items: center; }
+		.brand-ug { font-size: 24px; font-weight: 900; background: linear-gradient(180deg, #0057b7 45%, #ffd700 55%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+		.brand-bf { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--bf-purple); font-style: italic; }
+		.p-nav { background: #161820; border-bottom: 1px solid var(--border); display: flex; padding: 0 30px; }
+		.p-navEl { padding: 12px 20px; color: #f1f5f9; font-weight: 600; font-size: 14px; text-transform: uppercase; cursor: pointer; }
+		.p-navEl:hover { color: var(--bf-glow); }
+		.p-body { max-width: 1400px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+		@media (max-width: 1024px) { .p-body { grid-template-columns: 1fr; } }
+		.block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 25px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.4); }
+		.block-header { background: linear-gradient(90deg, #161922 0%, #201335 100%); padding: 15px 20px; font-size: 15px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--border); color: #fff; margin: 0; }
+		.node-row { display: grid; grid-template-columns: 40px 1fr 150px; padding: 18px 20px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.2s; cursor: pointer; }
+		.node-row:hover { background: #161822; }
+		.node-icon { font-size: 20px; color: var(--bf-purple); }
+		.node-title { font-size: 16px; font-weight: 600; margin: 0 0 4px 0; }
+		.node-desc { font-size: 13px; color: var(--text-muted); }
+		.node-stats { font-size: 13px; color: var(--text-muted); text-align: right; }
+		.node-content { display: none; background: #0d0e12; padding: 20px; border-top: 1px solid var(--border); }
+		.price-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+		.price-table th, .price-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
+		.price-table th { color: var(--bf-glow); background: #161822; }
+		.price-green { color: #10b981; font-weight: bold; }
+		.maps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+		.map-card { background: #161822; border: 1px solid var(--border); padding: 12px; border-radius: 6px; text-align: center; }
+		.map-placeholder { width: 100%; height: 100px; background: #0d0e12; border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+		.sidebar-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+		.sidebar-title { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--bf-glow); margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+	</style>
 </head>
 <body>
 
-    <img src="blob:https://gemini.google.com/c856f38e-dbbc-44bd-a0ca-5167267ec76c" class="clan-logo" alt="">
+	<header class="p-header">
+		<div>
+			<span class="brand-ug">UKRAINE GTA</span>
+			<span style="color:#fff;margin:0 5px;">x</span>
+			<span class="brand-bf">Bloody-FamQ</span>
+		</div>
+		<div style="font-size:14px;color:var(--text-muted);">Вітаємо, <span style="color:var(--bf-glow);font-weight:bold;">Дениска Хеллі</span></div>
+	</header>
 
-    <img src="blob:https://gemini.google.com/2511f942-5127-4d71-8d2e-69263fe344f7" alt="">
-    <img src="blob:https://gemini.google.com/02d3bfaa-f3cf-4c57-bdc2-33956c8236fc" alt="">
-    <img src="blob:https://gemini.google.com/a0183734-6beb-48bc-a001-cf2120207be5" alt="">
-    <img src="blob:https://gemini.google.com/a0183734-6beb-48bc-a001-cf2120207be5" alt="">
-    <img src="blob:https://gemini.google.com/eb35454d-914a-4a1e-8551-60903d3d8720" alt="">
-    <img src="blob:https://gemini.google.com/821bb97d-4dc4-4f5b-a7f6-cbb3c71ad432" alt="">
+	<nav class="p-nav">
+		<div class="p-navEl">Головна</div>
+		<div class="p-navEl">Форуми</div>
+		<div class="p-navEl">Новини</div>
+		<div class="p-navEl">Користувачі</div>
+	</nav>
 
+	<div class="p-body">
+		<div class="p-body-main">
+
+			<!-- РОЗДІЛИ КЛАНУ -->
+			<div class="block">
+				<h2 class="block-header">⚔️ Внутрішні розділи організації Bloody-FamQ</h2>
+				<div class="node-row" onclick="toggle('clan-1')"><div class="node-icon">📜</div><div><div class="node-title">Статут та правила сім'ї</div><div class="node-desc">Права, обов'язки та внутрішні правила кодексу.</div></div><div class="node-stats">Тем: 1</div></div>
+				<div id="clan-1" class="node-content"><p>Кожен член клану зобов'язаний дотримуватися субординації та внутрішнього статуту.</p></div>
+				
+				<div class="node-row" onclick="toggle('clan-2')"><div class="node-icon">📢</div><div><div class="node-title">Оголошення та Новини</div><div class="node-desc">Важливі події та плани на найближчі битви.</div></div><div class="node-stats">Тем: 12</div></div>
+				<div id="clan-2" class="node-content"><p>Готуємося до вечірнього збору на битву за бізнес.</p></div>
+
+				<div class="node-row" onclick="toggle('clan-3')"><div class="node-icon">🛡️</div><div><div class="node-title">Штаб / Старший Склад</div><div class="node-desc">Розділ для обговорення стратегій та дипломатії.</div></div><div class="node-stats">Тем: 14</div></div>
+				<div id="clan-3" class="node-content"><p>Доступно тільки для Офіцерів та Керівництва.</p></div>
+
+				<div class="node-row" onclick="toggle('clan-4')"><div class="node-icon">📝</div><div><div class="node-title">Електронні заявки на вступ</div><div class="node-desc">Критерії відбору та анкети для кандидатів.</div></div><div class="node-stats">Тем: 84</div></div>
+				<div id="clan-4" class="node-content"><p>Анкети залишати суворо за формою. Набір відкритий від 10-го ігрового рівня.</p></div>
+
+				<div class="node-row" onclick="toggle('clan-5')"><div class="node-icon">⚠️</div><div><div class="node-title">Скарги на учасників</div><div class="node-desc">Подача скарг на порушення з боку сокланів.</div></div><div class="node-stats">Тем: 3</div></div>
+				<div id="clan-5" class="node-content"><p>Розгляд скарг проводить виключно Лідер організації.</p></div>
+			</div>
+
+			<!-- КАРТИ АЛКОГОЛЮ -->
+			<div class="block">
+				<h2 class="block-header">🍺 Карти локацій алкоголю за містами</h2>
+				<div class="node-row" onclick="toggle('alko')"><div class="node-icon">🗺️</div><div><div class="node-title">Розташування алко-точок (Збір пляшок)</div><div class="node-desc">Повні схеми збору пляшок для неофіційного сектору.</div></div><div class="node-stats">Оновлено</div></div>
+				<div id="alko" class="node-content">
+					<div class="maps-grid">
+						<div class="map-card"><h5>Київ</h5><div class="map-placeholder">photo_2026-05-30_17-02-57.jpg</div></div>
+						<div class="map-card"><h5>Дніпро</h5><div class="map-placeholder">photo_2026-05-30_17-02-55.jpg</div></div>
+						<div class="map-card"><h5>Харків</h5><div class="map-placeholder">photo_2026-05-30_17-02-52.jpg</div></div>
+						<div class="map-card"><h5>Полтава</h5><div class="map-placeholder">photo_2026-05-30_17-02-51.jpg</div></div>
+						<div class="map-card"><h5>Лівий Берег</h5><div class="map-placeholder">photo_2026-05-30_17-02-50.jpg</div></div>
+						<div class="map-card"><h5>Гостомель</h5><div class="map-placeholder">photo_2026-05-30_17-02-48.jpg</div></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- БАЗА ТРАНСПОРТУ -->
+			<div class="block">
+				<h2 class="block-header">🚘 Повна база даних цін на транспорт штату</h2>
+
+				<!-- ЕКОНОМ -->
+				<div class="node-row" onclick="toggle('ec')"><div class="node-icon">🚗</div><div><div class="node-title">Автосалон Економ Класу</div><div class="node-desc">Бюджетний сегмент автомобілів.</div></div><div class="node-stats">25 моделей</div></div>
+				<div id="ec" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>ЗАЗ 968</td><td class="price-green">23 500 грн</td></tr>
+							<tr><td>ЗАЗ Таврія</td><td class="price-green">55 000 грн</td></tr>
+							<tr><td>CitroenAMI</td><td class="price-green">60 000 грн</td></tr>
+							<tr><td>Fiat 124</td><td class="price-green">77 500 грн</td></tr>
+							<tr><td>Opel Cadett</td><td class="price-green">89 900 грн</td></tr>
+							<tr><td>Fiat 2104</td><td class="price-green">93 800 грн</td></tr>
+							<tr><td>Fiat 125</td><td class="price-green">99 800 грн</td></tr>
+							<tr><td>Fiat 2108</td><td class="price-green">100 000 грн</td></tr>
+							<tr><td>Skoda Fabia I</td><td class="price-green">110 000 грн</td></tr>
+							<tr><td>Volkswagen Golf II GTI</td><td class="price-green">114 000 грн</td></tr>
+							<tr><td>Daewoo Lanos</td><td class="price-green">127 500 грн</td></tr>
+							<tr><td>Volkswagen Passat B3</td><td class="price-green">132 400 грн</td></tr>
+							<tr><td>Daewoo Nexia</td><td class="price-green">137 500 грн</td></tr>
+							<tr><td>Audi 80</td><td class="price-green">137 500 грн</td></tr>
+							<tr><td>Daewoo Matiz</td><td class="price-green">139 000 грн</td></tr>
+							<tr><td>Renault Logan</td><td class="price-green">149 000 грн</td></tr>
+							<tr><td>FIAT 2107</td><td class="price-green">150 000 грн</td></tr>
+							<tr><td>Toyota Corolla AE86</td><td class="price-green">217 000 грн</td></tr>
+							<tr><td>Chevrolet Aveo</td><td class="price-green">220 000 грн</td></tr>
+							<tr><td>Honda Civic Si</td><td class="price-green">230 000 грн</td></tr>
+							<tr><td>Skoda Rapid</td><td class="price-green">280 000 грн</td></tr>
+							<tr><td>Toyota Prius</td><td class="price-green">320 000 грн</td></tr>
+							<tr><td>Fiat Reora</td><td class="price-green">450 000 грн</td></tr>
+							<tr><td>Jeep Grand Cherokee 1995</td><td class="price-green">500 000 грн</td></tr>
+							<tr><td>Audi 100</td><td class="price-green">1 350 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- СЕРЕДНІЙ -->
+				<div class="node-row" onclick="toggle('md')"><div class="node-icon">🚘</div><div><div class="node-title">Автосалон Середнього Класу</div><div class="node-desc">Популярний міський транспорт та класика.</div></div><div class="node-stats">46 моделей</div></div>
+				<div id="md" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Skoda Octavia</td><td class="price-green">330 600 грн</td></tr>
+							<tr><td>Fiat Abarth</td><td class="price-green">436 620 грн</td></tr>
+							<tr><td>Renault Duster</td><td class="price-green">478 800 грн</td></tr>
+							<tr><td>Mazda6 MPS</td><td class="price-green">490 200 грн</td></tr>
+							<tr><td>Smart</td><td class="price-green">494 760 грн</td></tr>
+							<tr><td>Mercedes-Benz W124 E500</td><td class="price-green">513 000 грн</td></tr>
+							<tr><td>Opel Astra OPC</td><td class="price-green">583 680 грн</td></tr>
+							<tr><td>Nissan Leaf</td><td class="price-green">615 600 грн</td></tr>
+							<tr><td>Suzuki Jimny</td><td class="price-green">672 600 грн</td></tr>
+							<tr><td>Fiat Doblo</td><td class="price-green">712 500 грн</td></tr>
+							<tr><td>Mazda RZ7</td><td class="price-green">825 930 грн</td></tr>
+							<tr><td>Mercedes-Benz W140 S600</td><td class="price-green">866 400 грн</td></tr>
+							<tr><td>Land Cruiser Prado 2018</td><td class="price-green">883 500 грн</td></tr>
+							<tr><td>Toyota Mark II</td><td class="price-green">980 400 грн</td></tr>
+							<tr><td>Mazda3 MPS</td><td class="price-green">991 800 грн</td></tr>
+							<tr><td>Volkswagen Caddy</td><td class="price-green">991 800 грн</td></tr>
+							<tr><td>Nissan Silvia S15</td><td class="price-green">991 800 грн</td></tr>
+							<tr><td>Toyota Supra</td><td class="price-green">1 019 160 грн</td></tr>
+							<tr><td>Mitsubishi Lancer X 2.0</td><td class="price-green">Уточнюється</td></tr>
+							<tr><td>Toyota Chaser Tourer V</td><td class="price-green">1 105 800 грн</td></tr>
+							<tr><td>Volkswagen Golf 7</td><td class="price-green">1 105 800 грн</td></tr>
+							<tr><td>Toyota Cotolla</td><td class="price-green">1 254 000 грн</td></tr>
+							<tr><td>Subaru Impreza</td><td class="price-green">1 271 100 грн</td></tr>
+							<tr><td>Hyundai Sonata</td><td class="price-green">1 288 200 грн</td></tr>
+							<tr><td>Honda Accord</td><td class="price-green">1 322 400 грн</td></tr>
+							<tr><td>Skoda Octavia 7</td><td class="price-green">1 333 800 грн</td></tr>
+							<tr><td>Ford Transit</td><td class="price-green">1 413 600 грн</td></tr>
+							<tr><td>BMW M3 E46</td><td class="price-green">1 419 300 грн</td></tr>
+							<tr><td>Toyota Camry XV40</td><td class="price-green">1 425 000 грн</td></tr>
+							<tr><td>BMW e36</td><td class="price-green">1 425 000 грн</td></tr>
+							<tr><td>Volkswagen Variant 2019</td><td class="price-green">1 425 000 грн</td></tr>
+							<tr><td>Nissan Skyline R34</td><td class="price-green">1 436 400 грн</td></tr>
+							<tr><td>BMW E34 525i</td><td class="price-green">1 447 800 грн</td></tr>
+							<tr><td>Ford Focus RS</td><td class="price-green">1 447 800 грн</td></tr>
+							<tr><td>Volkswagen Passat B6</td><td class="price-green">1 607 400 грн</td></tr>
+							<tr><td>Nissan Qashqai</td><td class="price-green">1 869 600 грн</td></tr>
+							<tr><td>Toyota Land Cruiser 100</td><td class="price-green">2 052 000 грн</td></tr>
+							<tr><td>Jeep Wrangler</td><td class="price-green">2 109 000 грн</td></tr>
+							<tr><td>BMW X5</td><td class="price-green">2 131 800 грн</td></tr>
+							<tr><td>Opel Vivaro</td><td class="price-green">2 131 800 грн</td></tr>
+							<tr><td>Nissan Patrol GR Y61</td><td class="price-green">2 211 600 грн</td></tr>
+							<tr><td>Toyota RAV4</td><td class="price-green">2 234 400 грн</td></tr>
+							<tr><td>Mercedes-Benz C63 AMG</td><td class="price-green">2 428 200 грн</td></tr>
+							<tr><td>Chevrolet Tahoe</td><td class="price-green">2 679 000 грн</td></tr>
+							<tr><td>BMW M5 E60</td><td class="price-green">3 271 800 грн</td></tr>
+							<tr><td>Kia Carnival 2022</td><td class="price-green">13 680 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- ПРЕМІУМ -->
+				<div class="node-row" onclick="toggle('pr')"><div class="node-icon">✨</div><div><div class="node-title">Автосалон Преміум Класу</div><div class="node-desc">Кросовери, бізнес-седани та комфорт.</div></div><div class="node-stats">49 моделей</div></div>
+				<div id="pr" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Volkswagen ID6</td><td class="price-green">1 071 600 грн</td></tr>
+							<tr><td>Mercedes-Benz</td><td class="price-green">1 425 000 грн</td></tr>
+							<tr><td>Volkswagen Arteon R-line</td><td class="price-green">1 459 200 грн</td></tr>
+							<tr><td>Volkswagen Jetta</td><td class="price-green">1 675 800 грн</td></tr>
+							<tr><td>Cherry Tiggo 2023</td><td class="price-green">1 972 200 грн</td></tr>
+							<tr><td>BMW M3 E92</td><td class="price-green">2 017 800 грн</td></tr>
+							<tr><td>Ford Mustang</td><td class="price-green">2 109 000 грн</td></tr>
+							<tr><td>Audi A4 Allroad Quattro</td><td class="price-green">2 211 600 грн</td></tr>
+							<tr><td>Infiniti FX 35</td><td class="price-green">2 280 000 грн</td></tr>
+							<tr><td>Tesla Model S</td><td class="price-green">2 451 000 грн</td></tr>
+							<tr><td>Land Rover Range Rover 3</td><td class="price-green">2 508 000 грн</td></tr>
+							<tr><td>Volkswagen Passat B8 Red Fire</td><td class="price-green">2 565 000 грн</td></tr>
+							<tr><td>Mazda CX-90</td><td class="price-green">2 644 800 грн</td></tr>
+							<tr><td>Volvo XC90 2017</td><td class="price-green">2 667 600 грн</td></tr>
+							<tr><td>Toyota Camry 2021</td><td class="price-green">2 701 800 грн</td></tr>
+							<tr><td>Volkswagen T5</td><td class="price-green">2 781 600 грн</td></tr>
+							<tr><td>Volkswagen Beetle</td><td class="price-green">2 998 200 грн</td></tr>
+							<tr><td>Porsche Cayenne 2009</td><td class="price-green">3 249 000 грн</td></tr>
+							<tr><td>Audi A6</td><td class="price-green">3 249 000 грн</td></tr>
+							<tr><td>Mercedes-AMG E63</td><td class="price-green">3 363 000 грн</td></tr>
+							<tr><td>Chevrolet Camaro</td><td class="price-green">3 363 000 грн</td></tr>
+							<tr><td>Lexus RX350</td><td class="price-green">3 363 000 грн</td></tr>
+							<tr><td>Ford Raptor F150</td><td class="price-green">3 385 800 грн</td></tr>
+							<tr><td>Subaru BRZ tS Coupe</td><td class="price-green">3 722 100 грн</td></tr>
+							<tr><td>Tesla Model X</td><td class="price-green">3 841 800 грн</td></tr>
+							<tr><td>Volkswagen Passat CC</td><td class="price-green">3 955 800 грн</td></tr>
+							<tr><td>Tesla Model Y</td><td class="price-green">3 990 000 грн</td></tr>
+							<tr><td>Nissan GT-R</td><td class="price-green">4 126 800 грн</td></tr>
+							<tr><td>BMW M4 F82</td><td class="price-green">4 218 000 грн</td></tr>
+							<tr><td>Audi A6 C8</td><td class="price-green">4 275 000 грн</td></tr>
+							<tr><td>Lexus IS350 F Sport</td><td class="price-green">4 286 400 грн</td></tr>
+							<tr><td>Audi S5</td><td class="price-green">4 480 200 грн</td></tr>
+							<tr><td>BMW X6 E71</td><td class="price-green">4 560 000 грн</td></tr>
+							<tr><td>Jeep Grand Cherokee</td><td class="price-green">4 981 800 грн</td></tr>
+							<tr><td>Volkswagen Touareg</td><td class="price-green">4 981 800 грн</td></tr>
+							<tr><td>Audi RS6 C7</td><td class="price-green">5 130 000 грн</td></tr>
+							<tr><td>Mercedes-Benz CLS 2011</td><td class="price-green">5 586 000 грн</td></tr>
+							<tr><td>Ford Raptor 2022</td><td class="price-green">6 190 200 грн</td></tr>
+							<tr><td>BMW 540i G30</td><td class="price-green">6 224 400 грн</td></tr>
+							<tr><td>Mercedes-Benz GLE Coupe</td><td class="price-green">6 783 000 грн</td></tr>
+							<tr><td>Porsche Panamera</td><td class="price-green">6 805 800 грн</td></tr>
+							<tr><td>BMW X5 F15</td><td class="price-green">7 113 600 грн</td></tr>
+							<tr><td>Mercedes-Benz G65</td><td class="price-green">7 261 800 грн</td></tr>
+							<tr><td>Mercedes-Benz Vito</td><td class="price-green">7 455 600 грн</td></tr>
+							<tr><td>Toyota Land Cruiser 200</td><td class="price-green">7 957 200 грн</td></tr>
+							<tr><td>Mercedes-Benz GL</td><td class="price-green">8 253 600 грн</td></tr>
+							<tr><td>Dodge RAM 1500</td><td class="price-green">8 971 800 грн</td></tr>
+							<tr><td>Porsche Cayenne</td><td class="price-green">9 085 800 грн</td></tr>
+							<tr><td>BMW M2</td><td class="price-green">9 519 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- ЛЮКС -->
+				<div class="node-row" onclick="toggle('lx')"><div class="node-icon">👑</div><div><div class="node-title">Автосалон Люкс Класу</div><div class="node-desc">Ексклюзивні суперкари та лімузини.</div></div><div class="node-stats">27 моделей</div></div>
+				<div id="lx" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Mercedes-Benz W221 AMG W12</td><td class="price-green">2 610 600 грн</td></tr>
+							<tr><td>Hyundai STARIA</td><td class="price-green">5 700 000 грн</td></tr>
+							<tr><td>Lexus LX570</td><td class="price-green">6 691 800 грн</td></tr>
+							<tr><td>Range Rover Velar</td><td class="price-green">6 874 200 грн</td></tr>
+							<tr><td>Land Cruiser 300</td><td class="price-green">7 022 400 грн</td></tr>
+							<tr><td>BMW IX xDrive50</td><td class="price-green">7 854 600 грн</td></tr>
+							<tr><td>Honda NSX Rocket</td><td class="price-green">7 911 600 грн</td></tr>
+							<tr><td>Lincoln Navigator 2019</td><td class="price-green">7 980 000 грн</td></tr>
+							<tr><td>Mercedes-AMG GT S Coupe</td><td class="price-green">8 128 200 грн</td></tr>
+							<tr><td>Audi R8</td><td class="price-green">8 367 600 грн</td></tr>
+							<tr><td>Mercedes-Benz S63 AMG</td><td class="price-green">8 550 000 грн</td></tr>
+							<tr><td>BMW X5 Competition</td><td class="price-green">9 063 000 грн</td></tr>
+							<tr><td>BMW X7</td><td class="price-green">10 647 600 грн</td></tr>
+							<tr><td>Mercedes-benz S500</td><td class="price-green">11 799 000 грн</td></tr>
+							<tr><td>Lamborghini Gallardo</td><td class="price-green">12 448 800 грн</td></tr>
+							<tr><td>Audi RS7</td><td class="price-green">12 870 600 грн</td></tr>
+							<tr><td>BMW M8</td><td class="price-green">13 167 000 грн</td></tr>
+							<tr><td>Lamborghini Huracan</td><td class="price-green">14 341 200 грн</td></tr>
+							<tr><td>Mercedes-AMG GT63s</td><td class="price-green">21 660 000 грн</td></tr>
+							<tr><td>Rolls-Royce Cullinan</td><td class="price-green">27 855 900 грн</td></tr>
+							<tr><td>Lamborghini Aventador</td><td class="price-green">29 047 200 грн</td></tr>
+							<tr><td>Mercedes-Benz GLS 600 Maybach</td><td class="price-green">37 437 600 грн</td></tr>
+							<tr><td>Bugatti Chiron</td><td class="price-green">45 417 600 грн</td></tr>
+							<tr><td>McLaren 720S</td><td class="price-green">51 756 000 грн</td></tr>
+							<tr><td>McLaren P1</td><td class="price-green">75 405 300 грн</td></tr>
+							<tr><td>Bugatti Centodieci</td><td class="price-green">82 593 000 грн</td></tr>
+							<tr><td>Rolls-Royce Phantom</td><td class="price-green">108 129 000 грн</td></tr>
+							<tr><td>Mercedes-Benz Maybach Pullman</td><td class="price-green">171 000 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- МОТО -->
+				<div class="node-row" onclick="toggle('mt')"><div class="node-icon">🏍️</div><div><div class="node-title">Мотосалон</div><div class="node-desc">Швидкісний мототранспорт.</div></div><div class="node-stats">9 моделей</div></div>
+				<div id="mt" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Honda Dio34 ZX</td><td class="price-green">51 300 грн</td></tr>
+							<tr><td>Kawasaki Barako 175</td><td class="price-green">111 720 грн</td></tr>
+							<tr><td>Jawa</td><td class="price-green">228 000 грн</td></tr>
+							<tr><td>Honda XRE 300</td><td class="price-green">410 400 грн</td></tr>
+							<tr><td>APRILIA RSV4 R</td><td class="price-green">684 000 грн</td></tr>
+							<tr><td>Kawasaki Ninja H2R</td><td class="price-green">2 006 400 грн</td></tr>
+							<tr><td>Harley Davidson 2010</td><td class="price-green">2 230 980 грн</td></tr>
+							<tr><td>Ducato Desmosedici RR Dia</td><td class="price-green">2 793 000 грн</td></tr>
+							<tr><td>BMW S1000 RR</td><td class="price-green">3 744 900 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- ВАНТАЖІВКИ -->
+				<div class="node-row" onclick="toggle('tr')"><div class="node-icon">🚛</div><div><div class="node-title">Салон Вантажівок</div><div class="node-desc">Важка техніка та фури для далекобійників.</div></div><div class="node-stats">9 моделей</div></div>
+				<div id="tr" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Fiat 3302</td><td class="price-green">438 900 грн</td></tr>
+							<tr><td>VW Transporter pickup</td><td class="price-green">712 500 грн</td></tr>
+							<tr><td>Mercedes Sprinter TENT</td><td class="price-green">843 600 грн</td></tr>
+							<tr><td>MAN TGA 2000</td><td class="price-green">1 516 200 грн</td></tr>
+							<tr><td>Mercedes-Benz Actros</td><td class="price-green">1 915 200 грн</td></tr>
+							<tr><td>DAF XF 105</td><td class="price-green">3 830 400 грн</td></tr>
+							<tr><td>Volvo FH16 750</td><td class="price-green">5 301 000 грн</td></tr>
+							<tr><td>Scania R 730</td><td class="price-green">8 937 600 грн</td></tr>
+							<tr><td>Freightliner Century</td><td class="price-green">33 972 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- ВОДНИЙ -->
+				<div class="node-row" onclick="toggle('wt')"><div class="node-icon">🚤</div><div><div class="node-title">Водний транспорт</div><div class="node-desc">Лодки, катери та круїзні судна.</div></div><div class="node-stats">5 моделей</div></div>
+				<div id="wt" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Colibri</td><td class="price-green">13 064 000 грн</td></tr>
+							<tr><td>Sea Ray L650 Fly</td><td class="price-green">82 052 500 грн</td></tr>
+							<tr><td>Speedboat</td><td class="price-green">724 500 грн</td></tr>
+							<tr><td>Harmony</td><td class="price-green">37 375 000 грн</td></tr>
+							<tr><td>Lampo</td><td class="price-green">1 334 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- АВІА -->
+				<div class="node-row" onclick="toggle('av')"><div class="node-icon">✈️</div><div><div class="node-title">Авіасалон Бориспіль</div><div class="node-desc">Гвинтокрили та літаки.</div></div><div class="node-stats">6 моделей</div></div>
+				<div id="av" class="node-content">
+					<table class="price-table">
+						<thead><tr><th>Модель</th><th>Ціна</th></tr></thead>
+						<tbody>
+							<tr><td>Private Jet #1</td><td class="price-green">26 427 000 грн</td></tr>
+							<tr><td>Private JET #2</td><td class="price-green">100 671 000 грн</td></tr>
+							<tr><td>Bell 407</td><td class="price-green">15 007 500 грн</td></tr>
+							<tr><td>Airbus Helicopter H135</td><td class="price-green">11 086 000 грн</td></tr>
+							<tr><td>Bell 430</td><td class="price-green">21 137 000 грн</td></tr>
+							<tr><td>Dodo</td><td class="price-green">27 025 000 грн</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- ПРАВА ПАНЕЛЬ -->
+		<div class="p-body-sidebar">
+			<div class="sidebar-block">
+				<div class="sidebar-title">Статистика</div>
+				<div style="font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+					Теми: <strong style="color:#fff;">14,582</strong><br>
+					Повідомлення: <strong style="color:#fff;">298,410</strong><br>
+					Активні користувачі: <strong style="color:var(--bf-glow);">1,240</strong>
+				</div>
+			</div>
+			<div class="sidebar-block">
+				<div class="sidebar-title">Керівництво</div>
+				<div style="font-size:13px;color:#fff;font-weight:bold;">Bloody_Boss</div>
+				<div style="font-size:11px;color:var(--text-muted);">Засновник сім'ї</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function toggle(id) {
+			var e = document.getElementById(id);
+			e.style.display = (e.style.display === 'block') ? 'none' : 'block';
+		}
+	</script>
 </body>
 </html>
