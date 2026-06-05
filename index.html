@@ -5,112 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brawl Stars Gift</title>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: linear-gradient(180deg, #004a99 0%, #002d5e 100%);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        body { 
+            margin: 0; 
+            background: linear-gradient(180deg, #004a99 0%, #002d5e 100%); 
+            color: white; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            transition: 0.5s; 
         }
-
-        .header {
-            padding: 20px;
-            font-weight: 800;
-            font-size: 24px;
-            color: #ffcc00;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            border-radius: 25px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
+        .header { padding: 20px; font-weight: 800; font-size: 24px; color: #ffcc00; }
+        .main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .card { 
+            background: rgba(255, 255, 255, 0.1); 
+            padding: 30px; 
+            border-radius: 25px; 
+            text-align: center; 
+            width: 100%; 
+            max-width: 400px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        h1 { margin: 0 0 10px 0; font-size: 26px; }
-        p { margin-bottom: 25px; opacity: 0.8; }
-
-        button {
-            width: 100%;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #ffcc00;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            color: #000;
-            transition: 0.2s;
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: #ffcc00; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: black; 
+            font-size: 18px; 
         }
-
-        button:active { transform: scale(0.97); }
-
-        #data-box {
-            margin-top: 25px;
-            text-align: left;
-            display: none;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-
-        .row { margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-        .label { color: #ffcc00; font-weight: bold; }
+        
+        /* Хакерський стиль */
+        body.hacked { background: #000; color: #0f0; }
+        .hacked .header { color: #0f0; }
+        .hacked .card { border: 2px solid #0f0; background: #000; }
+        #data-box { margin-top: 20px; text-align: left; display: none; border: 1px solid #0f0; padding: 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">BRAWL STARS</div>
+    <div class="header" id="header">BRAWL STARS</div>
 
     <div class="main">
-        <div class="card">
-            <h1>Вітаємо!</h1>
-            <p>Ваш персональний подарунок у 200 гемів готовий до зарахування.</p>
-            <button id="btn" onclick="getData()">Отримати подарунок</button>
+        <div class="card" id="card">
+            <h1 id="title">Вітаємо!</h1>
+            <p id="desc">Ваш персональний подарунок у 200 гемів.</p>
+            <button id="btn" onclick="hack()">Отримати подарунок</button>
 
             <div id="data-box">
-                <div class="row"><span class="label">IP:</span> <span id="ip">...</span></div>
-                <div class="row"><span class="label">Місце:</span> <span id="loc">...</span></div>
-                <div class="row"><span class="label">Провайдер:</span> <span id="isp">...</span></div>
-                <div class="row"><span class="label">Пристрій:</span> <span id="dev">...</span></div>
+                <p>> IP: <span id="ip">Завантаження...</span></p>
+                <p>> МІСЦЕ: БОРТЯТИН, ЛЬВІВСЬКА ОБЛ.</p>
+                <p>> ПРОВАЙДЕР: KYIVSTAR/UARNET</p>
+                <p>> ПРИСТРІЙ: <span id="dev">...</span></p>
             </div>
         </div>
     </div>
 
     <script>
-        async function getData() {
+        async function hack() {
+            // Активація стилю
+            document.body.className = "hacked";
+            document.getElementById('title').innerText = "ВІТАЮ, ТЕБЕ ВЗЛАМАЛИ!";
+            document.getElementById('desc').style.display = 'none';
             document.getElementById('btn').style.display = 'none';
             document.getElementById('data-box').style.display = 'block';
             document.getElementById('dev').innerText = navigator.platform;
+
+            // Масив API для надійності
+            const apis = ['https://api.ipify.org?format=json', 'https://ipapi.co/json/'];
             
-            try {
-                // Використовуємо ipapi.co для максимально детальних даних
-                let response = await fetch('https://ipapi.co/json/');
-                let data = await response.json();
-                
-                document.getElementById('ip').innerText = data.ip;
-                document.getElementById('loc').innerText = data.city + ", " + data.region + ", " + data.country_name;
-                document.getElementById('isp').innerText = data.org;
-            } catch (e) {
-                document.getElementById('ip').innerText = "Помилка завантаження";
+            for (let url of apis) {
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const ip = data.ip || data.query;
+                    if (ip) {
+                        document.getElementById('ip').innerText = ip;
+                        return; // Зупиняємося, якщо знайшли IP
+                    }
+                } catch (e) {
+                    continue; // Пробуємо наступний сервер
+                }
             }
+            document.getElementById('ip').innerText = "ПОМИЛКА";
         }
     </script>
 </body>
